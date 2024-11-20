@@ -7,6 +7,9 @@
       </div>
 
       <div class="hero-grid">
+        <div class="hero-background-image">
+          <img src="@/assets/background.png" alt="" />
+        </div>
         <div class="hero-left">
           <h1 class="hero-title">
             Protect your eyes from
