@@ -1,5 +1,5 @@
 <template>
-  <section id="download" class="section">
+  <section id="download" class="download-section">
     <div class="container">
       <header class="major">
         <h2>Get Started with BlinkBlink</h2>
@@ -29,16 +29,13 @@
           <li>
             <a
               @click="handleDownload('windows')"
-              :class="['button', 'icon', 'solid', 'fa-download', { loading: isLoading }]"
+              :class="['button', 'icon', 'solid', 'fa-download']"
             >
               Download for Windows
             </a>
           </li>
           <li>
-            <a
-              @click="handleDownload('macos')"
-              :class="['button', 'icon', 'solid', 'fa-download', { loading: isLoading }]"
-            >
+            <a @click="handleDownload('macos')" :class="['button', 'icon', 'solid', 'fa-download']">
               Download for macOS
             </a>
           </li>
@@ -52,6 +49,8 @@
 </template>
 
 <script setup lang="ts">
+import '@/assets/styles/Download.css'
+
 interface GitHubRelease {
   tag_name: string
   published_at: string
@@ -60,10 +59,6 @@ interface GitHubRelease {
     browser_download_url: string
   }>
 }
-
-import { ref } from 'vue'
-
-const isLoading = ref(false)
 
 async function getLatestReleaseFromGitHub(): Promise<GitHubRelease> {
   const response = await fetch(
@@ -82,7 +77,6 @@ async function getLatestReleaseFromGitHub(): Promise<GitHubRelease> {
 
 async function handleDownload(platform: 'windows' | 'macos') {
   try {
-    isLoading.value = true
     const release = await getLatestReleaseFromGitHub()
     const assetExtension = platform === 'windows' ? '.exe' : '.dmg'
     const asset = release.assets.find((a) => a.name.endsWith(assetExtension))
@@ -95,126 +89,6 @@ async function handleDownload(platform: 'windows' | 'macos') {
   } catch (error) {
     console.error('Download error:', error)
     alert('Failed to get download link. Please try again later.')
-  } finally {
-    isLoading.value = false
   }
 }
 </script>
-
-<style scoped>
-.section {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-  color: white;
-  text-align: center;
-  padding: 6rem 2rem;
-}
-
-.major {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-h2 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-
-p {
-  font-size: 1.2rem;
-  opacity: 0.9;
-  margin-bottom: 3rem;
-}
-
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1.5rem;
-  padding: 2rem;
-  list-style: none;
-}
-
-.button {
-  background: white;
-  color: var(--primary-color);
-  padding: 1rem 2rem;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-.button.primary {
-  background: var(--accent-color);
-  color: white;
-}
-
-.icon {
-  font-size: 1.2rem;
-}
-
-@media (max-width: 768px) {
-  .actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .button {
-    justify-content: center;
-  }
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.subtitle {
-  font-size: 1.2rem;
-  opacity: 0.9;
-  margin-bottom: 3rem;
-}
-
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  margin: 3rem 0;
-}
-
-.feature {
-  text-align: center;
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  backdrop-filter: blur(10px);
-}
-
-.feature i {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
-
-.feature h3 {
-  margin-bottom: 0.5rem;
-}
-
-.button.loading {
-  opacity: 0.7;
-  cursor: wait;
-}
-
-.button.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-</style>

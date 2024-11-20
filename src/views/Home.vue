@@ -2,13 +2,7 @@
   <div>
     <header>
       <div class="header-brand">
-        <img
-          src="@/assets/monster_1.png"
-          alt="BlinkBlink Logo"
-          width="60"
-          height="60"
-          class="logo"
-        />
+        <img src="@/assets/icon.png" alt="BlinkBlink Logo" class="logo" />
         <h2 class="brand-name">BlinkBlink</h2>
       </div>
 
@@ -38,7 +32,7 @@
               </span>
             </div>
           </h1>
-          <a href="#download" class="download-button">
+          <a href="#download" class="button secondary download-button">
             Download Now
             <ArrowIcon class="download-arrow" />
           </a>
@@ -49,14 +43,15 @@
           </p>
         </div>
       </div>
+      <nav data-nav-state="bottom">
+        <div class="nav-content">
+          <a href="#why" @click.prevent="scrollToSection('why')">Why BlinkBlink</a>
+          <a href="#rule" @click.prevent="scrollToSection('rule')">20·20·20</a>
+          <a href="#download" @click.prevent="scrollToSection('download')">Download</a>
+          <a href="#about" @click.prevent="scrollToSection('about')">About</a>
+        </div>
+      </nav>
     </header>
-
-    <nav>
-      <a href="#why">Why BlinkBlink</a>
-      <a href="#rule">20·20·20</a>
-      <a href="#download">Download</a>
-      <a href="#about">About</a>
-    </nav>
 
     <Why />
     <Rule />
@@ -66,6 +61,7 @@
 </template>
 
 <script setup lang="ts">
+import '@/assets/styles/Home.css'
 import { ref, onMounted } from 'vue'
 import About from '@/components/sections/About.vue'
 import Why from '@/components/sections/Why.vue'
@@ -91,5 +87,37 @@ onMounted(() => {
       animate.value = true
     }, totalDuration)
   }, 4000)
+
+  // Add scroll handler for nav
+  const nav = document.querySelector('nav')
+  let lastScroll = 0
+
+  window.addEventListener('scroll', () => {
+    const currentScroll = window.scrollY
+    const headerHeight = document.querySelector('header')?.offsetHeight || 0
+
+    if (currentScroll > headerHeight - 100) {
+      nav?.setAttribute('data-nav-state', 'top')
+    } else {
+      nav?.setAttribute('data-nav-state', 'bottom')
+    }
+
+    lastScroll = currentScroll
+  })
 })
+
+const scrollToSection = (id: string) => {
+  const element = document.getElementById(id)
+
+  if (element) {
+    const offset = 80 // Offset for fixed header
+    const elementPosition = element.getBoundingClientRect().top
+    const offsetPosition = elementPosition + window.pageYOffset - offset
+
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth',
+    })
+  }
+}
 </script>
