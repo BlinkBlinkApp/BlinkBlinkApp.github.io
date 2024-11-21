@@ -1,10 +1,20 @@
 .rule-section {
-  background: linear-gradient(135deg, var(--background-alt) 0%, var(--background-light) 100%);
+  width: 100%;
+  padding: 8rem 0; /* Remove horizontal padding */
+  display: flex;
+  justify-content: center;
+  background: var(--background-light);
 }
 
-.section {
-  /* background: linear-gradient(135deg, var(--background-alt) 0%, #ffffff 100%); */
-  padding: 6rem 2rem;
+/* Remove .section class */
+
+.content-wrapper {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+  box-sizing: border-box;
+  /* Use .container class from base.css instead */
 }
 
 h2 {
@@ -17,13 +27,33 @@ h2 {
   -webkit-text-fill-color: transparent;
 }
 
+.subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 1.2rem;
+  margin-bottom: 4rem;
+}
+
 .rule-container {
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
-  padding: 2rem;
+  padding: 2rem var(--spacing-md);
+  position: relative;
+  width: min(100%, 1200px);
+}
+
+.rule-container::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+  z-index: 0;
 }
 
 .rule-card {
@@ -34,6 +64,20 @@ h2 {
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  animation: fadeInUp 0.6s ease forwards;
+  opacity: 0;
+  z-index: 1;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .rule-card::before {
@@ -71,7 +115,7 @@ h2 {
   background: white;
   border-radius: 20px;
   padding: 3rem;
-  margin-top: 4rem;
+  margin-top: 6rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
@@ -81,10 +125,22 @@ h2 {
   margin-bottom: 1.5rem;
 }
 
+.explanation-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.explanation-text {
+  font-size: 1.1rem;
+  line-height: 1.8;
+}
+
 .benefits {
   margin-top: 2rem;
   padding: 2rem;
-  background: var(--background-alt);
+  background: linear-gradient(135deg, var(--background-alt) 0%, var(--background-light) 100%);
   border-radius: 12px;
 }
 
@@ -100,7 +156,10 @@ h2 {
 
 .benefits li {
   margin: 1rem 0;
-  padding-left: 2rem;
+  padding: 1rem 1.5rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   position: relative;
   transition: transform 0.2s ease;
 }
@@ -114,5 +173,21 @@ h2 {
   color: var(--accent-color);
   position: absolute;
   left: 0;
+  top: 50%;
+  transform: translateY(-50%);
   font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .explanation-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .rule-container::after {
+    display: none;
+  }
+  
+  .rule-section {
+    padding: 4rem 1.5rem;
+  }
 }

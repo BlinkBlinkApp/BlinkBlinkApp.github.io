@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page-wrapper">
     <header>
       <div class="header-brand">
         <img src="@/assets/icon.png" alt="BlinkBlink Logo" class="logo" />
@@ -56,10 +56,12 @@
       </nav>
     </header>
 
-    <Features />
-    <Rule />
-    <Download />
-    <About />
+    <main class="main-content">
+      <Features />
+      <Rule />
+      <Download />
+      <About />
+    </main>
   </div>
 </template>
 

@@ -8,6 +8,7 @@
   --background-alt: #f8fafc;
   --text-primary: #1a1f36;
   --text-secondary: #4f566b;
+  --background-body: #f8fafc;  /* Add this new variable */
 
   /* Animation */
   --transition-fast: 0.2s ease;
@@ -51,20 +52,38 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-body);
+  margin: 0;
+  padding: 0;
 }
 
 /* Common components */
-.section {
-  padding: var(--spacing-xl) var(--spacing-md);
+.page-wrapper {
   position: relative;
-  overflow: hidden;
-  /* Remove any default background here */
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.main-content {
+  width: 100%;
+}
+
+/* Move all common section and container styles here */
+.section {
+  width: 100%;
+  padding: var(--spacing-lg) 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .container {
-  max-width: 1200px;
+  width: 100%;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 var(--spacing-md);
+  box-sizing: border-box;
 }
 
 .button {

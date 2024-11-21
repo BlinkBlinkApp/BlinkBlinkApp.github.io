@@ -1,5 +1,5 @@
 .section {
-  background: var(--background-light);
+  /* Remove the background: var(--background-light); */
   padding: 6rem 2rem;
 }
 
