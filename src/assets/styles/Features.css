@@ -53,7 +53,7 @@
   display: flex;
   align-items: center;
   gap: 6rem;
-  margin-bottom: 8rem;
+  margin-bottom: 4rem; /* reduced from 8rem */
   padding: 3rem;
   backdrop-filter: blur(10px);
   background: rgba(255, 255, 255, 0.1);
@@ -94,7 +94,7 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  margin: 4rem 0;
+  margin: 2rem 0; /* reduced from 4rem 0 */
 }
 
 .feature-showcase-item {
@@ -130,10 +130,6 @@
   display: block;
   object-fit: contain;
   transition: transform 0.4s ease;
-}
-
-.feature-showcase-item:hover .screenshot img {
-  transform: scale(1.02);
 }
 
 .description {

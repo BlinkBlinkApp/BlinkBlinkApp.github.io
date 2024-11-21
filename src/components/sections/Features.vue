@@ -12,8 +12,8 @@
           <h3>Protect Your Digital Vision</h3>
           <p>
             Modern life means more screen time than ever. BlinkBlink helps you maintain healthy eyes
-            with smart reminders based on the 20-20-20 rule: Every 20 minutes, look at something 20
-            feet away for 20 seconds.
+            with smart reminders based on the 20·20·20 rule: Every 20 minutes, look at something 20
+            feet (6 meters) away for 20 seconds.
           </p>
         </div>
       </div>
