@@ -3,18 +3,14 @@
   padding: 8rem 0; /* Remove horizontal padding */
   display: flex;
   justify-content: center;
-  background: var(--background-light);
 }
 
-/* Remove .section class */
-
 .content-wrapper {
-  width: 100%;
+  width: min(100%, 1400px);
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 var(--spacing-md);
   box-sizing: border-box;
-  /* Use .container class from base.css instead */
 }
 
 h2 {
@@ -43,6 +39,9 @@ h2 {
   padding: 2rem var(--spacing-md);
   position: relative;
   width: min(100%, 1200px);
+  box-sizing: border-box;
+  padding-left: var(--spacing-md);
+  padding-right: var(--spacing-md);
 }
 
 .rule-container::after {
@@ -63,7 +62,6 @@ h2 {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
   position: relative;
-  overflow: hidden;
   animation: fadeInUp 0.6s ease forwards;
   opacity: 0;
   z-index: 1;
@@ -182,11 +180,11 @@ h2 {
   .explanation-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .rule-container::after {
     display: none;
   }
-  
+
   .rule-section {
     padding: 4rem 1.5rem;
   }
