@@ -1,4 +1,4 @@
-.why-section {
+.features-section {
   background: linear-gradient(135deg, var(--background-light) 0%, var(--background-alt) 100%);
 }
 
@@ -91,50 +91,60 @@
 }
 
 .features-showcase {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
   margin: 4rem 0;
 }
 
 .feature-showcase-item {
-  background: rgba(255, 255, 255, 0.98);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
-  transition: transform 0.4s ease;
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  padding: 2rem;
+  transition: all 0.4s ease;
 }
 
 .feature-showcase-item:hover {
-  transform: translateY(-8px);
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-2px);
 }
 
 .screenshot {
+  flex: 1;
+  max-width: 600px;
   width: 100%;
-  aspect-ratio: 16/9;
   overflow: hidden;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .screenshot img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  display: block;
+  object-fit: contain;
   transition: transform 0.4s ease;
 }
 
 .feature-showcase-item:hover .screenshot img {
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
 
 .description {
-  padding: 1.5rem;
-  text-align: center;
+  flex: 1;
+  padding: 1rem;
 }
 
 .description h4 {
-  font-size: 1.4rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
   -webkit-background-clip: text;
   background-clip: text;
@@ -142,8 +152,10 @@
 }
 
 .description p {
+  font-size: 1.1rem;
+  line-height: 1.6;
   color: var(--text-secondary);
-  font-size: 1rem;
+  opacity: 0.9;
 }
 
 .secondary-features {
@@ -256,6 +268,20 @@
   .features-showcase {
     grid-template-columns: 1fr;
   }
+
+  .feature-showcase-item {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1.5rem;
+  }
+
+  .screenshot {
+    max-width: 100%;
+  }
+
+  .description {
+    text-align: center;
+  }
 }
 
 @media (max-width: 768px) {
@@ -298,5 +324,21 @@
   .icon-wrapper {
     width: 50px;
     height: 50px;
+  }
+
+  .feature-showcase-item {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0.5rem;
+  }
+
+  .screenshot {
+    width: 100%;
+    aspect-ratio: 16/9;
+  }
+
+  .description {
+    text-align: center;
+    padding: 0.5rem 1rem 1rem;
   }
 }

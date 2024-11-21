@@ -48,7 +48,7 @@
       </div>
       <nav data-nav-state="bottom">
         <div class="nav-content">
-          <a href="#why" @click.prevent="scrollToSection('why')">Why BlinkBlink</a>
+          <a href="#features" @click.prevent="scrollToSection('features')">Features</a>
           <a href="#rule" @click.prevent="scrollToSection('rule')">20·20·20</a>
           <a href="#download" @click.prevent="scrollToSection('download')">Download</a>
           <a href="#about" @click.prevent="scrollToSection('about')">About</a>
@@ -56,7 +56,7 @@
       </nav>
     </header>
 
-    <Why />
+    <Features />
     <Rule />
     <Download />
     <About />
@@ -67,7 +67,7 @@
 import '@/assets/styles/Home.css'
 import { ref, onMounted } from 'vue'
 import About from '@/components/sections/About.vue'
-import Why from '@/components/sections/Why.vue'
+import Features from '@/components/sections/Features.vue'
 import Rule from '@/components/sections/Rule.vue'
 import Download from '@/components/sections/Download.vue'
 import ArrowIcon from '@/components/icons/Arrow.vue'
