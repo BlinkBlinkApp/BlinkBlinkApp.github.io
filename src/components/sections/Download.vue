@@ -1,64 +1,49 @@
 <template>
-  <section id="download" class="section download-section">
-    <div class="container">
-      <h2>Get Started with BlinkBlink</h2>
-      <p class="subtitle">Available for all major platforms</p>
+  <section id="download" class="download-section">
+    <div class="download-wrapper">
+      <h2>Download & Get Started!</h2>
 
-      <div class="features-ticker" @mouseenter="pauseScroll" @mouseleave="resumeScroll">
-        <div class="ticker-track" :style="{ animationPlayState: isPaused ? 'paused' : 'running' }">
-          <!-- First set of features -->
-          <div class="feature">
-            <i class="fa-solid fa-rocket"></i>
-            <h3>Auto Start</h3>
-            <p>Launches automatically with your system</p>
+      <div class="features-ticker">
+        <div class="ticker-content" style="running">
+          <div class="feature" v-for="(feature, index) in [...features, ...features]" :key="index">
+            <i :class="feature.icon"></i>
+            <h3>{{ feature.title }}</h3>
+            <p>{{ feature.description }}</p>
           </div>
-          <div class="feature">
-            <i class="fa-solid fa-arrows-rotate"></i>
-            <h3>Auto Update</h3>
-            <p>Always get the latest features</p>
-          </div>
-          <div class="feature">
-            <i class="fa-solid fa-shield"></i>
-            <h3>Privacy First</h3>
-            <p>Your data stays on your device</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="download-stats">
-        <div class="stat">
-          <span class="number">{{ totalDownloads.toLocaleString() }}+</span>
-          <span class="label">Total Downloads</span>
         </div>
       </div>
 
       <ul class="actions special">
-        <li>
-          <a
-            @click="handleDownload('windows')"
-            :class="['button', 'icon', 'solid', 'fa-download', { loading: isLoading.windows }]"
-            :disabled="isLoading.windows"
-          >
-            {{ isLoading.windows ? 'Preparing Download...' : 'Download for Windows' }}
-          </a>
-        </li>
-        <li>
-          <a
-            @click="handleDownload('macos')"
-            :class="['button', 'icon', 'solid', 'fa-download', { loading: isLoading.macos }]"
-            :disabled="isLoading.macos"
-          >
-            {{ isLoading.macos ? 'Preparing Download...' : 'Download for macOS' }}
-          </a>
-        </li>
-        <li>
-          <a class="button icon solid fa-download disabled"> Download for Linux (Coming Soon) </a>
-        </li>
+        <div class="primary-downloads">
+          <li>
+            <a
+              @click="handleDownload('windows')"
+              :class="['button', 'icon', 'solid', 'fa-download', { loading: isLoading.windows }]"
+              :disabled="isLoading.windows"
+            >
+              {{ isLoading.windows ? 'Preparing Download...' : 'Download for Windows' }}
+            </a>
+          </li>
+          <li>
+            <a
+              @click="handleDownload('macos')"
+              :class="['button', 'icon', 'solid', 'fa-download', { loading: isLoading.macos }]"
+              :disabled="isLoading.macos"
+            >
+              {{ isLoading.macos ? 'Preparing Download...' : 'Download for macOS' }}
+            </a>
+          </li>
+        </div>
       </ul>
+      <span class="coming-soon-label">Linux Coming Soon</span>
       <div class="version-info" v-if="latestVersion">
-        Latest version: <span class="version">{{ latestVersion }}</span>
+        <span
+          >Latest version: <span class="version">{{ latestVersion }}</span></span
+        >
         <span class="dot-separator">•</span>
-        <span class="date">{{ releaseDate }}</span>
+        <span class="date">Released {{ releaseDate }}</span>
+        <span class="dot-separator">•</span>
+        <span class="downloads">{{ totalDownloads.toLocaleString() }}+ Downloads</span>
       </div>
     </div>
   </section>
@@ -86,15 +71,50 @@ const isLoading = reactive({
   macos: false,
 })
 
-const isPaused = ref(false)
-
-const pauseScroll = () => {
-  isPaused.value = true
-}
-
-const resumeScroll = () => {
-  isPaused.value = false
-}
+const features = [
+  { icon: 'fa-solid fa-rocket', title: 'Auto Start', description: 'Launches with your system' },
+  {
+    icon: 'fa-solid fa-stopwatch',
+    title: 'Smart Scheduling',
+    description: 'Custom timers and breaks',
+  },
+  {
+    icon: 'fa-solid fa-chart-line',
+    title: 'Track Progress',
+    description: 'Insights to improve habits',
+  },
+  {
+    icon: 'fa-solid fa-eye',
+    title: 'Break Reminders',
+    description: 'Reduce eye strain with prompts',
+  },
+  {
+    icon: 'fa-solid fa-user-md',
+    title: '20·20·20 Rule',
+    description: 'Encourages healthy eye habits',
+  },
+  {
+    icon: 'fa-solid fa-arrows-rotate',
+    title: 'Auto Updates',
+    description: 'Stay up-to-date effortlessly',
+  },
+  { icon: 'fa-solid fa-shield', title: 'Privacy First', description: 'Data stays on your device' },
+  {
+    icon: 'fa-solid fa-desktop',
+    title: 'Multi-Screen Support',
+    description: 'Works across all screens',
+  },
+  {
+    icon: 'fa-solid fa-brush',
+    title: 'Clean Interface',
+    description: 'Simple and beautiful design',
+  },
+  {
+    icon: 'fa-solid fa-moon',
+    title: 'System Theme Sync',
+    description: 'Matches light or dark mode',
+  },
+]
 
 async function getAllReleasesFromGitHub(): Promise<GitHubRelease[]> {
   const response = await fetch(
