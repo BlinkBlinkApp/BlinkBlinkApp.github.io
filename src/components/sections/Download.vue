@@ -38,10 +38,10 @@
       <span class="coming-soon-label">Linux Coming Soon</span>
       <div class="version-info" v-if="latestVersion">
         <span
-          >Latest version: <span class="version">{{ latestVersion }}</span></span
+          >Latest Version: <span class="version">{{ latestVersion }}</span></span
         >
         <span class="dot-separator">•</span>
-        <span class="date">Latest Release: {{ releaseDate }}</span>
+        <span class="date">Release Date: {{ releaseDate }}</span>
         <span class="dot-separator">•</span>
         <span class="downloads">{{ totalDownloads.toLocaleString() }}+ Downloads</span>
       </div>

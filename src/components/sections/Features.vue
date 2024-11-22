@@ -13,8 +13,10 @@
         <div class="hero-text">
           <span class="overline">Features</span>
           <h3>Protect Your Digital Vision</h3>
-          <p>More screen time doesn't have to mean strained eyes. BlinkBlink helps you stay focused,
-            refreshed, and in control of your screen habits.</p>
+          <p>
+            More screen time doesn't have to mean strained eyes. BlinkBlink helps you stay focused,
+            refreshed, and in control of your screen habits.
+          </p>
           <div class="highlights">
             <div class="highlight-item">
               <span class="highlight-number">20-20-20</span>
@@ -30,14 +32,20 @@
 
       <div class="features-showcase">
         <div class="feature-showcase-item featured">
-          <div class="screenshot-wrapper">
-            <div class="featured-screenshot">
+          <div class="screenshot-wrapper transition-container">
+            <div class="featured-screenshot" :style="{ opacity: firstImageOpacity }">
               <img src="@/assets/screenshots/break_overlay.png" alt="Break reminder interface" />
+            </div>
+            <div class="featured-screenshot" :style="{ opacity: secondImageOpacity }">
+              <img src="@/assets/screenshots/summary_overlay.png" alt="Break summary interface" />
             </div>
           </div>
           <div class="description">
-            <h4>Gentle Reminders</h4>
-            <p>Soft notifications and a calming screen blur signal it's time to pause and reset.</p>
+            <h4>Smart Break Experience</h4>
+            <p>
+              From gentle break reminders to insightful summaries, BlinkBlink guides you through a
+              complete eye care routine.
+            </p>
           </div>
         </div>
 
@@ -72,5 +80,56 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import '@/assets/styles/Features.css'
+
+const transitionProgress = ref(0)
+const TRANSITION_DURATION = 1500 // 1.5 seconds for the transition
+const DISPLAY_DURATION = 4000 // 4 seconds to display each image
+
+let animationFrame: number | null = null
+let lastTransitionTime = 0
+
+const firstImageOpacity = computed(() => {
+  return Math.cos(Math.PI * transitionProgress.value) * 0.5 + 0.5
+})
+
+const secondImageOpacity = computed(() => {
+  return Math.cos(Math.PI * (transitionProgress.value + 1)) * 0.5 + 0.5
+})
+
+const animate = (currentTime: number) => {
+  if (!lastTransitionTime) lastTransitionTime = currentTime
+  const elapsed = currentTime - lastTransitionTime
+
+  if (transitionProgress.value % 1 === 0) {
+    // When at integer value (fully displayed), wait for DISPLAY_DURATION
+    if (elapsed >= DISPLAY_DURATION) {
+      lastTransitionTime = currentTime
+      transitionProgress.value += 0.01
+    }
+  } else {
+    // During transition, smoothly increment
+    const progress = Math.min(elapsed / TRANSITION_DURATION, 1)
+    const targetValue = Math.ceil(transitionProgress.value)
+    transitionProgress.value = Math.floor(transitionProgress.value) + progress
+
+    if (progress === 1) {
+      lastTransitionTime = currentTime
+      transitionProgress.value = targetValue
+    }
+  }
+
+  animationFrame = requestAnimationFrame(animate)
+}
+
+onMounted(() => {
+  animationFrame = requestAnimationFrame(animate)
+})
+
+onUnmounted(() => {
+  if (animationFrame !== null) {
+    cancelAnimationFrame(animationFrame)
+  }
+})
 </script>
