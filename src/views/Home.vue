@@ -6,7 +6,7 @@
         <h2 class="brand-name">BlinkBlink</h2>
       </div>
 
-      <div class="hero-grid">
+      <div class="hero-grid" :style="{ opacity: heroOpacity }">
         <div class="hero-background-image">
           <img src="@/assets/background.png" alt="" />
         </div>
@@ -86,6 +86,7 @@ let currentIndex = 0
 
 const sections = ['home', 'rule', 'features', 'download', 'about']
 const currentSection = ref('home')
+const heroOpacity = ref(1)
 
 onMounted(() => {
   setInterval(() => {
@@ -123,6 +124,25 @@ onMounted(() => {
     const element = document.getElementById(section)
     if (element) observer.observe(element)
   })
+
+  // Update scroll handler to use vh
+  const handleScroll = () => {
+    const scrollPosition = window.scrollY
+    const viewportHeight = window.innerHeight
+    const fadeStart = viewportHeight * 0.05
+    const fadeEnd = viewportHeight * 0.8
+
+    if (scrollPosition <= fadeStart) {
+      heroOpacity.value = 1
+    } else if (scrollPosition >= fadeEnd) {
+      heroOpacity.value = 0
+    } else {
+      heroOpacity.value = 1 - ((scrollPosition - fadeStart) / (fadeEnd - fadeStart))
+    }
+  }
+
+  window.addEventListener('scroll', handleScroll)
+  window.addEventListener('resize', handleScroll) // Add resize listener to update on viewport changes
 })
 
 const scrollToSection = (id: string) => {

@@ -3,7 +3,6 @@
   position: relative;
   overflow: hidden;
   padding: var(--spacing-xl) var(--spacing-lg);
-  background: var(--background-alt);
 }
 
 /* Main wrapper */

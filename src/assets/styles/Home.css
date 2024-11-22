@@ -50,6 +50,7 @@ header {
   width: min(100%, 1400px);
   box-sizing: border-box;
   padding: 0 var(--spacing-md);
+  transition: opacity 0.3s ease;
 }
 
 .hero-background-image {

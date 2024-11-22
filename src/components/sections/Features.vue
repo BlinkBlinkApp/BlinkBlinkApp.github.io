@@ -6,38 +6,47 @@
       <div class="shape shape-3"></div>
     </div>
 
+    <div class="pattern-overlay"></div>
+
     <div class="container">
       <div class="hero-content">
         <div class="hero-text">
+          <span class="overline">Features</span>
           <h3>Protect Your Digital Vision</h3>
-          <p>
-            Modern life means more screen time than ever. BlinkBlink helps you maintain healthy eyes
-            with smart reminders based on the 20·20·20 rule: Every 20 minutes, look at something 20
-            feet (6 meters) away for 20 seconds.
-          </p>
+          <p>More screen time doesn't have to mean strained eyes. BlinkBlink helps you stay focused,
+            refreshed, and in control of your screen habits.</p>
+          <div class="highlights">
+            <div class="highlight-item">
+              <span class="highlight-number">20-20-20</span>
+              <span class="highlight-label">Eye Care Rule</span>
+            </div>
+            <div class="highlight-item">
+              <span class="highlight-number">100%</span>
+              <span class="highlight-label">Customizable</span>
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="features-showcase">
-        <div class="feature-showcase-item">
-          <div class="screenshot">
-            <img src="@/assets/screenshots/break_overlay.png" alt="Break reminder interface" />
+        <div class="feature-showcase-item featured">
+          <div class="screenshot-wrapper">
+            <div class="featured-screenshot">
+              <img src="@/assets/screenshots/break_overlay.png" alt="Break reminder interface" />
+            </div>
           </div>
           <div class="description">
-            <h4>Gentle Break Reminders</h4>
-            <p>
-              Subtle notifications and a soothing screen blur signal it’s time to pause. Take 20
-              seconds to relax your eyes and refresh your mind.
-            </p>
+            <h4>Gentle Reminders</h4>
+            <p>Soft notifications and a calming screen blur signal it's time to pause and reset.</p>
           </div>
         </div>
 
         <div class="feature-showcase-item">
           <div class="description">
-            <h4>Personalized Settings</h4>
+            <h4>Customizable Schedules</h4>
             <p>
-              Customize your schedule with ease. Adjust break intervals and durations to seamlessly
-              fit your work style.
+              Tailor breaks to your needs. Set intervals and durations that align with your
+              workflow.
             </p>
           </div>
           <div class="screenshot">
@@ -50,10 +59,10 @@
             <img src="@/assets/screenshots/stats_dark.png" alt="Analytics dashboard" />
           </div>
           <div class="description">
-            <h4>Actionable Insights</h4>
+            <h4>Insightful Analytics</h4>
             <p>
-              Visualize your habits with intuitive analytics. Track progress and take control of
-              your digital wellness.
+              Understand your screen habits with clear visuals. Stay on top of your digital
+              wellness.
             </p>
           </div>
         </div>
