@@ -33,11 +33,13 @@
       <div class="features-showcase">
         <div class="feature-showcase-item featured">
           <div class="screenshot-wrapper transition-container">
-            <div class="featured-screenshot" :style="{ opacity: firstImageOpacity }">
-              <img src="@/assets/screenshots/break_overlay.png" alt="Break reminder interface" />
-            </div>
-            <div class="featured-screenshot" :style="{ opacity: secondImageOpacity }">
-              <img src="@/assets/screenshots/summary_overlay.png" alt="Break summary interface" />
+            <div
+              v-for="(image, index) in featuredImages"
+              :key="image.src"
+              class="featured-screenshot"
+              :style="{ opacity: getImageOpacity(index) }"
+            >
+              <img :src="image.src" :alt="image.alt" />
             </div>
           </div>
           <div class="description">
@@ -61,7 +63,6 @@
             <img src="@/assets/screenshots/schedule_setting.png" alt="Customizable settings" />
           </div>
         </div>
-
         <div class="feature-showcase-item">
           <div class="screenshot">
             <img src="@/assets/screenshots/stats_dark.png" alt="Analytics dashboard" />
@@ -74,6 +75,18 @@
             </p>
           </div>
         </div>
+        <div class="feature-showcase-item">
+          <div class="description">
+            <h4>Seamless Theme Integration</h4>
+            <p>
+              Automatically adapts to your system's light or dark mode for a consistent and
+              comfortable visual experience.
+            </p>
+          </div>
+          <div class="screenshot">
+            <img src="@/assets/screenshots/light_dark_show.png" alt="Analytics dashboard" />
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -82,41 +95,61 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import '@/assets/styles/Features.css'
+import workDemo from '@/assets/screenshots/work_demo.png'
+import breakOverlay from '@/assets/screenshots/break_overlay.png'
+import summaryOverlay from '@/assets/screenshots/summary_overlay.png'
+
+interface FeaturedImage {
+  src: string
+  alt: string
+}
+
+const featuredImages: FeaturedImage[] = [
+  { src: workDemo, alt: 'Work screen demo' },
+  { src: breakOverlay, alt: 'Break reminder interface' },
+  { src: summaryOverlay, alt: 'Break summary interface' },
+]
 
 const transitionProgress = ref(0)
-const TRANSITION_DURATION = 1500 // 1.5 seconds for the transition
-const DISPLAY_DURATION = 4000 // 4 seconds to display each image
+const TRANSITION_DURATION = 2000
+const DISPLAY_DURATION = 5000
 
 let animationFrame: number | null = null
 let lastTransitionTime = 0
 
-const firstImageOpacity = computed(() => {
-  return Math.cos(Math.PI * transitionProgress.value) * 0.5 + 0.5
-})
+const getImageOpacity = (index: number) => {
+  const totalImages = featuredImages.length
+  const currentIndex = Math.floor(transitionProgress.value)
+  const nextIndex = (currentIndex + 1) % totalImages
 
-const secondImageOpacity = computed(() => {
-  return Math.cos(Math.PI * (transitionProgress.value + 1)) * 0.5 + 0.5
-})
+  if (index === currentIndex) {
+    return 1 - (transitionProgress.value - currentIndex)
+  } else if (index === nextIndex) {
+    return transitionProgress.value - currentIndex
+  }
+  return 0
+}
 
 const animate = (currentTime: number) => {
   if (!lastTransitionTime) lastTransitionTime = currentTime
   const elapsed = currentTime - lastTransitionTime
 
-  if (transitionProgress.value % 1 === 0) {
-    // When at integer value (fully displayed), wait for DISPLAY_DURATION
+  if (Math.floor(transitionProgress.value) === transitionProgress.value) {
+    // At a whole number, wait for display duration
     if (elapsed >= DISPLAY_DURATION) {
       lastTransitionTime = currentTime
       transitionProgress.value += 0.01
     }
   } else {
-    // During transition, smoothly increment
-    const progress = Math.min(elapsed / TRANSITION_DURATION, 1)
-    const targetValue = Math.ceil(transitionProgress.value)
-    transitionProgress.value = Math.floor(transitionProgress.value) + progress
+    // During transition, use smooth easing
+    const progress = elapsed / TRANSITION_DURATION
+    const ease = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2
 
-    if (progress === 1) {
+    transitionProgress.value = Math.floor(transitionProgress.value) + Math.min(1, ease)
+
+    if (progress >= 1) {
       lastTransitionTime = currentTime
-      transitionProgress.value = targetValue
+      transitionProgress.value = Math.ceil(transitionProgress.value) % featuredImages.length
     }
   }
 
