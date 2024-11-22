@@ -215,7 +215,7 @@ header {
 }
 
 nav {
-  position: absolute;
+  position: fixed;  /* Changed from absolute to fixed */
   bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
@@ -234,11 +234,12 @@ nav {
   width: max-content;
 }
 
-nav[data-nav-state='top'] {
+/* Remove this rule since we're not using top positioning anymore */
+/* nav[data-nav-state='top'] {
   position: fixed;
   top: 1.5rem;
   bottom: auto;
-}
+} */
 
 .nav-content {
   display: flex;
@@ -252,21 +253,56 @@ nav a {
   transition: all 0.3s ease;
   white-space: nowrap;
   position: relative;
+  padding: 0.5rem 1.25rem;  /* Adjusted padding */
+  overflow: hidden;  /* Added */
+  border-radius: 100px;  /* Changed from previous box style */
 }
 
-nav a:hover {
+nav a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-color);
+  opacity: 0;
+  transform: scale(0.9);  /* Changed from translateY */
+  transition: all 0.3s ease;
+  z-index: -1;
+  border-radius: inherit;  /* Match parent's radius */
+}
+
+nav a.active {
+  color: var(--primary-color);  /* Default active state is now colored text */
+}
+
+/* Special styling for non-home active sections */
+nav a.active:not([href="#home"]) {
+  color: white;
+}
+
+nav a.active:not([href="#home"])::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Home section active state */
+nav a.active[href="#home"] {
+  background: rgba(var(--primary-rgb), 0.1);
+}
+
+nav a.active[href="#home"]::before {
+  display: none;
+}
+
+nav a:hover:not(.active) {
   color: var(--primary-color);
+  background: rgba(var(--primary-rgb), 0.05);
 }
 
 nav a::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--primary-color);
-  transition: width 0.3s ease;
+  display: none;  /* Remove the previous underline effect */
 }
 
 nav a:hover::after {

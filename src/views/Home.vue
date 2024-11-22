@@ -1,6 +1,6 @@
 <template>
   <div class="page-wrapper">
-    <header>
+    <header id="home">
       <div class="header-brand">
         <img src="@/assets/icon.png" alt="BlinkBlink Logo" class="logo" />
         <h2 class="brand-name">BlinkBlink</h2>
@@ -46,19 +46,24 @@
           </p>
         </div>
       </div>
-      <nav data-nav-state="bottom">
+      <nav>
         <div class="nav-content">
-          <a href="#features" @click.prevent="scrollToSection('features')">Features</a>
-          <a href="#rule" @click.prevent="scrollToSection('rule')">20·20·20</a>
-          <a href="#download" @click.prevent="scrollToSection('download')">Download</a>
-          <a href="#about" @click.prevent="scrollToSection('about')">About</a>
+          <a
+            v-for="section in sections"
+            :key="section"
+            :href="`#${section}`"
+            :class="{ active: currentSection === section }"
+            @click.prevent="scrollToSection(section)"
+          >
+            {{ section === 'rule' ? '20·20·20' : section.charAt(0).toUpperCase() + section.slice(1) }}
+          </a>
         </div>
       </nav>
     </header>
 
     <main class="main-content">
-      <Features />
       <Rule />
+      <Features />
       <Download />
       <About />
     </main>
@@ -81,6 +86,9 @@ const currentWord = ref(words[0])
 const animate = ref(true)
 let currentIndex = 0
 
+const sections = ['home', 'rule', 'features', 'download', 'about']
+const currentSection = ref('home')
+
 onMounted(() => {
   setInterval(() => {
     animate.value = false
@@ -93,25 +101,41 @@ onMounted(() => {
     }, totalDuration)
   }, 4000)
 
-  // Add scroll handler for nav
-  const nav = document.querySelector('nav')
-  let lastScroll = 0
+  // Add scroll spy for navigation
+  const observerOptions = {
+    root: null,
+    rootMargin: '-50% 0px',
+    threshold: 0
+  }
 
-  window.addEventListener('scroll', () => {
-    const currentScroll = window.scrollY
-    const headerHeight = document.querySelector('header')?.offsetHeight || 0
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        currentSection.value = entry.target.id || 'home'
+      }
+    })
+  }, observerOptions)
 
-    if (currentScroll > headerHeight - 100) {
-      nav?.setAttribute('data-nav-state', 'top')
-    } else {
-      nav?.setAttribute('data-nav-state', 'bottom')
-    }
+  // Observe header for home section
+  const header = document.querySelector('header')
+  if (header) observer.observe(header)
 
-    lastScroll = currentScroll
+  // Observe other sections
+  sections.slice(1).forEach(section => {
+    const element = document.getElementById(section)
+    if (element) observer.observe(element)
   })
 })
 
 const scrollToSection = (id: string) => {
+  if (id === 'home') {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+    return
+  }
+
   const element = document.getElementById(id)
 
   if (element) {
