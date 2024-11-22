@@ -1,7 +1,6 @@
 .footer-section {
   background: var(--background-alt);
-  padding: 2rem 1.5rem;
-  margin-top: 2rem;
+  padding: var(--spacing-md);
 }
 
 .footer-grid {

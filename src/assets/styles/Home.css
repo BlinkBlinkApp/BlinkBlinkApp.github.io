@@ -215,32 +215,49 @@ header {
   }
 }
 
+:root {
+  --nav-transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  --nav-bg: rgba(255, 255, 255, 0.7);
+  --nav-padding: 1rem 2rem;
+  --nav-border-radius: 100px;
+  --nav-item-padding: 0.5rem 1.25rem;
+}
+
 nav {
-  position: fixed;  /* Changed from absolute to fixed */
+  position: fixed; /* Changed from absolute to fixed */
   bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--nav-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  padding: 1rem 2rem;
-  border-radius: 100px;
+  padding: var(--nav-padding);
+  border-radius: var(--nav-border-radius);
   display: flex;
   justify-content: center;
   gap: 2rem;
   z-index: 100;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
+  transition:
+    transform var(--nav-transition),
+    opacity var(--nav-transition);
   max-width: 90%;
   width: max-content;
+  transform-origin: bottom center;
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
 }
 
-/* Remove this rule since we're not using top positioning anymore */
-/* nav[data-nav-state='top'] {
-  position: fixed;
-  top: 1.5rem;
-  bottom: auto;
-} */
+/* Add styles for when nav is absolutely positioned */
+nav[style*='position: absolute'] {
+  transform: translateX(-50%) translateY(200%);
+  opacity: 0;
+}
+
+.nav-hide {
+  transform: translateX(-50%) translateY(200%);
+  opacity: 0;
+}
 
 .nav-content {
   display: flex;
@@ -254,9 +271,9 @@ nav a {
   transition: all 0.3s ease;
   white-space: nowrap;
   position: relative;
-  padding: 0.5rem 1.25rem;  /* Adjusted padding */
-  overflow: hidden;  /* Added */
-  border-radius: 100px;  /* Changed from previous box style */
+  padding: var(--nav-item-padding); /* Adjusted padding */
+  overflow: hidden; /* Added */
+  border-radius: var(--nav-border-radius); /* Changed from previous box style */
 }
 
 nav a::before {
@@ -268,32 +285,32 @@ nav a::before {
   height: 100%;
   background: var(--primary-color);
   opacity: 0;
-  transform: scale(0.9);  /* Changed from translateY */
-  transition: all 0.3s ease;
+  transform: scale(0.9); /* Changed from translateY */
+  transition: inherit;
   z-index: -1;
-  border-radius: inherit;  /* Match parent's radius */
+  border-radius: inherit; /* Match parent's radius */
 }
 
 nav a.active {
-  color: var(--primary-color);  /* Default active state is now colored text */
+  color: var(--primary-color); /* Default active state is now colored text */
 }
 
 /* Special styling for non-home active sections */
-nav a.active:not([href="#home"]) {
+nav a.active:not([href='#home']) {
   color: white;
 }
 
-nav a.active:not([href="#home"])::before {
+nav a.active:not([href='#home'])::before {
   opacity: 1;
   transform: scale(1);
 }
 
 /* Home section active state */
-nav a.active[href="#home"] {
+nav a.active[href='#home'] {
   background: rgba(var(--primary-rgb), 0.1);
 }
 
-nav a.active[href="#home"]::before {
+nav a.active[href='#home']::before {
   display: none;
 }
 
@@ -303,7 +320,7 @@ nav a:hover:not(.active) {
 }
 
 nav a::after {
-  display: none;  /* Remove the previous underline effect */
+  display: none; /* Remove the previous underline effect */
 }
 
 nav a:hover::after {
@@ -352,8 +369,100 @@ nav a:hover::after {
 }
 
 @media (max-width: 768px) {
+  :root {
+    --nav-padding: 0.5rem;
+    --nav-item-padding: 0.35rem 0.75rem;
+  }
+
   .hero-title {
     font-size: clamp(2rem, 6vw, 3.5rem);
     word-wrap: break-word;
+  }
+
+  header {
+    padding: var(--spacing-sm);
+  }
+
+  .hero-grid {
+    padding: 0 var(--spacing-sm);
+  }
+
+  nav {
+    bottom: 1rem;
+    padding: var(--nav-padding);
+    width: 90%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  nav[style*='position: absolute'] {
+    transform: translateX(-50%) translateY(200%);
+    opacity: 0;
+  }
+
+  .nav-hide {
+    transform: translateX(-50%) translateY(200%);
+    opacity: 0;
+  }
+
+  .nav-content {
+    gap: 0.5rem;
+    width: 100%;
+    justify-content: space-between;
+    padding: 0 0.5rem;
+  }
+
+  nav a {
+    padding: var(--nav-item-padding);
+    font-size: 0.85rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  nav {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .nav-content {
+    gap: 1rem;
+  }
+
+  nav a {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .header-brand {
+    top: 1rem;
+    left: 1rem;
+  }
+}
+
+/* Add small screen size optimization */
+@media (max-width: 380px) {
+  :root {
+    --nav-item-padding: 0.25rem 0.5rem;
+  }
+
+  nav a {
+    padding: var(--nav-item-padding);
+    font-size: 0.8rem;
+  }
+
+  .nav-content {
+    gap: 0.25rem;
   }
 }

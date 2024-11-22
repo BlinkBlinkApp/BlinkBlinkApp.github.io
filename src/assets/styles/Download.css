@@ -2,7 +2,7 @@
 .download-section {
   position: relative;
   overflow: hidden;
-  padding: var(--spacing-xl) var(--spacing-lg);
+  padding: var(--spacing-xs) var(--spacing-lg);
 }
 
 /* Main wrapper */
@@ -251,6 +251,33 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .download-section {
+    padding: 2rem 0.75rem;
+  }
+
+  .download-wrapper {
+    padding: 2rem 1rem;
+  }
+
+  .features-ticker {
+    margin: 1.5rem 0;
+    padding: 1rem 0;
+  }
+
+  .feature {
+    padding: 1.25rem;
+  }
+
+  .actions {
+    padding: 1.5rem 0.75rem;
+    gap: 1.25rem;
+  }
+
+  .version-info {
+    margin: 2rem auto 0;
+    padding: 0.75rem 1.25rem;
+  }
+
   .download-section {
     padding: var(--spacing-lg) var(--spacing-md);
   }

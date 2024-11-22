@@ -43,7 +43,7 @@
         <span class="dot-separator">•</span>
         <span class="date">Release Date: {{ releaseDate }}</span>
         <span class="dot-separator">•</span>
-        <span class="downloads">{{ totalDownloads.toLocaleString() }}+ Downloads</span>
+        <span class="downloads">{{ totalDownloads.toLocaleString() }} Downloads</span>
       </div>
     </div>
   </section>

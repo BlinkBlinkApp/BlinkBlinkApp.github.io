@@ -339,7 +339,7 @@
 @media (max-width: 600px) {
   .rule-section {
     min-height: auto;
-    padding: 6rem 1rem 3rem;  /* Adjusted padding for mobile */
+    padding: 3rem 0.75rem 2rem;  /* Adjusted padding for mobile */
   }
 
   .title-row {
@@ -416,6 +416,24 @@
   .unit {
     font-size: 1.2rem;
     margin-top: -0.25rem;
+  }
+
+  .rule-content {
+    padding: 0 0.75rem;
+    gap: 3rem;
+  }
+
+  .benefits-wrapper {
+    padding: 1.25rem 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .title-container {
+    padding: 0 0.75rem;
+  }
+
+  .title-row {
+    margin: 2rem auto;
   }
 
   /* Optimize animations for mobile */

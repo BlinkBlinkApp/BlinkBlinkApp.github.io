@@ -35,9 +35,7 @@
               </span>
             </div>
           </h1>
-          <a href="#download" class="button secondary download-button">
-            Download Now ➤
-          </a>
+          <a href="#download" class="button secondary download-button"> Download Now for Free ➤ </a>
         </div>
         <div class="hero-right">
           <p class="hero-description">
@@ -45,7 +43,7 @@
           </p>
         </div>
       </div>
-      <nav>
+      <nav :class="{ 'nav-hide': shouldHideNav }">
         <div class="nav-content">
           <a
             v-for="section in sections"
@@ -54,7 +52,7 @@
             :class="{ active: currentSection === section }"
             @click.prevent="scrollToSection(section)"
           >
-            {{ section === 'rule' ? '20·20·20' : section.charAt(0).toUpperCase() + section.slice(1) }}
+            {{ formatSectionName(section) }}
           </a>
         </div>
       </nav>
@@ -64,18 +62,19 @@
       <Rule />
       <Features />
       <Download />
-      <About />
     </main>
+
+    <Footer />
   </div>
 </template>
 
 <script setup lang="ts">
 import '@/assets/styles/Home.css'
-import { ref, onMounted } from 'vue'
-import About from '@/components/sections/About.vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import Features from '@/components/sections/Features.vue'
 import Rule from '@/components/sections/Rule.vue'
 import Download from '@/components/sections/Download.vue'
+import Footer from '@/components/Footer.vue'
 
 const BASE_DURATION = 600 // 0.6s in ms
 const CHAR_DELAY = 40 // 0.04s in ms
@@ -87,6 +86,12 @@ let currentIndex = 0
 const sections = ['home', 'rule', 'features', 'download', 'about']
 const currentSection = ref('home')
 const heroOpacity = ref(1)
+const shouldHideNav = ref(false)
+
+// Helper function to format section names
+const formatSectionName = (section: string) => {
+  return section === 'rule' ? '20·20·20' : section.charAt(0).toUpperCase() + section.slice(1)
+}
 
 onMounted(() => {
   setInterval(() => {
@@ -100,56 +105,67 @@ onMounted(() => {
     }, totalDuration)
   }, 4000)
 
-  // Add scroll spy for navigation
-  const observerOptions = {
-    root: null,
-    rootMargin: '-50% 0px',
-    threshold: 0
-  }
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        currentSection.value = entry.target.id || 'home'
-      }
-    })
-  }, observerOptions)
-
-  // Observe header for home section
-  const header = document.querySelector('header')
-  if (header) observer.observe(header)
-
-  // Observe other sections
-  sections.slice(1).forEach(section => {
-    const element = document.getElementById(section)
-    if (element) observer.observe(element)
-  })
-
-  // Update scroll handler to use vh
   const handleScroll = () => {
-    const scrollPosition = window.scrollY
-    const viewportHeight = window.innerHeight
-    const fadeStart = viewportHeight * 0.05
-    const fadeEnd = viewportHeight * 0.8
+    const { scrollY, innerHeight } = window
+    const { scrollHeight } = document.documentElement
 
-    if (scrollPosition <= fadeStart) {
-      heroOpacity.value = 1
-    } else if (scrollPosition >= fadeEnd) {
-      heroOpacity.value = 0
-    } else {
-      heroOpacity.value = 1 - ((scrollPosition - fadeStart) / (fadeEnd - fadeStart))
+    // Update nav visibility
+    const aboutSection = document.getElementById('about')
+    if (aboutSection) {
+      shouldHideNav.value = aboutSection.getBoundingClientRect().top - innerHeight < 0
     }
+
+    // Update current section
+    if (scrollY + innerHeight >= scrollHeight - 100) {
+      currentSection.value = 'about'
+    } else if (scrollY < innerHeight / 2) {
+      currentSection.value = 'home'
+    } else {
+      // Find current section
+      const viewportMiddle = scrollY + innerHeight / 2
+      const bufferZone = innerHeight * 0.15
+
+      for (const section of sections.slice(1, -1)) {
+        const element = document.getElementById(section)
+        if (!element) continue
+
+        const { top, bottom } = element.getBoundingClientRect()
+        const absoluteTop = top + scrollY
+        const absoluteBottom = bottom + scrollY
+
+        if (
+          viewportMiddle >= absoluteTop - bufferZone &&
+          viewportMiddle <= absoluteBottom + bufferZone
+        ) {
+          currentSection.value = section
+          break
+        }
+      }
+    }
+
+    // Update hero opacity
+    const fadeStart = innerHeight * 0.05
+    const fadeEnd = innerHeight * 0.8
+    heroOpacity.value = Math.max(0, Math.min(1, 1 - (scrollY - fadeStart) / (fadeEnd - fadeStart)))
   }
 
-  window.addEventListener('scroll', handleScroll)
-  window.addEventListener('resize', handleScroll) // Add resize listener to update on viewport changes
+  // Initial setup and event listeners
+  handleScroll()
+  window.addEventListener('scroll', handleScroll, { passive: true })
+  window.addEventListener('resize', handleScroll)
+
+  // Cleanup
+  onUnmounted(() => {
+    window.removeEventListener('scroll', handleScroll)
+    window.removeEventListener('resize', handleScroll)
+  })
 })
 
 const scrollToSection = (id: string) => {
   if (id === 'home') {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth'
+      behavior: 'smooth',
     })
     return
   }

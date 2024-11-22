@@ -13,7 +13,7 @@
         <h4>Links</h4>
         <a href="https://github.com/frozen0601" target="_blank">GitHub</a>
         <a href="https://www.linkedin.com/in/weichengh/" target="_blank">LinkedIn</a>
-        <a href="mailto:theblinkblinkapp@gmail.com">Contact</a>
+        <a href="mailto:theblinkblinkapp@gmail.com">Contact (Let us know what you think!)</a>
       </div>
 
       <div class="footer-support">
@@ -31,5 +31,5 @@
 </template>
 
 <script setup lang="ts">
-import '@/assets/styles/About.css'
+import '@/assets/styles/Footer.css'
 </script>

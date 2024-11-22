@@ -52,22 +52,22 @@
         </div>
 
         <div class="feature-showcase-item">
-          <div class="description">
+          <div class="description order-even-2">
             <h4>Customizable Schedules</h4>
             <p>
               Tailor breaks to your needs. Set intervals and durations that align with your
               workflow.
             </p>
           </div>
-          <div class="screenshot">
+          <div class="screenshot order-even-1">
             <img src="@/assets/screenshots/schedule_setting.png" alt="Customizable settings" />
           </div>
         </div>
         <div class="feature-showcase-item">
-          <div class="screenshot">
+          <div class="screenshot order-odd-1">
             <img src="@/assets/screenshots/stats_dark.png" alt="Analytics dashboard" />
           </div>
-          <div class="description">
+          <div class="description order-odd-2">
             <h4>Insightful Analytics</h4>
             <p>
               Understand your screen habits with clear visuals. Stay on top of your digital
@@ -76,14 +76,14 @@
           </div>
         </div>
         <div class="feature-showcase-item">
-          <div class="description">
+          <div class="description order-even-2">
             <h4>Seamless Theme Integration</h4>
             <p>
               Automatically adapts to your system's light or dark mode for a consistent and
               comfortable visual experience.
             </p>
           </div>
-          <div class="screenshot">
+          <div class="screenshot order-even-1">
             <img src="@/assets/screenshots/light_dark_show.png" alt="Analytics dashboard" />
           </div>
         </div>
