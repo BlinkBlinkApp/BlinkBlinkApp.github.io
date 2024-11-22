@@ -39,7 +39,7 @@
               class="featured-screenshot"
               :style="{ opacity: getImageOpacity(index) }"
             >
-              <img :src="image.src" :alt="image.alt" />
+              <img :src="image.src" :alt="image.alt" v-fade-in loading="eager" />
             </div>
           </div>
           <div class="description">
@@ -60,12 +60,22 @@
             </p>
           </div>
           <div class="screenshot order-even-1">
-            <img src="@/assets/screenshots/schedule_setting.png" alt="Customizable settings" />
+            <img
+              src="@/assets/screenshots/schedule_setting.png"
+              alt="Customizable settings"
+              v-fade-in
+              loading="lazy"
+            />
           </div>
         </div>
         <div class="feature-showcase-item">
           <div class="screenshot order-odd-1">
-            <img src="@/assets/screenshots/stats_dark.png" alt="Analytics dashboard" />
+            <img
+              src="@/assets/screenshots/stats_dark.png"
+              alt="Analytics dashboard"
+              v-fade-in
+              loading="lazy"
+            />
           </div>
           <div class="description order-odd-2">
             <h4>Insightful Analytics</h4>
@@ -84,7 +94,12 @@
             </p>
           </div>
           <div class="screenshot order-even-1">
-            <img src="@/assets/screenshots/light_dark_show.png" alt="Analytics dashboard" />
+            <img
+              src="@/assets/screenshots/light_dark_show.png"
+              alt="Analytics dashboard"
+              v-fade-in
+              loading="lazy"
+            />
           </div>
         </div>
       </div>

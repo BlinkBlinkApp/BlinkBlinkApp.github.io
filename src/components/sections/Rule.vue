@@ -11,7 +11,7 @@
                 <span class="rule-number">20</span>
                 <span class="unit">min</span>
               </div>
-              <div class="bubble-text bottom">Stay focused, crush your tasks</div>
+              <div class="bubble-text bottom">Stay focused,<br>crush your tasks!</div>
             </div>
             <span class="connector">·</span>
             <div class="number-set">
@@ -19,7 +19,7 @@
                 <span class="rule-number">20</span>
                 <span class="unit">ft</span>
               </div>
-              <div class="bubble-text top">Glance away, reset your eyes</div>
+              <div class="bubble-text top">Glance away, rest your eyes</div>
             </div>
             <span class="connector">·</span>
             <div class="number-set">
@@ -27,7 +27,7 @@
                 <span class="rule-number">20</span>
                 <span class="unit">sec</span>
               </div>
-              <div class="bubble-text bottom">Breathe, blink, and recharge</div>
+              <div class="bubble-text bottom">Breathe,<br>blink,<br>recharge.</div>
             </div>
           </div>
           <span class="post-heading">Rule</span>
@@ -90,9 +90,43 @@ import '@/assets/styles/Rule.css'
 import { onMounted } from 'vue'
 
 onMounted(() => {
-  const numbers = document.querySelectorAll('.number-container')
-  numbers.forEach((number, index) => {
-    ;(number as HTMLElement).style.animationDelay = `${index * 0.3}s`
+  const numberSets = document.querySelectorAll('.number-set')
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      const set = entry.target as HTMLElement
+      const number = set.querySelector('.number-container') as HTMLElement
+      const bubble = set.querySelector('.bubble-text') as HTMLElement
+      const index = Array.from(numberSets).indexOf(set)
+
+      if (entry.isIntersecting) {
+        // Animate number
+        number.style.animation = 'none'
+        number.offsetHeight
+        number.style.animation = 'floatIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards'
+        number.style.animationDelay = `${index * 0.4}s`
+
+        // Animate bubble
+        bubble.style.animation = 'none'
+        bubble.offsetHeight
+        bubble.style.animation = `
+          bubbleFloat 3s ease-in-out infinite,
+          fadeIn 0.5s ease-out forwards
+        `
+        bubble.style.animationDelay = `${index * 0.3}s, ${index * 0.3}s`
+      } else {
+        // Hide both elements
+        number.style.opacity = '0'
+        number.style.animation = 'none'
+        bubble.style.opacity = '0'
+        bubble.style.animation = 'none'
+      }
+    })
+  }, {
+    threshold: 0,
+    rootMargin: '-10% 0px'
   })
+
+  numberSets.forEach(set => observer.observe(set))
 })
 </script>

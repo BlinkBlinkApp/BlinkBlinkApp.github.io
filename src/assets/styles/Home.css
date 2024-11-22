@@ -26,8 +26,8 @@ header {
 }
 
 .brand-name {
-  font-size: 1.75rem;
-  font-weight: 700;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
   line-height: 44px;
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
   -webkit-background-clip: text;
@@ -57,13 +57,13 @@ header {
   position: absolute;
   top: 20%;
   left: 90%;
-  transform: translate(-50%, -50%) rotate(-45deg);
   width: 60%;
   height: 60%;
   z-index: 0;
   opacity: 0.1;
   pointer-events: none;
   max-width: 100vw;
+  will-change: transform;
 }
 
 .hero-background-image img {
@@ -76,7 +76,7 @@ header {
   position: relative;
   z-index: 1;
   justify-self: start;
-  padding-top: 2vh; /* Reduced from 8vh */
+  padding-top: 2vh;
 }
 
 .hero-right {
@@ -87,9 +87,9 @@ header {
 }
 
 .hero-title {
-  font-size: 4.5rem;
-  font-weight: 800;
-  line-height: 1.1;
+  font-size: var(--font-size-7xl);
+  font-weight: var(--font-weight-extrabold);
+  line-height: var(--line-height-tight);
   margin-bottom: 2rem;
   text-align: left;
 }
@@ -98,10 +98,13 @@ header {
   height: 1.5em;
   margin-top: 0.5rem;
   overflow: hidden;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .rotating-text {
-  display: flex;
+  display: inline-flex;
+  flex-wrap: wrap;
   color: var(--primary-color);
   font-weight: 900;
   position: relative;
@@ -144,7 +147,7 @@ header {
 }
 
 .hero-description {
-  font-size: 1.75rem;
+  font-size: var(--font-size-2xl);
   color: var(--text-secondary);
   text-align: right;
   max-width: 500px;
@@ -224,7 +227,7 @@ header {
 }
 
 nav {
-  position: fixed; /* Changed from absolute to fixed */
+  position: fixed;
   bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
@@ -248,7 +251,6 @@ nav {
   opacity: 1;
 }
 
-/* Add styles for when nav is absolutely positioned */
 nav[style*='position: absolute'] {
   transform: translateX(-50%) translateY(200%);
   opacity: 0;
@@ -271,9 +273,9 @@ nav a {
   transition: all 0.3s ease;
   white-space: nowrap;
   position: relative;
-  padding: var(--nav-item-padding); /* Adjusted padding */
-  overflow: hidden; /* Added */
-  border-radius: var(--nav-border-radius); /* Changed from previous box style */
+  padding: var(--nav-item-padding);
+  overflow: hidden;
+  border-radius: var(--nav-border-radius);
 }
 
 nav a::before {
@@ -285,17 +287,16 @@ nav a::before {
   height: 100%;
   background: var(--primary-color);
   opacity: 0;
-  transform: scale(0.9); /* Changed from translateY */
+  transform: scale(0.9);
   transition: inherit;
   z-index: -1;
-  border-radius: inherit; /* Match parent's radius */
+  border-radius: inherit;
 }
 
 nav a.active {
-  color: var(--primary-color); /* Default active state is now colored text */
+  color: var(--primary-color);
 }
 
-/* Special styling for non-home active sections */
 nav a.active:not([href='#home']) {
   color: white;
 }
@@ -305,7 +306,6 @@ nav a.active:not([href='#home'])::before {
   transform: scale(1);
 }
 
-/* Home section active state */
 nav a.active[href='#home'] {
   background: rgba(var(--primary-rgb), 0.1);
 }
@@ -320,7 +320,7 @@ nav a:hover:not(.active) {
 }
 
 nav a::after {
-  display: none; /* Remove the previous underline effect */
+  display: none;
 }
 
 nav a:hover::after {
@@ -336,7 +336,7 @@ nav a:hover::after {
 
   .hero-left {
     justify-self: center;
-    padding-top: 2vh; /* Adjusted to match desktop */
+    padding-top: 2vh;
   }
 
   .hero-right {
@@ -375,7 +375,7 @@ nav a:hover::after {
   }
 
   .hero-title {
-    font-size: clamp(2rem, 6vw, 3.5rem);
+    font-size: var(--font-size-5xl);
     word-wrap: break-word;
   }
 
@@ -385,6 +385,28 @@ nav a:hover::after {
 
   .hero-grid {
     padding: 0 var(--spacing-sm);
+    min-height: 100vh;
+    align-content: center;
+    padding-top: 4rem;
+    padding-bottom: 5rem;
+  }
+
+  .hero-left {
+    justify-self: center;
+    padding-top: 0;
+  }
+
+  .hero-right {
+    align-self: start;
+    margin-top: 1rem;
+  }
+
+  .download-button {
+    margin-top: 2rem;
+  }
+
+  .hero-description {
+    font-size: var(--font-size-xl);
   }
 
   nav {
@@ -396,6 +418,7 @@ nav a:hover::after {
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: none;
     scrollbar-width: none;
+    scroll-behavior: smooth;
   }
 
   nav::-webkit-scrollbar {
@@ -426,7 +449,6 @@ nav a:hover::after {
     flex-shrink: 0;
   }
 
-  /* Hide scrollbar but keep functionality */
   nav::-webkit-scrollbar {
     display: none;
   }
@@ -449,9 +471,12 @@ nav a:hover::after {
     top: 1rem;
     left: 1rem;
   }
+
+  .rotating-text-wrapper {
+    height: 3em; /* Increase height to accommodate two lines */
+  }
 }
 
-/* Add small screen size optimization */
 @media (max-width: 380px) {
   :root {
     --nav-item-padding: 0.25rem 0.5rem;

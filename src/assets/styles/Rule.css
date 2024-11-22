@@ -1,26 +1,24 @@
-/* Base Layout */
 .rule-section {
   min-height: 100vh;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4rem 0 4rem;  /* Increased top padding */
-  overflow: hidden;
+  padding: 4rem 0 4rem;
+  overflow: visible;
 }
 
 .rule-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6rem;  /* Increased gap between title and benefits */
+  gap: 6rem;
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 2rem;
 }
 
-/* Title Section */
 .title-container {
   width: 100%;
   padding: 0 2rem;
@@ -29,39 +27,38 @@
 .title-row {
   display: flex;
   align-items: center;
-  gap: clamp(1.5rem, 3vw, 3rem);  /* Increased gap */
-  margin: 6rem auto;  /* Increased vertical margin */
+  gap: clamp(1.5rem, 3vw, 3rem);
+  margin: 6rem auto;
   justify-content: center;
 }
 
 .number-group {
   display: flex;
   align-items: center;
-  gap: clamp(1rem, 2vw, 2rem);  /* Increased gap */
-  position: relative;  /* Added */
+  gap: clamp(1rem, 2vw, 2rem);
+  position: relative;
+  overflow: visible;
 }
 
-/* Add after .number-group styles */
 .number-set {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow: visible;
 }
 
-/* Numbers and Text */
 .number-container {
   position: relative;
-  animation: floatIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-  opacity: 0;
+  opacity: 0; /* Ensure numbers start hidden */
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 2rem;  /* Added to offset the unit text height */
+  margin-top: 2rem;
 }
 
 .rule-number {
-  font-size: clamp(6rem, 12vw, 14rem);  /* Increased font size */
+  font-size: clamp(6rem, 12vw, 14rem);
   font-weight: 800;
   background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
   -webkit-background-clip: text;
@@ -83,40 +80,40 @@
 
 .pre-heading,
 .post-heading {
-  font-size: clamp(3rem, 6vw, 7rem);  /* Increased font size */
+  font-size: clamp(3rem, 6vw, 7rem);
   color: var(--text-secondary);
   opacity: 0.8;
   font-weight: 600;
 }
 
 .connector {
-  font-size: clamp(4rem, 8vw, 10rem);  /* Increased font size */
+  font-size: clamp(4rem, 8vw, 10rem);
   color: var(--accent-color);
   opacity: 0.6;
-  line-height: 0;  /* Added */
-  margin-top: -1rem;  /* Added to align with numbers */
-  position: relative;  /* Added */
-  z-index: 1;  /* Added */
+  line-height: 0;
+  margin-top: -1rem;
+  position: relative;
+  z-index: 1;
 }
 
-/* Bubble Text */
 .bubble-text {
   position: absolute;
   background: white;
-  padding: clamp(1rem, 2vw, 2rem);  /* Increased padding */
+  padding: clamp(1rem, 2vw, 2rem);
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  font-size: clamp(1rem, 1.8vw, 1.4rem);  /* Increased font size */
+  font-size: var(--font-size-lg);
   color: var(--text-primary);
   animation: bubbleFloat 3s ease-in-out infinite;
   z-index: 1;
   left: 50%;
   transform: translateX(-50%);
-  width: max-content;  /* Changed from auto */
-  min-width: 200px;   /* Added minimum width */
-  max-width: 300px;   /* Maintained max width */
-  text-align: center; /* Center text */
-  white-space: normal; /* Allow text wrapping */
+  width: max-content;
+  min-width: 100px;
+  max-width: 350px;
+  text-align: center;
+  white-space: normal;
+  opacity: 0; /* Start hidden */
 }
 
 .number-set:first-child .bubble-text.bottom {
@@ -130,11 +127,11 @@
 }
 
 .bubble-text.bottom {
-  top: calc(100% + 2rem);  /* Increased spacing */
+  top: calc(100% + 2rem);
 }
 
 .bubble-text.top {
-  bottom: calc(100% + 2rem);  /* Increased spacing */
+  bottom: calc(100%);
 }
 
 .bubble-text::before {
@@ -155,7 +152,6 @@
   bottom: -7px;
 }
 
-/* Benefits Section */
 .benefits-wrapper {
   background: linear-gradient(165deg, #ffffff, #f8f9fa);
   border-radius: 32px;
@@ -190,11 +186,12 @@
 }
 
 .benefit-card {
-  background: white;
   padding: 2rem;
   border-radius: 24px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .benefit-card:hover {
@@ -206,6 +203,7 @@
   color: var(--primary-color);
   font-size: 1.4rem;
   margin-bottom: 1rem;
+  text-align: center;
 }
 
 .benefit-card p {
@@ -224,6 +222,7 @@
   color: white;
   font-size: 1.6rem;
   margin-bottom: 1.5rem;
+  text-align: center;
 }
 
 .key-benefits ul {
@@ -247,10 +246,14 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
-/* Animations */
 @keyframes bubbleFloat {
-  0%, 100% { transform: translate(-50%, 0); }
-  50% { transform: translate(-50%, -10px); }
+  0%,
+  100% {
+    transform: translate(-50%, 0);
+  }
+  50% {
+    transform: translate(-50%, -10px);
+  }
 }
 
 @keyframes floatIn {
@@ -264,33 +267,42 @@
   }
 }
 
-/* Media Queries */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) translateX(-50%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateX(-50%);
+  }
+}
+
 @media (max-width: 1024px) {
   .number-group {
     flex-direction: column;
-    gap: 4rem;  /* Increased gap for better spacing */
+    gap: 4rem;
     width: 100%;
     align-items: center;
   }
-  
+
   .connector {
     transform: rotate(90deg);
-    margin: -1rem 0;  /* Adjust vertical spacing */
+    margin: -1rem 0;
     font-size: clamp(3rem, 6vw, 5rem);
   }
 
   .number-container {
     margin-top: 0;
     width: 100%;
-    max-width: 300px;  /* Limit width on tablets */
+    max-width: 300px;
   }
 
   .bubble-text {
     position: relative;
-    transform: none;
-    left: 0;
-    width: 100%;
-    max-width: 100%;
+    transform: none !important;
+    left: 0 !important;
+    opacity: 0;
     margin: 1rem 0;
   }
 
@@ -302,7 +314,7 @@
   }
 
   .bubble-text::before {
-    display: none;  /* Hide arrows on tablet */
+    display: none;
   }
 
   .number-set {
@@ -310,14 +322,15 @@
     margin: 1rem 0;
   }
 
-  .bubble-text {
-    position: relative;
-    transform: none !important; /* Override desktop transforms */
-    left: 0 !important;
-    width: 100%;
-    max-width: 100%;
-    margin: 1rem 0;
-    white-space: normal;
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
 
@@ -339,7 +352,7 @@
 @media (max-width: 600px) {
   .rule-section {
     min-height: auto;
-    padding: 3rem 0.75rem 2rem;  /* Adjusted padding for mobile */
+    padding: 3rem 0.75rem 2rem;
   }
 
   .title-row {
@@ -364,11 +377,11 @@
   }
 
   .number-container {
-    max-width: 250px;  /* Smaller width on mobile */
+    max-width: 250px;
   }
 
   .rule-number {
-    font-size: clamp(4rem, 15vw, 8rem);  /* Adjusted font size */
+    font-size: clamp(4rem, 15vw, 8rem);
   }
 
   .pre-heading,
@@ -377,35 +390,16 @@
   }
 
   .bubble-text {
-    font-size: 1rem;
-    padding: 1rem;
-    text-align: center;
-    background: var(--bg-secondary);  /* Softer background on mobile */
-    border-radius: 12px;
-  }
-
-  .bubble-text {
-    position: relative;
-    transform: none;
-    left: auto;
-    top: auto;
-    margin: 1rem 0;
-    width: 100%;
-  }
-
-  .bubble-text::before {
-    display: none;
+    border-radius: 20px;
+    padding: clamp(1rem, 2vw, 2rem);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    max-width: 280px;
+    margin: 1.5rem auto;
   }
 
   .bubble-text.top,
   .bubble-text.bottom {
-    position: relative;
-    transform: none;
-    left: auto;
-    top: auto;
-    bottom: auto;
-    margin: 1rem 0;
-    width: 100%;
+    margin: 1.5rem auto;
   }
 
   .benefits-wrapper {
@@ -436,16 +430,20 @@
     margin: 2rem auto;
   }
 
-  /* Optimize animations for mobile */
   @keyframes bubbleFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }  /* Reduced movement */
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
   }
 
   @keyframes floatIn {
     from {
       opacity: 0;
-      transform: translateY(15px) scale(0.9);  /* Reduced movement */
+      transform: translateY(15px) scale(0.9);
     }
     to {
       opacity: 1;

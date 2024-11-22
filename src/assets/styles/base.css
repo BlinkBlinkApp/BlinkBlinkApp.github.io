@@ -8,7 +8,31 @@
   --background-alt: #f8fafc;
   --text-primary: #1a1f36;
   --text-secondary: #4f566b;
-  --background-body: #f8fafc; /* Add this new variable */
+  --background-body: #f8fafc;
+
+  /* Typography */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  --font-size-xs: 0.75rem; /* 12px */
+  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-base: 1rem; /* 16px */
+  --font-size-lg: 1.125rem; /* 18px */
+  --font-size-xl: 1.25rem; /* 20px */
+  --font-size-2xl: 1.5rem; /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+  --font-size-4xl: 2.25rem; /* 36px */
+  --font-size-5xl: 3rem; /* 48px */
+  --font-size-6xl: 3.75rem; /* 60px */
+  --font-size-7xl: 4.5rem; /* 72px */
+
+  --line-height-tight: 1.1;
+  --line-height-snug: 1.3;
+  --line-height-normal: 1.6;
+  --line-height-relaxed: 1.8;
 
   /* Animation */
   --transition-fast: 0.2s ease;
@@ -66,15 +90,17 @@ body {
   min-height: 100vh;
   max-width: 100vw;
   overflow-x: clip;
+  z-index: 1;
 }
 
-/* Move all common section and container styles here */
 .section {
   width: 100%;
   padding: var(--spacing-lg) 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
+  z-index: 2;
 }
 
 .container {
@@ -83,6 +109,8 @@ body {
   margin: 0 auto;
   padding: 0 var(--spacing-md);
   box-sizing: border-box;
+  position: relative;
+  z-index: 2;
 }
 
 .button {
@@ -132,6 +160,160 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+/* Background shapes */
+.background-shapes {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+  z-index: 0;
+}
+
+.shape-primary {
+  background: var(--primary-color);
+  width: 300px;
+  height: 300px;
+  top: -100px;
+  left: -100px;
+}
+
+.shape-accent {
+  background: var(--accent-color);
+  width: 400px;
+  height: 400px;
+  bottom: -150px;
+  right: -150px;
+}
+
+.shape-secondary {
+  background: var(--secondary-color);
+  width: 250px;
+  height: 250px;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Dynamic background shapes */
+.floating-shapes {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.floating-shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.15;
+  will-change: transform;
+  mix-blend-mode: plus-lighter;
+  animation: moveAround var(--duration, 45s) cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes moveAround {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(var(--move-x), var(--move-y)) scale(1.1);
+  }
+  66% {
+    transform: translate(calc(var(--move-x) * -0.5), calc(var(--move-y) * -0.5)) scale(0.9);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+/* Image loading animations */
+.img-lazy {
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+  will-change: opacity;
+}
+
+.img-loaded {
+  opacity: 1 !important;
+}
+
+.img-placeholder {
+  position: relative;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.img-placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: translateX(-100%);
+  will-change: transform;
+}
+
+@keyframes loading-pulse {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Header brand specific */
+.header-brand {
+  opacity: 1 !important;
+}
+
+.header-brand img {
+  opacity: 1;
+}
+
+/* Hero background specific */
+.hero-background-image {
+  position: relative;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.hero-background-image::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: translateX(-100%);
+  animation: shimmer 1.5s infinite;
+  will-change: transform;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 /* Responsive breakpoints */
 @media (max-width: 1024px) {
   :root {
@@ -159,4 +341,10 @@ body {
     --spacing-md: 0.75rem;
     --spacing-sm: 0.5rem;
   }
+}
+
+header,
+nav {
+  position: relative;
+  z-index: 2;
 }

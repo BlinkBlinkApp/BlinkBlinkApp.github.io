@@ -1,11 +1,9 @@
-/* Section layout */
 .download-section {
   position: relative;
   overflow: hidden;
   padding: var(--spacing-xs) var(--spacing-lg);
 }
 
-/* Main wrapper */
 .download-wrapper {
   background: linear-gradient(165deg, var(--accent-color) 0%, var(--primary-color) 100%);
   box-shadow:
@@ -33,9 +31,9 @@
   pointer-events: none;
 }
 
-/* Typography */
 .download-section h2 {
-  font-size: 3.5rem;
+  font-size: var(--font-size-6xl);
+  font-weight: var(--font-weight-bold);
   margin-bottom: 1rem;
   background: transparent;
   -webkit-background-clip: unset;
@@ -44,13 +42,12 @@
 }
 
 .download-section .subtitle {
-  font-size: 1.3rem;
+  font-size: var(--font-size-xl);
   color: rgba(255, 255, 255, 0.9);
   margin-bottom: 3rem;
   text-align: center;
 }
 
-/* Features ticker */
 .features-ticker {
   width: 100%;
   overflow: hidden;
@@ -100,7 +97,6 @@
   width: max-content;
 }
 
-/* Feature cards */
 .feature {
   flex: 0 0 250px;
   padding: 1.5rem;
@@ -132,20 +128,20 @@
 }
 
 .feature h3 {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-lg);
   color: rgba(255, 255, 255, 0.95);
-  font-weight: 600;
-  font-size: 1.1rem;
   margin-bottom: 0.4rem;
 }
 
 .feature p {
+  font-size: var(--font-size-base);
   color: rgba(255, 255, 255, 0.8);
   font-size: 0.9rem;
   margin-bottom: 0;
   opacity: 0.8;
 }
 
-/* Download buttons */
 .actions {
   display: flex;
   flex-wrap: wrap;
@@ -169,7 +165,7 @@
 }
 
 .coming-soon-label {
-  font-size: 0.85rem;
+  font-size: var(--font-size-xs);
   color: rgba(255, 255, 255, 0.6);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -208,7 +204,6 @@
   box-shadow: none;
 }
 
-/* Version info */
 .version-info {
   margin: 3rem auto 0;
   padding: 1rem 2rem;
@@ -239,7 +234,6 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
-/* Animations */
 @keyframes tickerScroll {
   from {
     transform: translateX(0);
@@ -249,7 +243,6 @@
   }
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .download-section {
     padding: 2rem 0.75rem;
@@ -288,7 +281,7 @@
   }
 
   .download-section h2 {
-    font-size: 2.5rem;
+    font-size: var(--font-size-4xl);
   }
 
   .actions {

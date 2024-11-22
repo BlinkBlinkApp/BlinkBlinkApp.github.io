@@ -4,4 +4,27 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 
-createApp(App).use(router).mount('#app')
+const app = createApp(App)
+
+app.directive('fade-in', {
+  mounted(el) {
+    el.classList.add('img-lazy')
+
+    const loadImage = () => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          el.classList.add('img-loaded')
+        })
+      })
+      el.removeEventListener('load', loadImage)
+    }
+
+    if (el.complete) {
+      loadImage()
+    } else {
+      el.addEventListener('load', loadImage)
+    }
+  }
+})
+
+app.use(router).mount('#app')
