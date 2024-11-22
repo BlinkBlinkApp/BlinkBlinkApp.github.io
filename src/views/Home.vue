@@ -36,8 +36,7 @@
             </div>
           </h1>
           <a href="#download" class="button secondary download-button">
-            Download Now
-            <ArrowIcon class="download-arrow" />
+            Download Now ➤
           </a>
         </div>
         <div class="hero-right">
@@ -77,7 +76,6 @@ import About from '@/components/sections/About.vue'
 import Features from '@/components/sections/Features.vue'
 import Rule from '@/components/sections/Rule.vue'
 import Download from '@/components/sections/Download.vue'
-import ArrowIcon from '@/components/icons/Arrow.vue'
 
 const BASE_DURATION = 600 // 0.6s in ms
 const CHAR_DELAY = 40 // 0.04s in ms

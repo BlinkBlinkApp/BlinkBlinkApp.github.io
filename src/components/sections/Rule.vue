@@ -5,21 +5,28 @@
         <div class="title-row">
           <span class="pre-heading">The</span>
           <div class="number-group">
-            <div class="number-container">
-              <span class="rule-number">20</span>
-              <span class="unit">min</span>
+            <!-- Wrap each number set in a container -->
+            <div class="number-set">
+              <div class="number-container">
+                <span class="rule-number">20</span>
+                <span class="unit">min</span>
+              </div>
               <div class="bubble-text bottom">Stay focused, crush your tasks</div>
             </div>
             <span class="connector">·</span>
-            <div class="number-container">
-              <span class="rule-number">20</span>
-              <span class="unit">ft</span>
+            <div class="number-set">
+              <div class="number-container">
+                <span class="rule-number">20</span>
+                <span class="unit">ft</span>
+              </div>
               <div class="bubble-text top">Glance away, reset your eyes</div>
             </div>
             <span class="connector">·</span>
-            <div class="number-container">
-              <span class="rule-number">20</span>
-              <span class="unit">sec</span>
+            <div class="number-set">
+              <div class="number-container">
+                <span class="rule-number">20</span>
+                <span class="unit">sec</span>
+              </div>
               <div class="bubble-text bottom">Breathe, blink, and recharge</div>
             </div>
           </div>
