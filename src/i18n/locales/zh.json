@@ -29,7 +29,7 @@
     },
     "why_matters": {
       "title": "為何重要？",
-      "intro": "這個簡單又易於記憶的法則，最初由眼科專家Dr. Anshel於1991年提出。這一法則不僅能有效減緩長時間使用螢幕所帶來的眼睛疲勞，更是一個幫助您養成健康螢幕使用���慣的關鍵方法。無論是在工作、學習還是娛樂時，長時間盯著螢幕會對眼睛造成極大壓力，導致疲勞、乾澀甚至視力模糊。然而，運用這個簡單的法則，您可以輕鬆減少這些不適，保持眼睛清爽，並提高專注力。",
+      "intro": "這個簡單又易於記憶的法則，最初由眼科專家Dr. Anshel於1991年提出。這一法則不僅能有效減緩長時間使用螢幕所帶來的眼睛疲勞，更是一個幫助您養成健康螢幕使用習慣的好方法。無論是在工作、學習還是娛樂時，長時間盯著螢幕會對眼睛造成極大壓力，導致疲勞、乾澀甚至視力模糊。然而，運用這個簡單的法則，您可以輕鬆減少這些不適，保持眼睛清爽，並提高專注力。",
       "every_20_min": {
         "title": "每20分鐘",
         "desc": "定期休息有助於預防眼睛疲勞，維持全天專注力。把它想作視覺系統的小型重置。"
@@ -58,7 +58,7 @@
   "features": {
     "overline": "功能特色",
     "title": "守護你的視力",
-    "description": "長時間的螢幕使用難以避免。然而，這不代表眼睛就得為此受苦。BlinkBlink幫助你在持續保持專注同時維持健康的螢幕使用習慣。",
+    "description": "長時間的螢幕使用在所難免。然而，這不代表眼睛就得為此受苦。BlinkBlink幫助你在持續保持專注同時維持健康的螢幕使用習慣。",
     "highlights": {
       "rule": {
         "number": "20-20-20",
@@ -145,23 +145,39 @@
     }
   },
   "tutorial": {
-    "title": "在{platform}上安裝BlinkBlink",
-    "step1": {
-      "macos": {
-        "title": "步驟 1：拖放安裝"
+    "common": {
+      "title": "在{platform}上安裝BlinkBlink",
+      "footer": {
+        "need_help": "需要協助？請聯繫支援"
       },
-      "windows": {
-        "title": "步驟 1：啟動安裝程式",
-        "description": "下載BlinkBlink安裝程式後，在下載資料夾中找到 BlinkBlink-Setup.{version}.exe 檔案並雙擊開始安裝。"
+      "buttons": {
+        "copy": "複製",
+        "copied": "已複製！"
+      },
+      "links": {
+        "email": "theblinkblinkapp@gmail.com"
       }
     },
-    "step2": {
-      "macos": {
-        "title": "步驟 2：移除安全限制",
+    "mac": {
+      "step1": {
+        "title": "拖放安裝"
+      },
+      "step2": {
+        "title": "移除安全限制",
         "why_needed": "為什麼需要這樣做？",
         "explanation": {
           "title": "🧠 為什麼需要這樣做？",
-          "text": "否則，你會看到這個提示。Apple對應用程式有嚴格的安全措施，這對安全性來說很好，但對小型開發者來說是個挑戰。繞過這些警告的基本要求是支付Apple每年99美元的費用。由於目前我還沒有這樣的資源，安裝應用程式可能需要你多走一步。😞 但別擔心，這絕對值得！"
+          "content": "否則，你會看到{discussion}。Apple對應用程式有嚴格的安全措施，這對安全性來說很好，但對小型開發者來說是個挑戰。繞過這些警告的基本要求是支付Apple{membership}。由於目前我還沒有這樣的資源，安裝BlinkBlink需要您多些步驟。😞 但別擔心，這絕對值得！如果你有任何疑慮，歡迎透過{email}聯繫我。你也可以在{security}了解更多有關Apple的安全措施。",
+          "links": {
+            "discussion": "https://discussions.apple.com/thread/253714860?sortBy=rank",
+            "membership": "https://developer.apple.com/support/compare-memberships/",
+            "security": "https://support.apple.com/guide/security/protecting-against-malware-sec469d47bd8/web"
+          },
+          "link_texts": {
+            "discussion": "這個提示",
+            "membership": "每年99美元的費用",
+            "security": "這裡"
+          }
         },
         "instructions": {
           "step1": "開啟終端機（按⌘+空白鍵並輸入「終端機」）",
@@ -169,13 +185,25 @@
           "step3": "按下返回鍵 (⏎) 執行指令",
           "step4": "開啟BlinkBlink即可使用！🎉"
         }
+      }
+    },
+    "windows": {
+      "step1": {
+        "title": "啟動安裝程式",
+        "description": "下載BlinkBlink安裝程式後，在下載資料夾中找到 BlinkBlink-Setup.{version}.exe 檔案並雙擊開始安裝。"
       },
-      "windows": {
-        "title": "步驟 2：處理安全性警告",
+      "step2": {
+        "title": "處理安全性警告",
         "why_needed": "為什麼會看到這個？",
         "explanation": {
           "title": "🛡️ 為什麼會看到這個？",
-          "text": "BlinkBlink是完全安全的。但因為它沒有數位簽章認證（對小型獨立開發者來說成本較高），Windows會額外提醒以策安全。"
+          "content": "BlinkBlink是完全安全的。但因為它沒有數位簽章認證（這將產生每年上百美金的費用，對小型獨立開發者來說成本較高），Windows會額外提醒以策安全。想了解更多關於Microsoft Defender SmartScreen的運作方式，請參考{smartscreen}",
+          "links": {
+            "smartscreen": "https://learn.microsoft.com/en-us/windows/security/operating-system-security/virus-and-threat-protection/microsoft-defender-smartscreen/"
+          },
+          "link_texts": {
+            "smartscreen": "官方指南。"
+          }
         },
         "instructions": {
           "step1": "在「Windows已保護您的電腦」畫面中，點擊「更多資訊」。",
@@ -183,13 +211,6 @@
           "step3": "依照安裝程式的提示完成安裝。"
         }
       }
-    },
-    "footer": {
-      "need_help": "需要協助？請聯繫支援"
-    },
-    "buttons": {
-      "copy": "複製",
-      "copied": "已複製！"
     }
   }
 }

@@ -145,23 +145,39 @@
     }
   },
   "tutorial": {
-    "title": "Installing BlinkBlink on {platform}",
-    "step1": {
-      "macos": {
-        "title": "Step 1: Drag & Drop"
+    "common": {
+      "title": "Installing BlinkBlink on {platform}",
+      "footer": {
+        "need_help": "Need help? Contact support at"
       },
-      "windows": {
-        "title": "Step 1: Launch the Installer",
-        "description": "After downloading the BlinkBlink installer, locate the BlinkBlink-Setup.{version}.exe file in your downloads folder and double-click it to start the installation process."
+      "buttons": {
+        "copy": "Copy",
+        "copied": "Copied!"
+      },
+      "links": {
+        "email": "theblinkblinkapp@gmail.com"
       }
     },
-    "step2": {
-      "macos": {
-        "title": "Step 2: Remove Security Restrictions",
+    "mac": {
+      "step1": {
+        "title": "Drag & Drop"
+      },
+      "step2": {
+        "title": "Remove Security Restrictions",
         "why_needed": "Why is this needed?",
         "explanation": {
           "title": "🧠 Why is this needed?",
-          "text": "Otherwise, you will be seeing this. Apple has strict security measures for apps, which is great for safety but can be a challenge for smaller developers. The baseline requirement for bypassing these warnings is paying Apple's $99 annual fee. Since I don't have the resources for that yet, installing the app might take you an extra step. 😞 But don't worry, it's totally worth it!"
+          "content": "Otherwise, you will be seeing {discussion}. Apple has strict security measures for apps, which is great for safety but can be a challenge for smaller developers. The baseline requirement for bypassing these warnings is paying Apple's {membership}. Since I don't have the resources for that yet, installing the app might take you an extra step. 😞 But don't worry, it's totally worth it! If you have further questions, feel free to reach out to {email}. You can learn more about Apple's security measures {security}",
+          "links": {
+            "discussion": "https://discussions.apple.com/thread/253714860?sortBy=rank",
+            "membership": "https://developer.apple.com/support/compare-memberships/",
+            "security": "https://support.apple.com/guide/security/protecting-against-malware-sec469d47bd8/web"
+          },
+          "link_texts": {
+            "discussion": "this",
+            "membership": "$99 annual fee",
+            "security": "here"
+          }
         },
         "instructions": {
           "step1": "Open Terminal (press ⌘+Space and type \"Terminal\")",
@@ -169,13 +185,25 @@
           "step3": "hit Return (⏎) to run the command",
           "step4": "Open BlinkBlink and enjoy! 🎉"
         }
+      }
+    },
+    "windows": {
+      "step1": {
+        "title": "Launch the Installer",
+        "description": "After downloading the BlinkBlink installer, locate the BlinkBlink-Setup.{version}.exe file in your downloads folder and double-click it to start the installation process."
       },
-      "windows": {
-        "title": "Step 2: Handle the Security Warning",
+      "step2": {
+        "title": "Handle the Security Warning",
         "why_needed": "Why am I seeing this?",
         "explanation": {
           "title": "🛡️ Why am I seeing this?",
-          "text": "BlinkBlink is completely safe to use. However, because it's not digitally signed with a code signing certificate—a costly process for small indie developers—Windows flags it as an extra precaution."
+          "content": "BlinkBlink is completely safe to use. However, because it's not digitally signed with a code signing certificate—a costly process for small indie developers—Windows flags it as an extra precaution. To learn more about Microsoft Defender SmartScreen and how it works, visit {smartscreen}",
+          "links": {
+            "smartscreen": "https://learn.microsoft.com/en-us/windows/security/operating-system-security/virus-and-threat-protection/microsoft-defender-smartscreen/"
+          },
+          "link_texts": {
+            "smartscreen": "this official guide"
+          }
         },
         "instructions": {
           "step1": "On the \"Windows protected your PC\" screen, click \"More info\".",
@@ -183,13 +211,6 @@
           "step3": "Follow the prompts in the installer to complete the installation."
         }
       }
-    },
-    "footer": {
-      "need_help": "Need help? Contact support at"
-    },
-    "buttons": {
-      "copy": "Copy",
-      "copied": "Copied!"
     }
   }
 }
