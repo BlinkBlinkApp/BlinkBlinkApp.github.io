@@ -15,12 +15,13 @@
       <template v-if="platform === 'macos'">
         <div class="step compact">
           <h2><i class="fa-solid fa-folder-open"></i> Step 1: Drag & Drop</h2>
-          <div class="step-content"></div>
-          <div class="step-image">
-            <img
-              src="@/assets/screenshots/install_guide_mac_step_1.png"
-              alt="Drag to Applications"
-            />
+          <div class="step-body">
+            <div class="step-image">
+              <img
+                src="@/assets/screenshots/install_guide_mac_step_1.png"
+                alt="Drag to Applications"
+              />
+            </div>
           </div>
         </div>
 
@@ -32,7 +33,7 @@
             </h2>
             <button class="help-icon" title="Why is this needed?">?</button>
             <div class="explanation-box">
-              <strong>🧠 Why is this needed?</strong>
+              <span class="emphasis">🧠 Why is this needed?</span>
               <br /><br />
               Otherwise, you will be seeing
               <a href="https://discussions.apple.com/thread/253714860?sortBy=rank" target="_blank"
@@ -78,7 +79,62 @@
       </template>
 
       <template v-else>
-        <!-- ...Windows steps... -->
+        <div class="step compact">
+          <h2><i class="fa-solid fa-folder-open"></i> Step 1: Launch the Installer</h2>
+          <div class="step-body">
+            <div class="step-content">
+              <p>
+                After downloading the BlinkBlink installer, locate the
+                <code>BlinkBlink-Setup.{version}.exe</code> file in your downloads folder and
+                double-click it to start the installation process.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="heading-group">
+            <h2>
+              <i class="fa-solid fa-shield"></i>
+              Step 2: Handle the Security Warning
+            </h2>
+            <button class="help-icon" title="Why is this needed?">?</button>
+            <div class="explanation-box">
+              <span class="emphasis">🛡️ Why am I seeing this?</span>
+              <br /><br />
+              BlinkBlink is completely safe to use. However, because it’s not digitally signed with
+              a code signing certificate—a costly process for small indie developers—Windows flags
+              it as an extra precaution.
+              <br /><br />
+              To learn more about Microsoft Defender SmartScreen and how it works, visit
+              <a
+                href="https://learn.microsoft.com/en-us/windows/security/operating-system-security/virus-and-threat-protection/microsoft-defender-smartscreen/"
+                target="_blank"
+                >this official guide</a
+              >.
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="step-content">
+              <div class="step-instructions">
+                <p data-step="1.">On the "Windows protected your PC" screen, click "More info".</p>
+                <p data-step="2.">
+                  After clicking "More info," a "Run anyway" button will appear. Click it to
+                  continue.
+                </p>
+                <p data-step="3.">
+                  Follow the prompts in the installer to complete the installation.
+                </p>
+              </div>
+            </div>
+            <div class="step-image">
+              <img
+                src="@/assets/screenshots/install_guide_windows_step_2.png"
+                alt="Windows security warning screen"
+              />
+            </div>
+          </div>
+        </div>
       </template>
     </div>
 
