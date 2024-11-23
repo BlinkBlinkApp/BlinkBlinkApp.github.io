@@ -51,6 +51,8 @@ header {
   box-sizing: border-box;
   padding: 0 var(--spacing-md);
   transition: opacity 0.3s ease;
+  will-change: opacity;
+  transform: translateZ(0);
 }
 
 .hero-background-image {
@@ -64,6 +66,7 @@ header {
   pointer-events: none;
   max-width: 100vw;
   will-change: transform;
+  transform: translate3d(-50%, -50%, 0) rotate(-45deg); /* Force GPU acceleration */
 }
 
 .hero-background-image img {
@@ -115,6 +118,8 @@ header {
   transform: translateY(120%);
   animation: rollIn calc(var(--base-duration)) cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: calc(var(--char-index) * var(--char-delay));
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 .rotating-text.animate-out .char {
@@ -185,39 +190,6 @@ header {
   transform: translateX(4px);
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slideUpFade {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 :root {
   --nav-transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   --nav-bg: rgba(255, 255, 255, 0.7);
@@ -240,15 +212,18 @@ nav {
   justify-content: center;
   gap: 2rem;
   z-index: 100;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   transition:
     transform var(--nav-transition),
     opacity var(--nav-transition);
   max-width: 90%;
   width: max-content;
   transform-origin: bottom center;
-  transform: translateX(-50%) translateY(0);
+  transform: translate3d(-50%, 0, 0);
   opacity: 1;
+  will-change: transform;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 nav[style*='position: absolute'] {
@@ -325,6 +300,10 @@ nav a::after {
 
 nav a:hover::after {
   width: 100%;
+}
+
+nav::-webkit-scrollbar {
+  display: none;
 }
 
 @media (max-width: 1024px) {
@@ -416,13 +395,6 @@ nav a:hover::after {
     max-width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    scroll-behavior: smooth;
-  }
-
-  nav::-webkit-scrollbar {
-    display: none;
   }
 
   nav[style*='position: absolute'] {
@@ -436,44 +408,17 @@ nav a:hover::after {
   }
 
   .nav-content {
-    gap: 0.5rem;
+    gap: 1rem;
     width: 100%;
     justify-content: space-between;
     padding: 0 0.5rem;
   }
 
   nav a {
-    padding: var(--nav-item-padding);
-    font-size: 0.85rem;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  nav::-webkit-scrollbar {
-    display: none;
-  }
-
-  nav {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  .nav-content {
-    gap: 1rem;
-  }
-
-  nav a {
     padding: 0.35rem 0.75rem;
     font-size: 0.9rem;
-  }
-
-  .header-brand {
-    top: 1rem;
-    left: 1rem;
-  }
-
-  .rotating-text-wrapper {
-    height: 3em; /* Increase height to accommodate two lines */
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 }
 
@@ -490,4 +435,25 @@ nav a:hover::after {
   .nav-content {
     gap: 0.25rem;
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rotating-text .char {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+
+  .download-button:hover {
+    transform: none;
+  }
+
+  nav {
+    transition: none;
+  }
+}
+
+.main-content > * {
+  content-visibility: auto;
+  contain-intrinsic-size: 700px;
 }

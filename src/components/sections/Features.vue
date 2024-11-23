@@ -20,7 +20,9 @@
               <span class="highlight-label">{{ t('features.highlights.rule.label') }}</span>
             </div>
             <div class="highlight-item">
-              <span class="highlight-number">{{ t('features.highlights.customizable.number') }}</span>
+              <span class="highlight-number">{{
+                t('features.highlights.customizable.number')
+              }}</span>
               <span class="highlight-label">{{ t('features.highlights.customizable.label') }}</span>
             </div>
           </div>
@@ -36,7 +38,15 @@
               class="featured-screenshot"
               :style="{ opacity: getImageOpacity(index) }"
             >
-              <img :src="image.src" :alt="image.alt" v-fade-in loading="eager" />
+              <img
+                :src="image.src"
+                :alt="image.alt"
+                v-fade-in
+                :fetchpriority="index === 0 ? 'high' : 'low'"
+                :loading="index === 0 ? 'eager' : 'lazy'"
+                width="800"
+                height="600"
+              />
             </div>
           </div>
           <div class="description">
@@ -56,7 +66,7 @@
           </div>
           <div class="screenshot order-even-1">
             <img
-              src="@/assets/screenshots/schedule_setting.png"
+              src="@/assets/screenshots/schedule_setting.webp"
               alt="Customizable settings"
               v-fade-in
               loading="lazy"
@@ -66,7 +76,7 @@
         <div class="feature-showcase-item">
           <div class="screenshot order-odd-1">
             <img
-              src="@/assets/screenshots/stats_dark.png"
+              src="@/assets/screenshots/stats_dark.webp"
               alt="Analytics dashboard"
               v-fade-in
               loading="lazy"
@@ -88,7 +98,7 @@
           </div>
           <div class="screenshot order-even-1">
             <img
-              src="@/assets/screenshots/light_dark_show.png"
+              src="@/assets/screenshots/light_dark_show.webp"
               alt="Analytics dashboard"
               v-fade-in
               loading="lazy"
@@ -104,9 +114,9 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import '@/assets/styles/Features.css'
-import workDemo from '@/assets/screenshots/work_demo.png'
-import breakOverlay from '@/assets/screenshots/break_overlay.png'
-import summaryOverlay from '@/assets/screenshots/summary_overlay.png'
+import workDemo from '@/assets/screenshots/work_demo.webp'
+import breakOverlay from '@/assets/screenshots/break_overlay.webp'
+import summaryOverlay from '@/assets/screenshots/summary_overlay.webp'
 
 interface FeaturedImage {
   src: string

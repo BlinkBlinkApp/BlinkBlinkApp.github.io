@@ -18,7 +18,7 @@
           <div class="step-body">
             <div class="step-image">
               <img
-                src="@/assets/screenshots/install_guide_mac_step_1.png"
+                src="@/assets/screenshots/install_guide_mac_step_1.webp"
                 alt="Drag to Applications Folder"
               />
             </div>
@@ -74,7 +74,7 @@
               </div>
             </div>
             <div class="step-image">
-              <img src="@/assets/screenshots/install_guide_mac_step_2.png" alt="Terminal command" />
+              <img src="@/assets/screenshots/install_guide_mac_step_2.webp" alt="Terminal command" />
             </div>
           </div>
         </div>
@@ -119,7 +119,7 @@
             </div>
             <div class="step-image">
               <img
-                src="@/assets/screenshots/install_guide_windows_step_2.png"
+                src="@/assets/screenshots/install_guide_windows_step_2.webp"
                 alt="Windows security warning screen"
               />
             </div>

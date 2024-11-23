@@ -1,16 +1,29 @@
 <template>
   <div class="page-wrapper">
-    <div class="floating-shapes" ref="shapesContainer"></div>
-
     <header id="home">
       <div class="header-brand">
-        <img src="@/assets/icon.png" alt="BlinkBlink Logo" class="logo" loading="eager" />
+        <img
+          src="@/assets/icon.webp"
+          alt="BlinkBlink Logo"
+          class="logo"
+          fetchpriority="high"
+          width="32"
+          height="32"
+        />
         <h2 class="brand-name">BlinkBlink</h2>
       </div>
 
       <div class="hero-grid" :style="{ opacity: heroOpacity }">
         <div class="hero-background-image img-placeholder" ref="backgroundRef">
-          <img src="@/assets/background.png" alt="" v-fade-in loading="lazy" />
+          <img
+            src="@/assets/background.webp"
+            alt=""
+            v-fade-in
+            loading="lazy"
+            width="800"
+            height="600"
+            decoding="async"
+          />
         </div>
         <div class="hero-left">
           <h1 class="hero-title">
@@ -96,12 +109,14 @@ const toggleLanguage = () => {
   currentLanguage.value = newLocale
   localStorage.setItem('user-locale', newLocale)
   // Update rotating words after language change
-  words.splice(0, words.length,
+  words.splice(
+    0,
+    words.length,
     t('hero.words.strain'),
     t('hero.words.dryness'),
     t('hero.words.fatigue'),
     t('hero.words.discomfort'),
-    t('hero.words.burnout')
+    t('hero.words.burnout'),
   )
   currentWord.value = words[currentIndex]
 }
@@ -113,7 +128,7 @@ const words = [
   t('hero.words.dryness'),
   t('hero.words.fatigue'),
   t('hero.words.discomfort'),
-  t('hero.words.burnout')
+  t('hero.words.burnout'),
 ]
 const currentWord = ref(words[0])
 const animate = ref(true)
@@ -124,6 +139,7 @@ const currentSection = ref('home')
 const heroOpacity = ref(1)
 const shouldHideNav = ref(false)
 const backgroundRef = ref<HTMLElement | null>(null)
+let lastScrollY = 0 // Add this line to declare lastScrollY
 
 // Helper function to format section names
 const formatSectionName = (section: string) => {
@@ -149,6 +165,51 @@ const scrollActiveNavItemIntoView = () => {
   })
 }
 
+// Debounce scroll handler
+const debounce = (fn: Function, ms = 16) => {
+  let timeoutId: ReturnType<typeof setTimeout>
+  return function (this: any, ...args: any[]) {
+    clearTimeout(timeoutId)
+    timeoutId = setTimeout(() => fn.apply(this, args), ms)
+  }
+}
+
+let ticking = false
+const handleScroll = () => {
+  if (!ticking) {
+    ticking = true
+    requestAnimationFrame(() => {
+      const { scrollY } = window
+
+      // Calculate nav visibility less frequently
+      if (Math.abs(lastScrollY - scrollY) > 100) {
+        const aboutSection = document.getElementById('about')
+        if (aboutSection) {
+          shouldHideNav.value = aboutSection.getBoundingClientRect().top - window.innerHeight < 0
+        }
+        lastScrollY = scrollY
+      }
+
+      // Use transforms for better performance
+      heroOpacity.value = Math.max(0, Math.min(1, 1 - scrollY / (window.innerHeight * 0.75)))
+
+      // Use transform3d for GPU acceleration
+      if (backgroundRef.value) {
+        backgroundRef.value.style.transform = `translate3d(-50%, calc(-50% + ${scrollY * 0.4}px), 0) rotate(-45deg)`
+      }
+
+      ticking = false
+    })
+  }
+}
+
+// Add ResizeObserver for more efficient resize handling
+const resizeObserver = new ResizeObserver(
+  debounce(() => {
+    handleScroll()
+  }, 150),
+)
+
 onMounted(() => {
   setInterval(() => {
     animate.value = false
@@ -163,74 +224,45 @@ onMounted(() => {
 
   // Remove preloading code that used onImageLoad
 
-  const handleScroll = () => {
-    const { scrollY, innerHeight } = window
-    const { scrollHeight } = document.documentElement
+  // Throttle scroll handler using requestAnimationFrame
+  handleScroll()
 
-    // Update nav visibility
-    const aboutSection = document.getElementById('about')
-    if (aboutSection) {
-      shouldHideNav.value = aboutSection.getBoundingClientRect().top - innerHeight < 0
-    }
-
-    // Update current section
-    if (scrollY + innerHeight >= scrollHeight - 100) {
-      currentSection.value = 'about'
-    } else if (scrollY < innerHeight / 2) {
-      currentSection.value = 'home'
-    } else {
-      // Find current section
-      const viewportMiddle = scrollY + innerHeight / 2
-      const bufferZone = innerHeight * 0.15
-
-      for (const section of sections.slice(1, -1)) {
-        const element = document.getElementById(section)
-        if (!element) continue
-
-        const { top, bottom } = element.getBoundingClientRect()
-        const absoluteTop = top + scrollY
-        const absoluteBottom = bottom + scrollY
-
-        if (
-          viewportMiddle >= absoluteTop - bufferZone &&
-          viewportMiddle <= absoluteBottom + bufferZone
-        ) {
-          currentSection.value = section
-          break
+  // Use Intersection Observer for section detection
+  const sectionObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          currentSection.value = entry.target.id
         }
-      }
-    }
+      })
+    },
+    {
+      rootMargin: '-45% 0px -45% 0px',
+    },
+  )
 
-    const fadeStart = innerHeight * 0.05
-    const fadeEnd = innerHeight * 0.8
-    heroOpacity.value = Math.max(0, Math.min(1, 1 - (scrollY - fadeStart) / (fadeEnd - fadeStart)))
-    if (backgroundRef.value) {
-      const parallaxRate = 0.4
-      const yOffset = scrollY * parallaxRate
-      backgroundRef.value.style.transform = `translate(-50%, calc(-50% + ${yOffset}px)) rotate(-45deg)`
-    }
-
-    scrollActiveNavItemIntoView()
-  }
+  sections.forEach((section) => {
+    const element = document.getElementById(section)
+    if (element) sectionObserver.observe(element)
+  })
 
   // Initial setup and event listeners
-  handleScroll()
   window.addEventListener('scroll', handleScroll, { passive: true })
+
+  // Use ResizeObserver instead of resize event
+  if (backgroundRef.value) {
+    resizeObserver.observe(backgroundRef.value)
+  }
+
   window.addEventListener('resize', handleScroll)
 
   // Cleanup
   onUnmounted(() => {
+    sectionObserver.disconnect()
     window.removeEventListener('scroll', handleScroll)
     window.removeEventListener('resize', handleScroll)
+    resizeObserver.disconnect()
   })
-
-  // Initialize shapes
-  const shapesContainer = document.querySelector('.floating-shapes')
-  if (shapesContainer) {
-    for (let i = 0; i < SHAPE_COUNT; i++) {
-      shapesContainer.appendChild(createShape())
-    }
-  }
 })
 
 const scrollToSection = (id: string) => {
@@ -256,53 +288,6 @@ const scrollToSection = (id: string) => {
   }
 
   scrollActiveNavItemIntoView()
-}
-
-// Shape generation config
-const SHAPE_COUNT = 4
-const COLORS = [
-  'rgba(0, 194, 255, 0.8)', // subtle primary
-  'rgba(109, 89, 255, 0.8)', // subtle secondary
-  'rgba(255, 92, 168, 0.8)', // subtle accent
-  'rgba(54, 179, 255, 0.8)', // subtle blue
-]
-
-// Shape generation function
-const createShape = () => {
-  const shape = document.createElement('div')
-  shape.className = 'floating-shape'
-
-  // Larger size for more gradual gradients
-  const size = Math.random() * 300 + 300
-  shape.style.width = `${size}px`
-  shape.style.height = `${size}px`
-
-  // Position more strategically
-  const positions = [
-    { left: '10%', top: '20%' },
-    { left: '60%', top: '30%' },
-    { left: '30%', top: '70%' },
-  ]
-  const pos = positions[Math.floor(Math.random() * positions.length)]
-  shape.style.left = pos.left
-  shape.style.top = pos.top
-
-  // Random color
-  shape.style.background = COLORS[Math.floor(Math.random() * COLORS.length)]
-
-  // movement
-  const moveX = Math.random() * 100 + 5 + 'vw'
-  const moveY = Math.random() * 100 + 5 + 'vh'
-  shape.style.setProperty('--move-x', moveX)
-  shape.style.setProperty('--move-y', moveY)
-
-  // Random duration and delay
-  const duration = Math.random() * 15 + 45
-  const delay = Math.random() * -20
-  shape.style.setProperty('--duration', `${duration}s`)
-  shape.style.setProperty('--delay', `${delay}s`)
-
-  return shape
 }
 </script>
 
