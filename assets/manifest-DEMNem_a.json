@@ -8,7 +8,7 @@
   "theme_color": "#00c2ff",
   "icons": [
     {
-      "src": "/src/assets/icon.png",
+      "src": "/assets/icon.png",
       "sizes": "512x512",
       "type": "image/png"
     }
@@ -17,7 +17,7 @@
   "orientation": "any",
   "screenshots": [
     {
-      "src": "/src/assets/screenshots/break_overlay.webp",
+      "src": "/assets/screenshots/break_overlay.webp",
       "sizes": "4340x2860",
       "type": "image/webp"
     }
