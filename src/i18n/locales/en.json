@@ -167,7 +167,13 @@
         "why_needed": "Why is this needed?",
         "explanation": {
           "title": "🧠 Why is this needed?",
-          "content": "Otherwise, you will be seeing {discussion}. Apple has strict security measures for apps, which is great for safety but can be a challenge for smaller developers. The baseline requirement for bypassing these warnings is paying Apple's {membership}. Since I don't have the resources for that yet, installing the app might take you an extra step. 😞 But don't worry, it's totally worth it! If you have further questions, feel free to reach out to {email}. You can learn more about Apple's security measures {security}",
+          "content": {
+            "prefix": "Otherwise, you will be seeing ",
+            "middle1": ". Apple has strict security measures for apps, which is great for safety but can be a challenge for smaller developers. The baseline requirement for bypassing these warnings is paying Apple's ",
+            "middle2": ". Since I don't have the resources for that yet, installing the app might take you an extra step. 😞 But don't worry, it's totally worth it! If you have further questions, feel free to reach out to ",
+            "middle3": ". You can learn more about Apple's security measures ",
+            "suffix": "."
+          },
           "links": {
             "discussion": "https://discussions.apple.com/thread/253714860?sortBy=rank",
             "membership": "https://developer.apple.com/support/compare-memberships/",

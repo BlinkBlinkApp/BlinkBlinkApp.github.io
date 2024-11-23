@@ -35,28 +35,23 @@
             <div class="explanation-box">
               <span class="emphasis">{{ t('tutorial.mac.step2.explanation.title') }}</span>
               <br /><br />
-              <i18n-t keypath="tutorial.mac.step2.explanation.content" tag="span">
-                <template #discussion>
-                  <a :href="t('tutorial.mac.step2.explanation.links.discussion')" target="_blank">
-                    {{ t('tutorial.mac.step2.explanation.link_texts.discussion') }}
-                  </a>
-                </template>
-                <template #membership>
-                  <a :href="t('tutorial.mac.step2.explanation.links.membership')" target="_blank">
-                    {{ t('tutorial.mac.step2.explanation.link_texts.membership') }}
-                  </a>
-                </template>
-                <template #email>
-                  <a :href="`mailto:${t('tutorial.common.links.email')}`" target="_blank">
-                    {{ t('tutorial.common.links.email') }}
-                  </a>
-                </template>
-                <template #security>
-                  <a :href="t('tutorial.mac.step2.explanation.links.security')" target="_blank">
-                    {{ t('tutorial.mac.step2.explanation.link_texts.security') }}
-                  </a>
-                </template>
-              </i18n-t>
+              <span>
+                {{ t('tutorial.mac.step2.explanation.content.prefix') }}
+                <a :href="t('tutorial.mac.step2.explanation.links.discussion')" target="_blank">
+                  {{ t('tutorial.mac.step2.explanation.link_texts.discussion') }}
+                </a>
+                {{ t('tutorial.mac.step2.explanation.content.middle1') }}
+                <a :href="t('tutorial.mac.step2.explanation.links.membership')" target="_blank">
+                  {{ t('tutorial.mac.step2.explanation.link_texts.membership') }}
+                </a>
+                {{ t('tutorial.mac.step2.explanation.content.middle2') }}
+                <a :href="`mailto:${supportEmail}`">{{ supportEmail }}</a>
+                {{ t('tutorial.mac.step2.explanation.content.middle3') }}
+                <a :href="t('tutorial.mac.step2.explanation.links.security')" target="_blank">
+                  {{ t('tutorial.mac.step2.explanation.link_texts.security') }}
+                </a>
+                {{ t('tutorial.mac.step2.explanation.content.suffix') }}
+              </span>
             </div>
           </div>
           <div class="step-body">
@@ -136,9 +131,7 @@
     <div class="tutorial-footer">
       <div class="help-text">
         {{ t('tutorial.common.footer.need_help') }}
-        <a :href="`mailto:${t('tutorial.common.links.email')}`">{{
-          t('tutorial.common.links.email')
-        }}</a>
+        <a :href="`mailto:${supportEmail}`">{{ supportEmail }}</a>
       </div>
     </div>
   </div>
@@ -151,6 +144,7 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 const copied = ref(false)
+const supportEmail = 'theblinkblinkapp@gmail.com'
 
 const props = defineProps<{
   platform: 'windows' | 'macos'
