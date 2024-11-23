@@ -5,7 +5,7 @@
 
       <div class="features-ticker">
         <div class="ticker-content" style="running">
-          <div class="feature" v-for="(feature, index) in [...features, ...features]" :key="index">
+          <div class="feature" v-for="(feature, index) in [...computedFeatures, ...computedFeatures]" :key="index">
             <i :class="feature.icon"></i>
             <h3>{{ feature.title }}</h3>
             <p>{{ feature.description }}</p>
@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import '@/assets/styles/Download.css'
 import TutorialOverlay from '@/components/TutorialOverlay.vue'
@@ -84,7 +84,8 @@ const isLoading = reactive({
 const showTutorial = ref(false)
 const selectedPlatform = ref<'windows' | 'macos'>('windows')
 
-const features = [
+// Replace the features array with a computed property
+const computedFeatures = computed(() => [
   { icon: 'fa-solid fa-rocket', title: t('download.features.autoStart.title'), description: t('download.features.autoStart.description') },
   { icon: 'fa-solid fa-stopwatch', title: t('download.features.smartScheduling.title'), description: t('download.features.smartScheduling.description') },
   { icon: 'fa-solid fa-chart-line', title: t('download.features.trackProgress.title'), description: t('download.features.trackProgress.description') },
@@ -95,7 +96,7 @@ const features = [
   { icon: 'fa-solid fa-desktop', title: t('download.features.multiScreen.title'), description: t('download.features.multiScreen.description') },
   { icon: 'fa-solid fa-brush', title: t('download.features.cleanInterface.title'), description: t('download.features.cleanInterface.description') },
   { icon: 'fa-solid fa-moon', title: t('download.features.themeSync.title'), description: t('download.features.themeSync.description') }
-]
+])
 
 async function getAllReleasesFromGitHub(): Promise<GitHubRelease[]> {
   const response = await fetch(

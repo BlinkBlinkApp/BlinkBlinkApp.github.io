@@ -50,16 +50,21 @@
         </div>
       </div>
       <nav :class="{ 'nav-hide': shouldHideNav }">
-        <div class="nav-content">
-          <a
-            v-for="section in sections"
-            :key="section"
-            :href="`#${section}`"
-            :class="{ active: currentSection === section }"
-            @click.prevent="scrollToSection(section)"
-          >
-            {{ formatSectionName(section) }}
-          </a>
+        <div class="nav-wrapper">
+          <div class="nav-content">
+            <a
+              v-for="section in sections"
+              :key="section"
+              :href="`#${section}`"
+              :class="{ active: currentSection === section }"
+              @click.prevent="scrollToSection(section)"
+            >
+              {{ formatSectionName(section) }}
+            </a>
+          </div>
+          <button class="lang-switch-circle" @click="toggleLanguage">
+            {{ currentLanguage === 'en' ? '中' : 'EN' }}
+          </button>
         </div>
       </nav>
     </header>
@@ -82,7 +87,24 @@ import Rule from '@/components/sections/Rule.vue'
 import Download from '@/components/sections/Download.vue'
 import Footer from '@/components/Footer.vue'
 import { useI18n } from 'vue-i18n'
-const { t } = useI18n()
+const { t, locale } = useI18n()
+const currentLanguage = ref(locale.value)
+
+const toggleLanguage = () => {
+  const newLocale = locale.value === 'en' ? 'zh' : 'en'
+  locale.value = newLocale
+  currentLanguage.value = newLocale
+  localStorage.setItem('user-locale', newLocale)
+  // Update rotating words after language change
+  words.splice(0, words.length,
+    t('hero.words.strain'),
+    t('hero.words.dryness'),
+    t('hero.words.fatigue'),
+    t('hero.words.discomfort'),
+    t('hero.words.burnout')
+  )
+  currentWord.value = words[currentIndex]
+}
 
 const BASE_DURATION = 600 // 0.6s in ms
 const CHAR_DELAY = 40 // 0.04s in ms
@@ -283,3 +305,63 @@ const createShape = () => {
   return shape
 }
 </script>
+
+<style scoped>
+.nav-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Reduced from 16px */
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 12px 0 24px; /* Adjusted padding: left 24px, right 12px */
+  width: 100%;
+}
+
+.nav-content {
+  flex: 1;
+  overflow-x: auto;
+  padding-right: 8px; /* Added padding to separate from language switch */
+}
+
+.lang-switch-circle {
+  position: relative; /* Changed from fixed */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-background);
+  border: 2px solid var(--color-text);
+  color: var(--color-text);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0; /* Prevent shrinking */
+  margin-right: -4px; /* Added negative margin to move slightly closer to edge */
+}
+
+.lang-switch {
+  background: transparent;
+  border: 1px solid var(--color-text);
+  color: var(--color-text);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-left: 16px;
+  transition: all 0.2s ease;
+}
+
+.lang-switch:hover {
+  background: var(--color-text);
+  color: var(--color-background);
+}
+
+.lang-switch-circle:hover {
+  background: var(--color-text);
+  color: var(--color-background);
+  transform: scale(1.1);
+}
+</style>
