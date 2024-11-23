@@ -45,6 +45,13 @@
         <span class="downloads">{{ totalDownloads.toLocaleString() }} {{ t('download.versionInfo.downloads') }}</span>
       </div>
 
+      <!-- Add the donation popup -->
+      <DonationPopup
+        v-if="showDonationPopup"
+        @close="showDonationPopup = false"
+        @proceed="proceedWithDownload"
+      />
+
       <!-- Move the TutorialOverlay inside download-wrapper -->
       <TutorialOverlay
         v-if="showTutorial"
@@ -60,6 +67,7 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import '@/assets/styles/Download.css'
 import TutorialOverlay from '@/components/TutorialOverlay.vue'
+import DonationPopup from '@/components/DonationPopup.vue'
 
 const { t } = useI18n()
 
@@ -137,8 +145,21 @@ onMounted(async () => {
   }
 })
 
+const showDonationPopup = ref(false)
+const pendingDownload = ref<'windows' | 'macos' | null>(null)
+
 async function handleDownload(platform: 'windows' | 'macos') {
+  pendingDownload.value = platform
+  showDonationPopup.value = true
+}
+
+async function proceedWithDownload() {
+  if (!pendingDownload.value) return
+
+  const platform = pendingDownload.value
+  showDonationPopup.value = false
   isLoading[platform] = true
+
   try {
     const release = await getLatestReleaseFromGitHub()
     const assetExtension = platform === 'windows' ? '.exe' : '.dmg'
@@ -148,17 +169,16 @@ async function handleDownload(platform: 'windows' | 'macos') {
       throw new Error(`No ${platform} version available`)
     }
 
-    // Set platform and show tutorial before starting download
     selectedPlatform.value = platform
     showTutorial.value = true
 
-    // Start the download
     window.location.href = asset.browser_download_url
   } catch (error) {
     console.error('Download error:', error)
     alert('Failed to get download link. Please try again later.')
   } finally {
     isLoading[platform] = false
+    pendingDownload.value = null
   }
 }
 </script>

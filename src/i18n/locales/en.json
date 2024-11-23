@@ -218,5 +218,19 @@
         }
       }
     }
+  },
+  "donation": {
+    "title": "Support BlinkBlink",
+    "description": "BlinkBlink is completely free. If you find it useful, please consider supporting its development🥺 Your contribution helps keep the project alive!",
+    "buttons": {
+      "buyMeACoffee": "Buy Me a Coffee",
+      "kofi": "Support on Ko-fi",
+      "paypal": "Donate via PayPal"
+    },
+    "skipButton": "Take me to Download",
+    "thankYou": "Thank you so much for your incredible support! ❤️ Your generosity means the world and helps make BlinkBlink even better!",
+    "buyMeACoffeeUrl": "https://2ly.link/216p3",
+    "kofiUrl": "https://2ly.link/216p4",
+    "paypalUrl": "https://2ly.link/216p8"
   }
 }
