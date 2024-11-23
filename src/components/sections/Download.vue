@@ -35,6 +35,14 @@
           </li>
         </div>
       </ul>
+
+      <!-- Add tutorial overlay -->
+      <TutorialOverlay
+        v-if="showTutorial"
+        :platform="selectedPlatform"
+        @close="showTutorial = false"
+      />
+
       <span class="coming-soon-label">Linux Coming Soon</span>
       <div class="version-info" v-if="latestVersion">
         <span
@@ -52,6 +60,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import '@/assets/styles/Download.css'
+import TutorialOverlay from '@/components/TutorialOverlay.vue'
 
 interface GitHubRelease {
   tag_name: string
@@ -70,6 +79,9 @@ const isLoading = reactive({
   windows: false,
   macos: false,
 })
+
+const showTutorial = ref(false)
+const selectedPlatform = ref<'windows' | 'macos'>('windows')
 
 const features = [
   { icon: 'fa-solid fa-rocket', title: 'Auto Start', description: 'Launches with your system' },
@@ -167,6 +179,8 @@ async function handleDownload(platform: 'windows' | 'macos') {
     }
 
     window.location.href = asset.browser_download_url
+    selectedPlatform.value = platform
+    showTutorial.value = true
   } catch (error) {
     console.error('Download error:', error)
     alert('Failed to get download link. Please try again later.')

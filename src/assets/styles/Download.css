@@ -305,4 +305,148 @@
     width: 100%;
     max-width: 200px;
   }
+
+  .tutorial-overlay {
+    border-radius: var(--radius-lg);
+  }
+}
+
+.tutorial-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(16, 18, 27, 0.99);
+  backdrop-filter: blur(20px);
+  border-radius: var(--radius-xl);
+  z-index: 100;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tutorial-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  color: #e4e7f0;
+}
+
+.tutorial-content h1 {
+  color: #fff;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-weight: 700;
+  background: linear-gradient(90deg, #4c7bf3, #8c4cf3);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.tutorial-content .step {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tutorial-content .step:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.tutorial-content h2 {
+  color: #4c7bf3;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tutorial-content .command-box {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(76, 123, 243, 0.3);
+  border-radius: 8px;
+  padding: 1rem;
+  font-family: 'SF Mono', Monaco, Consolas, monospace;
+  position: relative;
+  margin: 1rem 0;
+  color: #4c7bf3;
+}
+
+.tutorial-content .copy-button {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #4c7bf3;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.tutorial-content .copy-button:hover {
+  background: #3a5ec9;
+}
+
+.tutorial-content .important {
+  background: rgba(76, 123, 243, 0.1);
+  border-left: 4px solid #4c7bf3;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.tutorial-content .explanation-box {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #a0a8c0;
+}
+
+.tutorial-content .explanation-box strong {
+  color: #4c7bf3;
+}
+
+.tutorial-content a {
+  color: #4c7bf3;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.tutorial-content a:hover {
+  color: #8c4cf3;
+  text-decoration: underline;
+}
+
+.close-button {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.close-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
 }

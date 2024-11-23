@@ -1,0 +1,273 @@
+/* Base Layout */
+.tutorial-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(165deg, var(--accent-color) 0%, var(--primary-color) 100%);
+  backdrop-filter: blur(20px);
+  border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  color: var(--background-light);
+  overflow: hidden;
+}
+
+/* Header & Footer */
+.tutorial-header,
+.tutorial-footer {
+  padding: var(--spacing-md);
+  text-align: center;
+}
+
+.tutorial-header h1 {
+  font-size: var(--font-size-3xl);
+}
+
+/* Steps Container */
+.steps-container {
+  display: flex;
+  gap: var(--spacing-md);
+  padding: var(--spacing-xs) var(--spacing-md);
+  align-items: stretch;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Common Step Styles */
+.step {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+.step h2 {
+  font-size: var(--font-size-2xl);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+/* Compact Steps (1 & 3) */
+.step.compact {
+  width: 300px;
+  flex-shrink: 0;
+}
+
+.step.compact .step-image {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 -var(--spacing-md);
+}
+
+.step .step-image img {
+  width: calc(100% + var(--spacing-md) * 2);
+  height: auto;
+  max-width: none;
+}
+
+/* Main Step (2) */
+.step:not(.compact) {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.step:not(.compact) .heading-group {
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  padding-bottom: var(--spacing-md);
+}
+
+.step:not(.compact) .step-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-xs);
+  flex: 1;
+  min-height: 0;
+  align-items: center;
+}
+
+.step:not(.compact) .step-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  justify-content: center;
+}
+
+.step:not(.compact) .step-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.step:not(.compact) .step-image img {
+  width: calc(100% + var(--spacing-sm));
+  height: auto;
+  max-width: none;
+}
+
+/* Images */
+.step-image img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* UI Components */
+.command-box {
+  background: rgba(0, 0, 0, 0.3);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-family: monospace;
+  position: relative;
+}
+
+.copy-button {
+  position: absolute;
+  right: var(--spacing-xs);
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  color: inherit;
+  cursor: pointer;
+}
+
+/* Explanation Box */
+.explanation-box {
+  position: absolute;
+  top: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 400px;
+  background: rgba(0, 0, 0, 0.95);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.step:not(.compact) h2 .help-icon {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-left: var(--spacing-xs);
+  font-size: 0.8em;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: help;
+  transition: color 0.2s;
+}
+
+.step:not(.compact) h2 .help-icon:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Help Icon */
+.help-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  font-size: 12px;
+  color: var(--background-light);
+  cursor: help;
+  transition: all 0.2s;
+  vertical-align: middle;
+}
+
+.help-icon:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.help-icon:hover + .explanation-box,
+.explanation-box:hover {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 100px;
+}
+
+.step-instructions {
+  background: rgba(255, 255, 255, 0.1);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+}
+
+.step-instructions p {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.5;
+}
+
+.step-instructions p:before {
+  content: attr(data-step);
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: var(--font-weight-semibold);
+  flex-shrink: 0;
+}
+
+.step-instructions .command-box {
+  margin: var(--spacing-sm) var(--spacing-md);
+}
+
+@media (max-width: 768px) {
+  .steps-container {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+
+  .step {
+    scroll-snap-align: center;
+  }
+
+  .step:not(.compact) {
+    min-width: 85%;
+    grid-template-areas:
+      'heading'
+      'image'
+      'content';
+    grid-template-columns: 1fr;
+  }
+
+  .step:not(.compact) .step-body {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+}
