@@ -143,5 +143,53 @@
         "description": "Matches light or dark mode"
       }
     }
+  },
+  "tutorial": {
+    "title": "Installing BlinkBlink on {platform}",
+    "step1": {
+      "macos": {
+        "title": "Step 1: Drag & Drop"
+      },
+      "windows": {
+        "title": "Step 1: Launch the Installer",
+        "description": "After downloading the BlinkBlink installer, locate the BlinkBlink-Setup.{version}.exe file in your downloads folder and double-click it to start the installation process."
+      }
+    },
+    "step2": {
+      "macos": {
+        "title": "Step 2: Remove Security Restrictions",
+        "why_needed": "Why is this needed?",
+        "explanation": {
+          "title": "🧠 Why is this needed?",
+          "text": "Otherwise, you will be seeing this. Apple has strict security measures for apps, which is great for safety but can be a challenge for smaller developers. The baseline requirement for bypassing these warnings is paying Apple's $99 annual fee. Since I don't have the resources for that yet, installing the app might take you an extra step. 😞 But don't worry, it's totally worth it!"
+        },
+        "instructions": {
+          "step1": "Open Terminal (press ⌘+Space and type \"Terminal\")",
+          "step2": "Copy and paste the following command to the Terminal",
+          "step3": "hit Return (⏎) to run the command",
+          "step4": "Open BlinkBlink and enjoy! 🎉"
+        }
+      },
+      "windows": {
+        "title": "Step 2: Handle the Security Warning",
+        "why_needed": "Why am I seeing this?",
+        "explanation": {
+          "title": "🛡️ Why am I seeing this?",
+          "text": "BlinkBlink is completely safe to use. However, because it's not digitally signed with a code signing certificate—a costly process for small indie developers—Windows flags it as an extra precaution."
+        },
+        "instructions": {
+          "step1": "On the \"Windows protected your PC\" screen, click \"More info\".",
+          "step2": "After clicking \"More info,\" a \"Run anyway\" button will appear. Click it to continue.",
+          "step3": "Follow the prompts in the installer to complete the installation."
+        }
+      }
+    },
+    "footer": {
+      "need_help": "Need help? Contact support at"
+    },
+    "buttons": {
+      "copy": "Copy",
+      "copied": "Copied!"
+    }
   }
 }

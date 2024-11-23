@@ -1,15 +1,15 @@
 {
   "hero": {
-    "title": "保護你的眼睛",
+    "title": "保護你的眼睛免於",
     "description_line1": "在你遨遊數位世界時，",
     "description_line2": "由BlinkBlink守護你的視力健康。",
     "downloadButton": "立即免費下載 ➤",
     "words": {
-      "strain": "疲勞",
-      "dryness": "乾澀",
-      "fatigue": "勞累",
-      "discomfort": "不適",
-      "burnout": "螢幕使用過度"
+      "strain": "數位疲勞",
+      "dryness": "乾澀不適",
+      "fatigue": "螢幕傷害",
+      "discomfort": "長時間注視螢幕",
+      "burnout": "視力模糊"
     }
   },
   "nav": {
@@ -28,37 +28,37 @@
       "breathe": "深呼吸，眨眨眼，重新充電。"
     },
     "why_matters": {
-      "title": "為什麼重要",
-      "intro": "這個簡單的法則是眼科專家推薦的，它可以幫助對抗數位眼睛疲勞，支持更健康的螢幕使用習慣，同時提高工作效率。",
+      "title": "為何重要？",
+      "intro": "這個簡單又易於記憶的法則，最初由眼科專家Dr. Anshel於1991年提出。這一法則不僅能有效減緩長時間使用螢幕所帶來的眼睛疲勞，更是一個幫助您養成健康螢幕使用���慣的關鍵方法。無論是在工作、學習還是娛樂時，長時間盯著螢幕會對眼睛造成極大壓力，導致疲勞、乾澀甚至視力模糊。然而，運用這個簡單的法則，您可以輕鬆減少這些不適，保持眼睛清爽，並提高專注力。",
       "every_20_min": {
         "title": "每20分鐘",
-        "desc": "定期休息可以預防眼睛疲勞，維持全天的專注力。把它想像成視覺系統的小型重置。"
+        "desc": "定期休息有助於預防眼睛疲勞，維持全天專注力。把它想作視覺系統的小型重置。"
       },
       "look_20_feet": {
-        "title": "看20英尺遠",
+        "title": "看20英尺（6公尺）遠",
         "desc": "注視遠處物體可以放鬆眼部肌肉並緩解視覺壓力。就像是在為眼睛做伸展運動。"
       },
       "for_20_sec": {
-        "title": "持續20秒鐘",
-        "desc": "這短暫的休息讓眼睛有機會完全放鬆和調整，同時促進有意識的眨眼和更好的姿勢。"
+        "title": "休息20秒鐘",
+        "desc": "短暫的休息讓眼睛有機會完全放鬆並調整，同時促進有意識的眨眼、改善姿勢。"
       }
     },
     "key_benefits": {
       "title": "主要好處",
       "items": [
         "減少數位用眼疲勞",
-        "提高專注力和持續生產力",
-        "預防眼睛乾澀和視覺模糊",
-        "改善姿勢和頸部舒適度",
-        "鼓勵有意識的眨眼和放鬆",
-        "培養長期健康的螢幕使用習慣"
+        "提升專注力與持續生產力",
+        "預防眼睛乾澀與視覺模糊",
+        "改善姿勢及頸部舒適度",
+        "鼓勵有意識的眨眼與放鬆",
+        "培養長期的健康螢幕使用習慣"
       ]
     }
   },
   "features": {
     "overline": "功能特色",
-    "title": "守護你的數位視力",
-    "description": "螢幕使用時間增加不代表眼睛一定要受苦。BlinkBlink幫助你保持專注、精力充沛，並掌控螢幕使用習慣。",
+    "title": "守護你的視力",
+    "description": "長時間的螢幕使用難以避免。然而，這不代表眼睛就得為此受苦。BlinkBlink幫助你在持續保持專注同時維持健康的螢幕使用習慣。",
     "highlights": {
       "rule": {
         "number": "20-20-20",
@@ -72,18 +72,18 @@
     "showcase": {
       "smart_break": {
         "title": "智慧休息體驗",
-        "description": "從溫和的休息提醒到深入的總結分析，BlinkBlink全程引導你完成護眼例行程序。"
+        "description": "從輕柔的休息提醒到簡明的數據摘要，BlinkBlink全程引導你完成護眼例行公事。"
       },
       "schedules": {
-        "title": "自訂休息時程",
-        "description": "根據需求調整休息時間。設定符合工作流程的間隔和持續時間。"
+        "title": "自訂休息時間",
+        "description": "根據需求調整休息時間，設定符合自己工作流程的BlinkBlink提醒。"
       },
       "analytics": {
         "title": "洞察分析",
-        "description": "透過清晰的視覺化數據了解你的螢幕使用習慣。掌握數位健康。"
+        "description": "透過清晰的數據了解你的螢幕使用習慣，掌握數位健康。"
       },
       "theme": {
-        "title": "無縫主題整合",
+        "title": "同步系統主題",
         "description": "自動適應系統的明暗模式，提供一致且舒適的視覺體驗。"
       }
     }
@@ -103,7 +103,7 @@
     },
     "features": {
       "autoStart": {
-        "title": "自動啟動",
+        "title": "開機自動啟動",
         "description": "隨系統啟動"
       },
       "smartScheduling": {
@@ -112,14 +112,14 @@
       },
       "trackProgress": {
         "title": "進度追蹤",
-        "description": "改善使用習慣"
+        "description": "透過數據洞察改善使用習慣"
       },
       "breakReminders": {
         "title": "休息提醒",
-        "description": "減少眼睛疲勞"
+        "description": "減少眼睛疲勞，養成健康習慣"
       },
       "rule": {
-        "title": "20·20·20 法則",
+        "title": "20·20·20 規則",
         "description": "養成健康用眼習慣"
       },
       "autoUpdates": {
@@ -128,20 +128,68 @@
       },
       "privacyFirst": {
         "title": "隱私優先",
-        "description": "資料留在本機"
+        "description": "資料完全保留在本機"
       },
       "multiScreen": {
         "title": "多螢幕支援",
-        "description": "支援所有螢幕"
+        "description": "支援所有螢幕顯示"
       },
       "cleanInterface": {
         "title": "簡潔介面",
-        "description": "簡單優美設計"
+        "description": "簡單、直覺的設計"
       },
       "themeSync": {
         "title": "主題同步",
-        "description": "配合系統明暗模式"
+        "description": "隨系統明暗模式變換"
       }
+    }
+  },
+  "tutorial": {
+    "title": "在{platform}上安裝BlinkBlink",
+    "step1": {
+      "macos": {
+        "title": "步驟 1：拖放安裝"
+      },
+      "windows": {
+        "title": "步驟 1：啟動安裝程式",
+        "description": "下載BlinkBlink安裝程式後，在下載資料夾中找到 BlinkBlink-Setup.{version}.exe 檔案並雙擊開始安裝。"
+      }
+    },
+    "step2": {
+      "macos": {
+        "title": "步驟 2：移除安全限制",
+        "why_needed": "為什麼需要這樣做？",
+        "explanation": {
+          "title": "🧠 為什麼需要這樣做？",
+          "text": "否則，你會看到這個提示。Apple對應用程式有嚴格的安全措施，這對安全性來說很好，但對小型開發者來說是個挑戰。繞過這些警告的基本要求是支付Apple每年99美元的費用。由於目前我還沒有這樣的資源，安裝應用程式可能需要你多走一步。😞 但別擔心，這絕對值得！"
+        },
+        "instructions": {
+          "step1": "開啟終端機（按⌘+空白鍵並輸入「終端機」）",
+          "step2": "複製並貼上以下指令到終端機",
+          "step3": "按下返回鍵 (⏎) 執行指令",
+          "step4": "開啟BlinkBlink即可使用！🎉"
+        }
+      },
+      "windows": {
+        "title": "步驟 2：處理安全性警告",
+        "why_needed": "為什麼會看到這個？",
+        "explanation": {
+          "title": "🛡️ 為什麼會看到這個？",
+          "text": "BlinkBlink是完全安全的。但因為它沒有數位簽章認證（對小型獨立開發者來說成本較高），Windows會額外提醒以策安全。"
+        },
+        "instructions": {
+          "step1": "在「Windows已保護您的電腦」畫面中，點擊「更多資訊」。",
+          "step2": "點擊「更多資訊」後，會出現「仍要執行」按鈕。點擊它繼續。",
+          "step3": "依照安裝程式的提示完成安裝。"
+        }
+      }
+    },
+    "footer": {
+      "need_help": "需要協助？請聯繫支援"
+    },
+    "buttons": {
+      "copy": "複製",
+      "copied": "已複製！"
     }
   }
 }

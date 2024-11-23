@@ -19,6 +19,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative; /* Add this line */
 }
 
 .download-wrapper::before {
@@ -320,6 +321,8 @@
   z-index: 100;
   overflow-y: auto;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;  /* Add this line */
+  flex-direction: column;  /* Add this line */
 }
 
 .tutorial-content {

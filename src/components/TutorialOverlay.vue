@@ -7,14 +7,14 @@
     <div class="tutorial-header">
       <h1>
         <i class="fa-solid" :class="platform === 'macos' ? 'fa-apple' : 'fa-windows'"></i>
-        Installing BlinkBlink on {{ platform === 'macos' ? 'macOS' : 'Windows' }}
+        {{ t('tutorial.title', { platform: platform === 'macos' ? 'macOS' : 'Windows' }) }}
       </h1>
     </div>
 
     <div class="steps-container">
       <template v-if="platform === 'macos'">
         <div class="step compact">
-          <h2><i class="fa-solid fa-folder-open"></i> Step 1: Drag & Drop</h2>
+          <h2><i class="fa-solid fa-folder-open"></i> {{ t('tutorial.step1.macos.title') }}</h2>
           <div class="step-body">
             <div class="step-image">
               <img
@@ -29,12 +29,13 @@
           <div class="heading-group">
             <h2>
               <i class="fa-solid fa-terminal"></i>
-              Step 2: Remove Security Restrictions
+              {{ t('tutorial.step2.macos.title') }}
             </h2>
-            <button class="help-icon" title="Why is this needed?">?</button>
+            <button class="help-icon" :title="t('tutorial.step2.macos.why_needed')">?</button>
             <div class="explanation-box">
-              <span class="emphasis">🧠 Why is this needed?</span>
+              <span class="emphasis">{{ t('tutorial.step2.macos.explanation.title') }}</span>
               <br /><br />
+              {{ t('tutorial.step2.macos.explanation.text') }}
               Otherwise, you will be seeing
               <a href="https://discussions.apple.com/thread/253714860?sortBy=rank" target="_blank"
                 >this</a
@@ -61,14 +62,14 @@
           <div class="step-body">
             <div class="step-content">
               <div class="step-instructions">
-                <p data-step="1.">Open Terminal (press ⌘+Space and type "Terminal")</p>
-                <p data-step="2.">Copy and paste the following command to the Terminal</p>
+                <p data-step="1.">{{ t('tutorial.step2.macos.instructions.step1') }}</p>
+                <p data-step="2.">{{ t('tutorial.step2.macos.instructions.step2') }}</p>
                 <div class="command-box">
                   xattr -c /Applications/BlinkBlink.app
-                  <button class="copy-button" @click="copyCommand">Copy</button>
+                  <button class="copy-button" @click="copyCommand">{{ copied ? t('tutorial.buttons.copied') : t('tutorial.buttons.copy') }}</button>
                 </div>
-                <p data-step="3.">hit Return (⏎) to run the command</p>
-                <p data-step="4.">Open BlinkBlink and enjoy! 🎉</p>
+                <p data-step="3.">{{ t('tutorial.step2.macos.instructions.step3') }}</p>
+                <p data-step="4.">{{ t('tutorial.step2.macos.instructions.step4') }}</p>
               </div>
             </div>
             <div class="step-image">
@@ -80,14 +81,10 @@
 
       <template v-else>
         <div class="step compact">
-          <h2><i class="fa-solid fa-folder-open"></i> Step 1: Launch the Installer</h2>
+          <h2><i class="fa-solid fa-folder-open"></i> {{ t('tutorial.step1.windows.title') }}</h2>
           <div class="step-body">
             <div class="step-content">
-              <p>
-                After downloading the BlinkBlink installer, locate the
-                <code>BlinkBlink-Setup.{version}.exe</code> file in your downloads folder and
-                double-click it to start the installation process.
-              </p>
+              <p>{{ t('tutorial.step1.windows.description', { version: '{version}' }) }}</p>
             </div>
           </div>
         </div>
@@ -96,9 +93,9 @@
           <div class="heading-group">
             <h2>
               <i class="fa-solid fa-shield"></i>
-              Step 2: Handle the Security Warning
+              {{ t('tutorial.step2.windows.title') }}
             </h2>
-            <button class="help-icon" title="Why is this needed?">?</button>
+            <button class="help-icon" :title="t('tutorial.step2.windows.why_needed')">?</button>
             <div class="explanation-box">
               <span class="emphasis">🛡️ Why am I seeing this?</span>
               <br /><br />
@@ -140,7 +137,7 @@
 
     <div class="tutorial-footer">
       <div class="help-text">
-        Need help? Contact support at
+        {{ t('tutorial.footer.need_help') }}
         <a href="mailto:theblinkblinkapp@gmail.com">theblinkblinkapp@gmail.com</a>
       </div>
     </div>
@@ -149,7 +146,11 @@
 
 <script setup lang="ts">
 import '@/assets/styles/TutorialOverlay.css'
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+const copied = ref(false)
 
 const props = defineProps<{
   platform: 'windows' | 'macos'
@@ -175,10 +176,9 @@ onUnmounted(() => {
 
 function copyCommand() {
   navigator.clipboard.writeText('xattr -c /Applications/BlinkBlink.app')
-  const button = document.querySelector('.copy-button') as HTMLButtonElement
-  button.textContent = 'Copied!'
+  copied.value = true
   setTimeout(() => {
-    button.textContent = 'Copy'
+    copied.value = false
   }, 2000)
 }
 </script>

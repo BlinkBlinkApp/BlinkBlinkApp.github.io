@@ -44,6 +44,13 @@
         <span class="dot-separator">•</span>
         <span class="downloads">{{ totalDownloads.toLocaleString() }} {{ t('download.versionInfo.downloads') }}</span>
       </div>
+
+      <!-- Move the TutorialOverlay inside download-wrapper -->
+      <TutorialOverlay
+        v-if="showTutorial"
+        :platform="selectedPlatform"
+        @close="showTutorial = false"
+      />
     </div>
   </section>
 </template>
@@ -140,9 +147,12 @@ async function handleDownload(platform: 'windows' | 'macos') {
       throw new Error(`No ${platform} version available`)
     }
 
-    window.location.href = asset.browser_download_url
+    // Set platform and show tutorial before starting download
     selectedPlatform.value = platform
     showTutorial.value = true
+
+    // Start the download
+    window.location.href = asset.browser_download_url
   } catch (error) {
     console.error('Download error:', error)
     alert('Failed to get download link. Please try again later.')
