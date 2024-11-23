@@ -1,7 +1,7 @@
 <template>
   <section id="download" class="download-section">
     <div class="download-wrapper">
-      <h2>Download & Get Started!</h2>
+      <h2>{{ t('download.title') }}</h2>
 
       <div class="features-ticker">
         <div class="ticker-content" style="running">
@@ -21,7 +21,7 @@
               :class="['button', 'icon', 'solid', 'fa-download', { loading: isLoading.windows }]"
               :disabled="isLoading.windows"
             >
-              {{ isLoading.windows ? 'Preparing Download...' : 'Download for Windows' }}
+              {{ isLoading.windows ? t('download.downloadButton.preparing') : t('download.downloadButton.windows') }}
             </a>
           </li>
           <li>
@@ -30,28 +30,19 @@
               :class="['button', 'icon', 'solid', 'fa-download', { loading: isLoading.macos }]"
               :disabled="isLoading.macos"
             >
-              {{ isLoading.macos ? 'Preparing Download...' : 'Download for macOS' }}
+              {{ isLoading.macos ? t('download.downloadButton.preparing') : t('download.downloadButton.macos') }}
             </a>
           </li>
         </div>
       </ul>
 
-      <!-- Add tutorial overlay -->
-      <TutorialOverlay
-        v-if="showTutorial"
-        :platform="selectedPlatform"
-        @close="showTutorial = false"
-      />
-
-      <span class="coming-soon-label">Linux Coming Soon</span>
+      <span class="coming-soon-label">{{ t('download.comingSoon') }}</span>
       <div class="version-info" v-if="latestVersion">
-        <span
-          >Latest Version: <span class="version">{{ latestVersion }}</span></span
-        >
+        <span>{{ t('download.versionInfo.latest') }}: <span class="version">{{ latestVersion }}</span></span>
         <span class="dot-separator">•</span>
-        <span class="date">Release Date: {{ releaseDate }}</span>
+        <span class="date">{{ t('download.versionInfo.releaseDate') }}: {{ releaseDate }}</span>
         <span class="dot-separator">•</span>
-        <span class="downloads">{{ totalDownloads.toLocaleString() }} Downloads</span>
+        <span class="downloads">{{ totalDownloads.toLocaleString() }} {{ t('download.versionInfo.downloads') }}</span>
       </div>
     </div>
   </section>
@@ -59,8 +50,11 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import '@/assets/styles/Download.css'
 import TutorialOverlay from '@/components/TutorialOverlay.vue'
+
+const { t } = useI18n()
 
 interface GitHubRelease {
   tag_name: string
@@ -84,48 +78,16 @@ const showTutorial = ref(false)
 const selectedPlatform = ref<'windows' | 'macos'>('windows')
 
 const features = [
-  { icon: 'fa-solid fa-rocket', title: 'Auto Start', description: 'Launches with your system' },
-  {
-    icon: 'fa-solid fa-stopwatch',
-    title: 'Smart Scheduling',
-    description: 'Custom timers and breaks',
-  },
-  {
-    icon: 'fa-solid fa-chart-line',
-    title: 'Track Progress',
-    description: 'Insights to improve habits',
-  },
-  {
-    icon: 'fa-solid fa-eye',
-    title: 'Break Reminders',
-    description: 'Reduce eye strain with prompts',
-  },
-  {
-    icon: 'fa-solid fa-user-md',
-    title: '20·20·20 Rule',
-    description: 'Encourages healthy eye habits',
-  },
-  {
-    icon: 'fa-solid fa-arrows-rotate',
-    title: 'Auto Updates',
-    description: 'Stay up-to-date effortlessly',
-  },
-  { icon: 'fa-solid fa-shield', title: 'Privacy First', description: 'Data stays on your device' },
-  {
-    icon: 'fa-solid fa-desktop',
-    title: 'Multi-Screen Support',
-    description: 'Works across all screens',
-  },
-  {
-    icon: 'fa-solid fa-brush',
-    title: 'Clean Interface',
-    description: 'Simple and beautiful design',
-  },
-  {
-    icon: 'fa-solid fa-moon',
-    title: 'System Theme Sync',
-    description: 'Matches light or dark mode',
-  },
+  { icon: 'fa-solid fa-rocket', title: t('download.features.autoStart.title'), description: t('download.features.autoStart.description') },
+  { icon: 'fa-solid fa-stopwatch', title: t('download.features.smartScheduling.title'), description: t('download.features.smartScheduling.description') },
+  { icon: 'fa-solid fa-chart-line', title: t('download.features.trackProgress.title'), description: t('download.features.trackProgress.description') },
+  { icon: 'fa-solid fa-eye', title: t('download.features.breakReminders.title'), description: t('download.features.breakReminders.description') },
+  { icon: 'fa-solid fa-user-md', title: t('download.features.rule.title'), description: t('download.features.rule.description') },
+  { icon: 'fa-solid fa-arrows-rotate', title: t('download.features.autoUpdates.title'), description: t('download.features.autoUpdates.description') },
+  { icon: 'fa-solid fa-shield', title: t('download.features.privacyFirst.title'), description: t('download.features.privacyFirst.description') },
+  { icon: 'fa-solid fa-desktop', title: t('download.features.multiScreen.title'), description: t('download.features.multiScreen.description') },
+  { icon: 'fa-solid fa-brush', title: t('download.features.cleanInterface.title'), description: t('download.features.cleanInterface.description') },
+  { icon: 'fa-solid fa-moon', title: t('download.features.themeSync.title'), description: t('download.features.themeSync.description') }
 ]
 
 async function getAllReleasesFromGitHub(): Promise<GitHubRelease[]> {

@@ -14,7 +14,7 @@
         </div>
         <div class="hero-left">
           <h1 class="hero-title">
-            Protect your eyes from
+            {{ t('hero.title') }}
             <div class="rotating-text-wrapper">
               <span
                 class="rotating-text"
@@ -37,11 +37,15 @@
               </span>
             </div>
           </h1>
-          <a href="#download" class="button secondary download-button"> Download Now for Free ➤ </a>
+          <a href="#download" class="button secondary download-button">
+            {{ t('hero.downloadButton') }}
+          </a>
         </div>
         <div class="hero-right">
           <p class="hero-description">
-            BlinkBlink keeps your vision healthy while you conquer the digital world.
+            {{ t('hero.description_line1') }}
+            <br />
+            {{ t('hero.description_line2') }}
           </p>
         </div>
       </div>
@@ -77,10 +81,18 @@ import Features from '@/components/sections/Features.vue'
 import Rule from '@/components/sections/Rule.vue'
 import Download from '@/components/sections/Download.vue'
 import Footer from '@/components/Footer.vue'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 
 const BASE_DURATION = 600 // 0.6s in ms
 const CHAR_DELAY = 40 // 0.04s in ms
-const words = ['strain', 'dryness', 'fatigue', 'discomfort', 'screen-time burnout']
+const words = [
+  t('hero.words.strain'),
+  t('hero.words.dryness'),
+  t('hero.words.fatigue'),
+  t('hero.words.discomfort'),
+  t('hero.words.burnout')
+]
 const currentWord = ref(words[0])
 const animate = ref(true)
 let currentIndex = 0
@@ -93,7 +105,7 @@ const backgroundRef = ref<HTMLElement | null>(null)
 
 // Helper function to format section names
 const formatSectionName = (section: string) => {
-  return section === 'rule' ? '20·20·20' : section.charAt(0).toUpperCase() + section.slice(1)
+  return t(`nav.${section}`)
 }
 
 const scrollActiveNavItemIntoView = () => {

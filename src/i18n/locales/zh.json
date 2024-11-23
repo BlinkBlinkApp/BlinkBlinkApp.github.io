@@ -1,0 +1,147 @@
+{
+  "hero": {
+    "title": "保護你的眼睛",
+    "description_line1": "在你遨遊數位世界時，",
+    "description_line2": "由BlinkBlink守護你的視力健康。",
+    "downloadButton": "立即免費下載 ➤",
+    "words": {
+      "strain": "疲勞",
+      "dryness": "乾澀",
+      "fatigue": "勞累",
+      "discomfort": "不適",
+      "burnout": "螢幕使用過度"
+    }
+  },
+  "nav": {
+    "home": "首頁",
+    "rule": "20·20·20",
+    "features": "功能",
+    "download": "下載",
+    "about": "關於"
+  },
+  "rule": {
+    "pre_heading": "",
+    "post_heading": "法則",
+    "bubbles": {
+      "focus": "保持專注，完成任務！",
+      "glance": "遠眺休息，放鬆雙眼。",
+      "breathe": "深呼吸，眨眨眼，重新充電。"
+    },
+    "why_matters": {
+      "title": "為什麼重要",
+      "intro": "這個簡單的法則是眼科專家推薦的，它可以幫助對抗數位眼睛疲勞，支持更健康的螢幕使用習慣，同時提高工作效率。",
+      "every_20_min": {
+        "title": "每20分鐘",
+        "desc": "定期休息可以預防眼睛疲勞，維持全天的專注力。把它想像成視覺系統的小型重置。"
+      },
+      "look_20_feet": {
+        "title": "看20英尺遠",
+        "desc": "注視遠處物體可以放鬆眼部肌肉並緩解視覺壓力。就像是在為眼睛做伸展運動。"
+      },
+      "for_20_sec": {
+        "title": "持續20秒鐘",
+        "desc": "這短暫的休息讓眼睛有機會完全放鬆和調整，同時促進有意識的眨眼和更好的姿勢。"
+      }
+    },
+    "key_benefits": {
+      "title": "主要好處",
+      "items": [
+        "減少數位用眼疲勞",
+        "提高專注力和持續生產力",
+        "預防眼睛乾澀和視覺模糊",
+        "改善姿勢和頸部舒適度",
+        "鼓勵有意識的眨眼和放鬆",
+        "培養長期健康的螢幕使用習慣"
+      ]
+    }
+  },
+  "features": {
+    "overline": "功能特色",
+    "title": "守護你的數位視力",
+    "description": "螢幕使用時間增加不代表眼睛一定要受苦。BlinkBlink幫助你保持專注、精力充沛，並掌控螢幕使用習慣。",
+    "highlights": {
+      "rule": {
+        "number": "20-20-20",
+        "label": "護眼法則"
+      },
+      "customizable": {
+        "number": "100%",
+        "label": "可自訂"
+      }
+    },
+    "showcase": {
+      "smart_break": {
+        "title": "智慧休息體驗",
+        "description": "從溫和的休息提醒到深入的總結分析，BlinkBlink全程引導你完成護眼例行程序。"
+      },
+      "schedules": {
+        "title": "自訂休息時程",
+        "description": "根據需求調整休息時間。設定符合工作流程的間隔和持續時間。"
+      },
+      "analytics": {
+        "title": "洞察分析",
+        "description": "透過清晰的視覺化數據了解你的螢幕使用習慣。掌握數位健康。"
+      },
+      "theme": {
+        "title": "無縫主題整合",
+        "description": "自動適應系統的明暗模式，提供一致且舒適的視覺體驗。"
+      }
+    }
+  },
+  "download": {
+    "title": "立即下載使用！",
+    "downloadButton": {
+      "windows": "下載 Windows 版本",
+      "macos": "下載 macOS 版本",
+      "preparing": "準備下載中..."
+    },
+    "comingSoon": "Linux 版本即將推出",
+    "versionInfo": {
+      "latest": "最新版本",
+      "releaseDate": "發布日期",
+      "downloads": "下載次數"
+    },
+    "features": {
+      "autoStart": {
+        "title": "自動啟動",
+        "description": "隨系統啟動"
+      },
+      "smartScheduling": {
+        "title": "智慧排程",
+        "description": "自訂休息時間"
+      },
+      "trackProgress": {
+        "title": "進度追蹤",
+        "description": "改善使用習慣"
+      },
+      "breakReminders": {
+        "title": "休息提醒",
+        "description": "減少眼睛疲勞"
+      },
+      "rule": {
+        "title": "20·20·20 法則",
+        "description": "養成健康用眼習慣"
+      },
+      "autoUpdates": {
+        "title": "自動更新",
+        "description": "輕鬆保持最新版本"
+      },
+      "privacyFirst": {
+        "title": "隱私優先",
+        "description": "資料留在本機"
+      },
+      "multiScreen": {
+        "title": "多螢幕支援",
+        "description": "支援所有螢幕"
+      },
+      "cleanInterface": {
+        "title": "簡潔介面",
+        "description": "簡單優美設計"
+      },
+      "themeSync": {
+        "title": "主題同步",
+        "description": "配合系統明暗模式"
+      }
+    }
+  }
+}

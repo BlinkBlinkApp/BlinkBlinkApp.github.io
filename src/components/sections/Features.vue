@@ -11,20 +11,17 @@
     <div class="container">
       <div class="hero-content">
         <div class="hero-text">
-          <span class="overline">Features</span>
-          <h3>Protect Your Digital Vision</h3>
-          <p>
-            More screen time doesn't have to mean strained eyes. BlinkBlink helps you stay focused,
-            refreshed, and in control of your screen habits.
-          </p>
+          <span class="overline">{{ t('features.overline') }}</span>
+          <h3>{{ t('features.title') }}</h3>
+          <p>{{ t('features.description') }}</p>
           <div class="highlights">
             <div class="highlight-item">
-              <span class="highlight-number">20-20-20</span>
-              <span class="highlight-label">Eye Care Rule</span>
+              <span class="highlight-number">{{ t('features.highlights.rule.number') }}</span>
+              <span class="highlight-label">{{ t('features.highlights.rule.label') }}</span>
             </div>
             <div class="highlight-item">
-              <span class="highlight-number">100%</span>
-              <span class="highlight-label">Customizable</span>
+              <span class="highlight-number">{{ t('features.highlights.customizable.number') }}</span>
+              <span class="highlight-label">{{ t('features.highlights.customizable.label') }}</span>
             </div>
           </div>
         </div>
@@ -43,20 +40,18 @@
             </div>
           </div>
           <div class="description">
-            <h4>Smart Break Experience</h4>
+            <h4>{{ t('features.showcase.smart_break.title') }}</h4>
             <p>
-              From gentle break reminders to insightful summaries, BlinkBlink guides you through a
-              complete eye care routine.
+              {{ t('features.showcase.smart_break.description') }}
             </p>
           </div>
         </div>
 
         <div class="feature-showcase-item">
           <div class="description order-even-2">
-            <h4>Customizable Schedules</h4>
+            <h4>{{ t('features.showcase.schedules.title') }}</h4>
             <p>
-              Tailor breaks to your needs. Set intervals and durations that align with your
-              workflow.
+              {{ t('features.showcase.schedules.description') }}
             </p>
           </div>
           <div class="screenshot order-even-1">
@@ -78,19 +73,17 @@
             />
           </div>
           <div class="description order-odd-2">
-            <h4>Insightful Analytics</h4>
+            <h4>{{ t('features.showcase.analytics.title') }}</h4>
             <p>
-              Understand your screen habits with clear visuals. Stay on top of your digital
-              wellness.
+              {{ t('features.showcase.analytics.description') }}
             </p>
           </div>
         </div>
         <div class="feature-showcase-item">
           <div class="description order-even-2">
-            <h4>Seamless Theme Integration</h4>
+            <h4>{{ t('features.showcase.theme.title') }}</h4>
             <p>
-              Automatically adapts to your system's light or dark mode for a consistent and
-              comfortable visual experience.
+              {{ t('features.showcase.theme.description') }}
             </p>
           </div>
           <div class="screenshot order-even-1">
@@ -108,7 +101,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import '@/assets/styles/Features.css'
 import workDemo from '@/assets/screenshots/work_demo.png'
 import breakOverlay from '@/assets/screenshots/break_overlay.png'
@@ -180,4 +174,6 @@ onUnmounted(() => {
     cancelAnimationFrame(animationFrame)
   }
 })
+
+const { t } = useI18n()
 </script>

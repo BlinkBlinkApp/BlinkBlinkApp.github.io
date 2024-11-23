@@ -1,0 +1,147 @@
+{
+  "hero": {
+    "title": "Protect your eyes from",
+    "description_line1": "BlinkBlink keeps your vision healthy",
+    "description_line2": "while you conquer the digital world.",
+    "downloadButton": "Download Now for Free ➤",
+    "words": {
+      "strain": "strain",
+      "dryness": "dryness",
+      "fatigue": "fatigue",
+      "discomfort": "discomfort",
+      "burnout": "screen-time burnout"
+    }
+  },
+  "nav": {
+    "home": "Home",
+    "rule": "20·20·20",
+    "features": "Features",
+    "download": "Download",
+    "about": "About"
+  },
+  "rule": {
+    "pre_heading": "The",
+    "post_heading": "Rule",
+    "bubbles": {
+      "focus": "Stay focused,\ncrush your tasks!",
+      "glance": "Glance away, rest your eyes",
+      "breathe": "Breathe,\nblink,\nrecharge."
+    },
+    "why_matters": {
+      "title": "Why it Matters",
+      "intro": "This simple rule, recommended by eye care professionals, helps combat digital eye strain and supports healthier screen habits while boosting productivity.",
+      "every_20_min": {
+        "title": "Every 20 Minutes",
+        "desc": "Regular breaks prevent eye fatigue and maintain focus throughout your workday. Think of it as a mini-reset for your visual system."
+      },
+      "look_20_feet": {
+        "title": "Look 20 Feet Away",
+        "desc": "Focusing on distant objects relaxes your eye muscles and eases visual stress. It's like stretching for your eyes."
+      },
+      "for_20_sec": {
+        "title": "For 20 Seconds",
+        "desc": "This short pause gives your eyes a chance to fully relax and readjust, while also promoting mindful blinking and better posture."
+      }
+    },
+    "key_benefits": {
+      "title": "Key Benefits",
+      "items": [
+        "Reduced digital eye strain and fatigue",
+        "Better focus and sustained productivity",
+        "Prevention of dry eyes and blurred vision",
+        "Improved posture and neck comfort",
+        "Encourages mindful blinking and relaxation",
+        "Healthier screen-time habits for long-term wellness"
+      ]
+    }
+  },
+  "features": {
+    "overline": "Features",
+    "title": "Protect Your Digital Vision",
+    "description": "More screen time doesn't have to mean strained eyes. BlinkBlink helps you stay focused, refreshed, and in control of your screen habits.",
+    "highlights": {
+      "rule": {
+        "number": "20-20-20",
+        "label": "Eye Care Rule"
+      },
+      "customizable": {
+        "number": "100%",
+        "label": "Customizable"
+      }
+    },
+    "showcase": {
+      "smart_break": {
+        "title": "Smart Break Experience",
+        "description": "From gentle break reminders to insightful summaries, BlinkBlink guides you through a complete eye care routine."
+      },
+      "schedules": {
+        "title": "Customizable Schedules",
+        "description": "Tailor breaks to your needs. Set intervals and durations that align with your workflow."
+      },
+      "analytics": {
+        "title": "Insightful Analytics",
+        "description": "Understand your screen habits with clear visuals. Stay on top of your digital wellness."
+      },
+      "theme": {
+        "title": "Seamless Theme Integration",
+        "description": "Automatically adapts to your system's light or dark mode for a consistent and comfortable visual experience."
+      }
+    }
+  },
+  "download": {
+    "title": "Download & Get Started!",
+    "downloadButton": {
+      "windows": "Download for Windows",
+      "macos": "Download for macOS",
+      "preparing": "Preparing Download..."
+    },
+    "comingSoon": "Linux Coming Soon",
+    "versionInfo": {
+      "latest": "Latest Version",
+      "releaseDate": "Release Date",
+      "downloads": "Downloads"
+    },
+    "features": {
+      "autoStart": {
+        "title": "Auto Start",
+        "description": "Launches with your system"
+      },
+      "smartScheduling": {
+        "title": "Smart Scheduling",
+        "description": "Custom timers and breaks"
+      },
+      "trackProgress": {
+        "title": "Track Progress",
+        "description": "Insights to improve habits"
+      },
+      "breakReminders": {
+        "title": "Break Reminders",
+        "description": "Reduce eye strain with prompts"
+      },
+      "rule": {
+        "title": "20·20·20 Rule",
+        "description": "Encourages healthy eye habits"
+      },
+      "autoUpdates": {
+        "title": "Auto Updates",
+        "description": "Stay up-to-date effortlessly"
+      },
+      "privacyFirst": {
+        "title": "Privacy First",
+        "description": "Data stays on your device"
+      },
+      "multiScreen": {
+        "title": "Multi-Screen Support",
+        "description": "Works across all screens"
+      },
+      "cleanInterface": {
+        "title": "Clean Interface",
+        "description": "Simple and beautiful design"
+      },
+      "themeSync": {
+        "title": "System Theme Sync",
+        "description": "Matches light or dark mode"
+      }
+    }
+  }
+}
