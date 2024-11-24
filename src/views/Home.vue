@@ -165,10 +165,21 @@ const scrollToSection = (id: string) => {
 
   const element = document.getElementById(id)
   if (element) {
-    const navHeight = 80 // Inline constant since it's only used here
-    const offset = element.getBoundingClientRect().top + window.scrollY - navHeight
-    window.scrollTo({ top: offset, behavior: 'smooth' })
-    setTimeout(scrollActiveNavItemIntoView, 500)
+    requestAnimationFrame(() => {
+      const navHeight = 80
+      const offset = element.offsetTop - navHeight
+
+      window.scrollTo({ top: offset })
+
+      requestAnimationFrame(() => {
+        window.scrollTo({
+          top: offset,
+          behavior: 'smooth'
+        })
+      })
+    })
+
+    setTimeout(scrollActiveNavItemIntoView, 800)
   }
 }
 
