@@ -42,8 +42,7 @@
                 :src="image.src"
                 :alt="image.alt"
                 v-fade-in
-                :fetchpriority="index === 0 ? 'high' : 'low'"
-                :loading="index === 0 ? 'eager' : 'lazy'"
+                :fetchpriority="index === 0 ? 'high' : undefined"
                 width="1200"
                 height="800"
               />
@@ -69,7 +68,6 @@
               src="@/assets/screenshots/schedule_setting.webp"
               alt="Customizable settings"
               v-fade-in
-              loading="lazy"
               width="800"
               height="600"
             />
@@ -81,7 +79,6 @@
               src="@/assets/screenshots/stats_dark.webp"
               alt="Analytics dashboard"
               v-fade-in
-              loading="lazy"
               width="800"
               height="600"
             />
@@ -105,7 +102,6 @@
               src="@/assets/screenshots/light_dark_show.webp"
               alt="Analytics dashboard"
               v-fade-in
-              loading="lazy"
               width="800"
               height="600"
             />

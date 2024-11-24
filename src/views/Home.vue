@@ -19,7 +19,6 @@
             src="@/assets/background.webp"
             alt=""
             v-fade-in
-            loading="lazy"
             width="800"
             height="600"
             decoding="async"
@@ -165,21 +164,15 @@ const scrollToSection = (id: string) => {
 
   const element = document.getElementById(id)
   if (element) {
-    requestAnimationFrame(() => {
-      const navHeight = 80
-      const offset = element.offsetTop - navHeight
+    const navHeight = 80
+    const offset = element.offsetTop - navHeight
 
-      window.scrollTo({ top: offset })
-
-      requestAnimationFrame(() => {
-        window.scrollTo({
-          top: offset,
-          behavior: 'smooth'
-        })
-      })
+    window.scrollTo({
+      top: offset,
+      behavior: 'smooth',
     })
 
-    setTimeout(scrollActiveNavItemIntoView, 800)
+    setTimeout(scrollActiveNavItemIntoView, 500)
   }
 }
 
