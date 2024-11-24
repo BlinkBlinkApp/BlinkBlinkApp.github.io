@@ -206,7 +206,7 @@ header {
   --nav-padding: 1rem 2rem;
   --nav-border-radius: 100px;
   --nav-item-padding: 0.5rem 1.25rem;
-  --nav-mobile-scale: 0.9; /* New variable for mobile scaling */
+  --nav-mobile-scale: 1; /* Changed from 0.9 */
 }
 
 nav {
@@ -261,6 +261,19 @@ nav a {
   padding: var(--nav-item-padding);
   overflow: hidden;
   border-radius: var(--nav-border-radius);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  outline: none;
+  user-select: none;
+}
+
+nav a:focus {
+  outline: none;
+}
+
+nav a:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: -2px;
 }
 
 nav a::before {
@@ -405,9 +418,12 @@ nav::-webkit-scrollbar {
     width: 90%;
     max-width: 100%;
     overflow: visible;
-    -webkit-overflow-scrolling: touch;
-    transform: translate3d(-50%, 0, 0) translateZ(0) scale(var(--nav-mobile-scale));
+    /* Remove scale transform that might cause janky scrolling */
+    transform: translate3d(-50%, 0, 0);
+    /* Remove contain property */
     contain: none;
+    /* Enable better touch handling */
+    touch-action: pan-x pan-y;
   }
 
   .nav-content {
@@ -416,23 +432,17 @@ nav::-webkit-scrollbar {
     justify-content: flex-start;
     padding: 0.5rem;
     overflow-x: auto;
-    scroll-snap-type: x proximity;
+    /* Enable momentum scrolling */
     -webkit-overflow-scrolling: touch;
+    /* Use mandatory snap for better control */
+    scroll-snap-type: x mandatory;
+    /* Remove Firefox scrollbar */
     scrollbar-width: none;
-    mask-image: linear-gradient(
-      to right,
-      transparent,
-      #000 10px,
-      #000 calc(100% - 10px),
-      transparent
-    );
-    -webkit-mask-image: linear-gradient(
-      to right,
-      transparent,
-      #000 10px,
-      #000 calc(100% - 10px),
-      transparent
-    );
+    /* Prevent rubber-banding on iOS */
+    overscroll-behavior-x: contain;
+    /* Remove mask for better performance */
+    mask-image: none;
+    -webkit-mask-image: none;
   }
 
   nav a {
@@ -440,7 +450,9 @@ nav::-webkit-scrollbar {
     font-size: 0.85rem;
     white-space: nowrap;
     flex-shrink: 0;
-    scroll-snap-align: center;
+    scroll-snap-align: start;
+    /* Better touch handling */
+    touch-action: manipulation;
   }
 
   .lang-switch-circle {

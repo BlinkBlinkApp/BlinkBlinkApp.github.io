@@ -264,15 +264,9 @@ body {
     rgba(255, 255, 255, 0) 100%
   );
   transform: translateX(-100%);
-  animation: shimmer 1.5s infinite;
   will-change: transform;
 }
 
-@keyframes shimmer {
-  100% {
-    transform: translateX(100%);
-  }
-}
 
 /* Responsive breakpoints */
 @media (max-width: 1024px) {

@@ -51,7 +51,7 @@
             </div>
           </h1>
           <div class="hero-buttons">
-            <a href="#download" class="button secondary download-button">
+            <a href="#download" class="button secondary download-button" @click="handleNavClick($event, 'download')">
               {{ t('hero.downloadButton') }}
             </a>
             <a
@@ -80,7 +80,7 @@
               :key="section"
               :href="`#${section}`"
               :class="{ active: currentSection === section }"
-              @click.prevent="scrollToSection(section)"
+              @click="handleNavClick($event, section)"
             >
               {{ formatSectionName(section) }}
             </a>
@@ -104,7 +104,8 @@
 
 <script setup lang="ts">
 import '@/assets/styles/Home.css'
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import Features from '@/components/sections/Features.vue'
 import Rule from '@/components/sections/Rule.vue'
 import Download from '@/components/sections/Download.vue'
@@ -127,8 +128,14 @@ const words = ['strain', 'dryness', 'fatigue', 'discomfort', 'burnout'].map((wor
 )
 const currentWord = ref(words[0])
 const animate = ref(true)
-const currentSection = ref('home')
 const heroOpacity = ref(1)
+
+// Add router instance
+const router = useRouter()
+const route = useRoute()
+const currentSection = computed(() => {
+  return route.hash ? route.hash.slice(1) : 'home'
+})
 
 // Utility functions
 const debounce = <T extends (...args: any[]) => any>(fn: T, delay: number = 50) => {
@@ -157,25 +164,6 @@ const rotateWords = () => {
 }
 
 const sections = ['home', 'rule', 'features', 'download', 'about']
-const scrollToSection = (id: string) => {
-  if (id === 'home') {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-    return
-  }
-
-  const element = document.getElementById(id)
-  if (element) {
-    const navHeight = 80
-    const offset = element.offsetTop - navHeight
-
-    window.scrollTo({
-      top: offset,
-      behavior: 'smooth',
-    })
-
-    setTimeout(scrollActiveNavItemIntoView, 500)
-  }
-}
 
 // Language handling
 const toggleLanguage = () => {
@@ -191,35 +179,36 @@ const toggleLanguage = () => {
   currentWord.value = words[0]
 }
 
+// Add back the scrollActiveNavItemIntoView function
+const scrollActiveNavItemIntoView = () => {
+  requestAnimationFrame(() => {
+    const nav = document.querySelector('.nav-content')
+    const activeItem = nav?.querySelector('a.active') as HTMLElement | null
+    if (nav && activeItem) {
+      const navRect = nav.getBoundingClientRect()
+      const activeRect = activeItem.getBoundingClientRect()
+
+      if (activeRect.left < navRect.left || activeRect.right > navRect.right) {
+        // Use native behavior on mobile
+        const behavior = window.innerWidth <= 768 ? 'auto' : 'smooth'
+        const scrollLeft = activeItem.offsetLeft - nav.clientWidth / 2 + activeItem.offsetWidth / 2
+        nav.scrollTo({
+          left: scrollLeft,
+          behavior
+        })
+      }
+    }
+  })
+}
+
 // Setup and cleanup
 onMounted(() => {
   const wordRotationInterval = rotateWords()
-  const sectionObserver = new IntersectionObserver(
-    (entries) =>
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          currentSection.value = entry.target.id
-          scrollActiveNavItemIntoView()
-        }
-      }),
-    {
-      // Adjusted margins for better mobile detection
-      rootMargin: '-20% 0px -20% 0px',
-      threshold: 0.2
-    }
-  )
-
-  sections.forEach((section) => {
-    const element = document.getElementById(section)
-    if (element) sectionObserver.observe(element)
-  })
-
   window.addEventListener('scroll', handleScroll, { passive: true })
   window.addEventListener('resize', handleScroll)
 
   onUnmounted(() => {
     clearInterval(wordRotationInterval)
-    sectionObserver.disconnect()
     window.removeEventListener('scroll', handleScroll)
     window.removeEventListener('resize', handleScroll)
   })
@@ -229,29 +218,15 @@ const formatSectionName = (section: string) => {
   return t(`nav.${section}`)
 }
 
-const scrollActiveNavItemIntoView = () => {
-  requestAnimationFrame(() => {
-    const nav = document.querySelector('.nav-content')
-    const activeItem = nav?.querySelector('a.active') as HTMLElement
-    if (nav && activeItem) {
-      const navRect = nav.getBoundingClientRect()
-      const activeRect = activeItem.getBoundingClientRect()
-
-      // Enhanced scroll positioning
-      if (activeRect.left < navRect.left || activeRect.right > navRect.right) {
-        const scrollLeft = activeItem.offsetLeft - nav.clientWidth / 2 + activeItem.offsetWidth / 2
-        nav.scrollTo({
-          left: scrollLeft,
-          behavior: 'smooth'
-        })
-      }
-    }
-  })
-}
-
 watch(currentSection, () => {
   scrollActiveNavItemIntoView()
 })
+
+// Simplify handleNavClick to only use hash
+const handleNavClick = (event: Event, section: string) => {
+  event.preventDefault()
+  router.push({ hash: section === 'home' ? '' : `#${section}` }).catch(() => {})
+}
 </script>
 
 <style scoped>

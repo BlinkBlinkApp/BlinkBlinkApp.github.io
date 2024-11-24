@@ -259,7 +259,6 @@
 
   background: rgba(255, 255, 255, 0.1);
   transform: rotate(45deg);
-  animation: shimmer 3s infinite;
 }
 
 .icon {
@@ -388,12 +387,6 @@
   }
   50% {
     transform: translateY(-20px) rotateY(5deg);
-  }
-}
-
-@keyframes shimmer {
-  to {
-    transform: translateX(100%);
   }
 }
 
