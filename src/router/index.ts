@@ -15,6 +15,11 @@ const router = createRouter({
       return savedPosition
     }
 
+    // Don't scroll if only the hash changed
+    if (from.path === to.path && to.hash !== from.hash) {
+      return false
+    }
+
     const behavior = window.innerWidth <= 768 ? 'auto' : 'smooth'
 
     if (to.hash) {

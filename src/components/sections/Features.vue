@@ -1,11 +1,5 @@
 <template>
   <section id="features" class="features-section">
-    <div class="background-shapes">
-      <div class="shape shape-1"></div>
-      <div class="shape shape-2"></div>
-      <div class="shape shape-3"></div>
-    </div>
-
     <div class="pattern-overlay"></div>
 
     <div class="container">

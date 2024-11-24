@@ -51,7 +51,11 @@
             </div>
           </h1>
           <div class="hero-buttons">
-            <a href="#download" class="button secondary download-button" @click="handleNavClick($event, 'download')">
+            <a
+              href="#download"
+              class="button secondary download-button"
+              @click="handleNavClick($event, 'download')"
+            >
               {{ t('hero.downloadButton') }}
             </a>
             <a
@@ -79,7 +83,7 @@
               v-for="section in sections"
               :key="section"
               :href="`#${section}`"
-              :class="{ active: currentSection === section }"
+              :class="{ active: activeSection === section }"
               @click="handleNavClick($event, section)"
             >
               {{ formatSectionName(section) }}
@@ -104,13 +108,15 @@
 
 <script setup lang="ts">
 import '@/assets/styles/Home.css'
-import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import Features from '@/components/sections/Features.vue'
 import Rule from '@/components/sections/Rule.vue'
 import Download from '@/components/sections/Download.vue'
 import Footer from '@/components/Footer.vue'
 import { useI18n } from 'vue-i18n'
+import { useSectionObserver } from '@/composables/useSectionObserver'
+import { useNavScroll } from '@/composables/useNavScroll'
 
 const CONFIG = {
   ANIMATION: {
@@ -133,23 +139,9 @@ const heroOpacity = ref(1)
 // Add router instance
 const router = useRouter()
 const route = useRoute()
-const currentSection = computed(() => {
-  return route.hash ? route.hash.slice(1) : 'home'
-})
-
-// Utility functions
-const debounce = <T extends (...args: any[]) => any>(fn: T, delay: number = 50) => {
-  let timeoutId: ReturnType<typeof setTimeout>
-  return function (this: any, ...args: Parameters<T>) {
-    clearTimeout(timeoutId)
-    timeoutId = setTimeout(() => fn.apply(this, args), delay)
-  }
-}
-
-const handleScroll = debounce(() => {
-  const { scrollY } = window
-  heroOpacity.value = Math.max(0, 1 - scrollY / (window.innerHeight * 0.8))
-}, CONFIG.ANIMATION.DELAY)
+const sections = ['home', 'rule', 'features', 'download', 'about']
+const { activeSection } = useSectionObserver(sections)
+const { scrollActiveNavItemIntoView } = useNavScroll(activeSection)
 
 const rotateWords = () => {
   let index = 0
@@ -162,8 +154,6 @@ const rotateWords = () => {
     }, CONFIG.ANIMATION.DURATION)
   }, CONFIG.ANIMATION.INTERVAL)
 }
-
-const sections = ['home', 'rule', 'features', 'download', 'about']
 
 // Language handling
 const toggleLanguage = () => {
@@ -179,53 +169,38 @@ const toggleLanguage = () => {
   currentWord.value = words[0]
 }
 
-// Add back the scrollActiveNavItemIntoView function
-const scrollActiveNavItemIntoView = () => {
-  requestAnimationFrame(() => {
-    const nav = document.querySelector('.nav-content')
-    const activeItem = nav?.querySelector('a.active') as HTMLElement | null
-    if (nav && activeItem) {
-      const navRect = nav.getBoundingClientRect()
-      const activeRect = activeItem.getBoundingClientRect()
-
-      if (activeRect.left < navRect.left || activeRect.right > navRect.right) {
-        // Use native behavior on mobile
-        const behavior = window.innerWidth <= 768 ? 'auto' : 'smooth'
-        const scrollLeft = activeItem.offsetLeft - nav.clientWidth / 2 + activeItem.offsetWidth / 2
-        nav.scrollTo({
-          left: scrollLeft,
-          behavior
-        })
-      }
-    }
-  })
-}
-
 // Setup and cleanup
 onMounted(() => {
   const wordRotationInterval = rotateWords()
-  window.addEventListener('scroll', handleScroll, { passive: true })
-  window.addEventListener('resize', handleScroll)
 
   onUnmounted(() => {
     clearInterval(wordRotationInterval)
-    window.removeEventListener('scroll', handleScroll)
-    window.removeEventListener('resize', handleScroll)
   })
+
+  scrollActiveNavItemIntoView()
 })
 
 const formatSectionName = (section: string) => {
   return t(`nav.${section}`)
 }
 
-watch(currentSection, () => {
-  scrollActiveNavItemIntoView()
-})
-
 // Simplify handleNavClick to only use hash
 const handleNavClick = (event: Event, section: string) => {
   event.preventDefault()
-  router.push({ hash: section === 'home' ? '' : `#${section}` }).catch(() => {})
+
+  // Directly scroll to element
+  const element = document.getElementById(section)
+  if (element) {
+    const behavior = window.innerWidth <= 768 ? 'auto' : 'smooth'
+    const offset = 100 // Same as router's scroll behavior
+    const y = element.getBoundingClientRect().top + window.pageYOffset - offset
+
+    window.scrollTo({ top: y, behavior })
+  }
+
+  // Update URL without triggering router scroll behavior
+  router.replace({ hash: section === 'home' ? '' : `#${section}` })
+  scrollActiveNavItemIntoView()
 }
 </script>
 

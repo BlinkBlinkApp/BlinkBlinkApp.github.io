@@ -495,10 +495,6 @@
     font-size: 1.2rem;
   }
 
-  .background-shapes .shape {
-    opacity: 0.2;
-  }
-
   .secondary-features {
     grid-template-columns: 1fr;
   }
@@ -555,6 +551,7 @@
     margin: 0 auto 2rem;
     inset-inline: 0;
     margin-inline: 0;
+    padding: 0 3rem;
   }
 
   .transition-container {
