@@ -72,7 +72,7 @@
           </p>
         </div>
       </div>
-      <nav :class="{ 'nav-hide': shouldHideNav }">
+      <nav>
         <div class="nav-wrapper">
           <div class="nav-content">
             <a
@@ -110,45 +110,108 @@ import Rule from '@/components/sections/Rule.vue'
 import Download from '@/components/sections/Download.vue'
 import Footer from '@/components/Footer.vue'
 import { useI18n } from 'vue-i18n'
+
+const CONFIG = {
+  ANIMATION: {
+    INTERVAL: 4000,
+    DURATION: 600,
+    DELAY: 50,
+  },
+} as const
+
+// Core state
 const { t, locale } = useI18n()
 const currentLanguage = ref(locale.value)
+const words = ['strain', 'dryness', 'fatigue', 'discomfort', 'burnout'].map((word) =>
+  t(`hero.words.${word}`),
+)
+const currentWord = ref(words[0])
+const animate = ref(true)
+const currentSection = ref('home')
+const heroOpacity = ref(1)
 
+// Utility functions
+const debounce = <T extends (...args: any[]) => any>(fn: T, delay: number = 50) => {
+  let timeoutId: ReturnType<typeof setTimeout>
+  return function (this: any, ...args: Parameters<T>) {
+    clearTimeout(timeoutId)
+    timeoutId = setTimeout(() => fn.apply(this, args), delay)
+  }
+}
+
+const handleScroll = debounce(() => {
+  const { scrollY } = window
+  heroOpacity.value = Math.max(0, 1 - scrollY / (window.innerHeight * 0.8))
+}, CONFIG.ANIMATION.DELAY)
+
+const rotateWords = () => {
+  let index = 0
+  return setInterval(() => {
+    animate.value = false
+    setTimeout(() => {
+      index = (index + 1) % words.length
+      currentWord.value = words[index]
+      animate.value = true
+    }, CONFIG.ANIMATION.DURATION)
+  }, CONFIG.ANIMATION.INTERVAL)
+}
+
+const sections = ['home', 'rule', 'features', 'download', 'about']
+const scrollToSection = (id: string) => {
+  if (id === 'home') {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    return
+  }
+
+  const element = document.getElementById(id)
+  if (element) {
+    const navHeight = 80 // Inline constant since it's only used here
+    const offset = element.getBoundingClientRect().top + window.scrollY - navHeight
+    window.scrollTo({ top: offset, behavior: 'smooth' })
+    setTimeout(scrollActiveNavItemIntoView, 500)
+  }
+}
+
+// Language handling
 const toggleLanguage = () => {
   const newLocale = locale.value === 'en' ? 'zh' : 'en'
   locale.value = newLocale
   currentLanguage.value = newLocale
   localStorage.setItem('user-locale', newLocale)
-  words.splice(
-    0,
-    words.length,
-    t('hero.words.strain'),
-    t('hero.words.dryness'),
-    t('hero.words.fatigue'),
-    t('hero.words.discomfort'),
-    t('hero.words.burnout'),
+
+  const newWords = ['strain', 'dryness', 'fatigue', 'discomfort', 'burnout'].map((word) =>
+    t(`hero.words.${word}`),
   )
-  currentWord.value = words[currentIndex]
+  words.splice(0, words.length, ...newWords)
+  currentWord.value = words[0]
 }
 
-const BASE_DURATION = 600
-const CHAR_DELAY = 40
-const words = [
-  t('hero.words.strain'),
-  t('hero.words.dryness'),
-  t('hero.words.fatigue'),
-  t('hero.words.discomfort'),
-  t('hero.words.burnout'),
-]
-const currentWord = ref(words[0])
-const animate = ref(true)
-let currentIndex = 0
+// Setup and cleanup
+onMounted(() => {
+  const wordRotationInterval = rotateWords()
+  const sectionObserver = new IntersectionObserver(
+    (entries) =>
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) currentSection.value = entry.target.id
+      }),
+    { rootMargin: '-45% 0px -45% 0px' },
+  )
 
-const sections = ['home', 'rule', 'features', 'download', 'about']
-const currentSection = ref('home')
-const heroOpacity = ref(1)
-const shouldHideNav = ref(false)
-const backgroundRef = ref<HTMLElement | null>(null)
-let lastScrollY = 0
+  sections.forEach((section) => {
+    const element = document.getElementById(section)
+    if (element) sectionObserver.observe(element)
+  })
+
+  window.addEventListener('scroll', handleScroll, { passive: true })
+  window.addEventListener('resize', handleScroll)
+
+  onUnmounted(() => {
+    clearInterval(wordRotationInterval)
+    sectionObserver.disconnect()
+    window.removeEventListener('scroll', handleScroll)
+    window.removeEventListener('resize', handleScroll)
+  })
+})
 
 const formatSectionName = (section: string) => {
   return t(`nav.${section}`)
@@ -173,129 +236,9 @@ const scrollActiveNavItemIntoView = () => {
   })
 }
 
-// Add watch for currentSection
 watch(currentSection, () => {
   scrollActiveNavItemIntoView()
 })
-
-// Debounce scroll handler
-const debounce = (fn: Function, ms = 16) => {
-  let timeoutId: ReturnType<typeof setTimeout>
-  return function (this: any, ...args: any[]) {
-    clearTimeout(timeoutId)
-    timeoutId = setTimeout(() => fn.apply(this, args), ms)
-  }
-}
-
-let ticking = false
-const handleScroll = () => {
-  if (!ticking) {
-    ticking = true
-    requestAnimationFrame(() => {
-      const { scrollY } = window
-
-      // Reduce nav visibility checks frequency and add hysteresis
-      if (Math.abs(lastScrollY - scrollY) > 150) {
-        const aboutSection = document.getElementById('about')
-        if (aboutSection) {
-          const threshold = window.innerHeight + 100
-          const shouldHide = aboutSection.getBoundingClientRect().top - threshold < 0
-          if (shouldHideNav.value !== shouldHide) {
-            shouldHideNav.value = shouldHide
-          }
-        }
-        lastScrollY = scrollY
-      }
-      heroOpacity.value = Math.max(0, Math.min(1, 1 - scrollY / (window.innerHeight * 0.8)))
-      ticking = false
-    })
-  }
-}
-
-const debouncedScroll = debounce(handleScroll, 32) // Increased from 16ms
-const resizeObserver = new ResizeObserver(
-  debounce(() => {
-    handleScroll()
-  }, 150),
-)
-
-onMounted(() => {
-  setInterval(() => {
-    animate.value = false
-    const totalDuration = BASE_DURATION + currentWord.value.length * CHAR_DELAY
-
-    setTimeout(() => {
-      currentIndex = (currentIndex + 1) % words.length
-      currentWord.value = words[currentIndex]
-      animate.value = true
-    }, totalDuration)
-  }, 4000)
-
-  handleScroll()
-
-  const sectionObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          currentSection.value = entry.target.id
-        }
-      })
-    },
-    {
-      rootMargin: '-45% 0px -45% 0px',
-    },
-  )
-
-  sections.forEach((section) => {
-    const element = document.getElementById(section)
-    if (element) sectionObserver.observe(element)
-  })
-
-  window.addEventListener('scroll', debouncedScroll, { passive: true })
-
-  if (backgroundRef.value) {
-    resizeObserver.observe(backgroundRef.value)
-  }
-
-  window.addEventListener('resize', handleScroll)
-
-  // Cleanup
-  onUnmounted(() => {
-    sectionObserver.disconnect()
-    window.removeEventListener('scroll', debouncedScroll)
-    window.removeEventListener('resize', handleScroll)
-    resizeObserver.disconnect()
-  })
-})
-
-const scrollToSection = (id: string) => {
-  if (id === 'home') {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    })
-    return
-  }
-
-  setTimeout(() => {
-    const element = document.getElementById(id)
-
-    if (element) {
-      const navHeight = 80
-      const extraPadding = 16
-
-      // Get the actual position after all content is loaded
-      const elementPosition = element.getBoundingClientRect().top
-      const offsetPosition = elementPosition + window.scrollY - (navHeight + extraPadding)
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth',
-      })
-      setTimeout(scrollActiveNavItemIntoView, 500)
-    }
-  }, 100)
-}
 </script>
 
 <style scoped>
@@ -307,9 +250,6 @@ const scrollToSection = (id: string) => {
   margin: 0 auto;
   padding: 8px 20px 8px 24px;
   width: 100%;
-  transform: translateZ(0);
-  will-change: transform;
-  contain: layout style paint;
 }
 
 .nav-content {
@@ -344,23 +284,6 @@ const scrollToSection = (id: string) => {
   margin-right: 0;
 }
 
-.lang-switch {
-  background: transparent;
-  border: 1px solid var(--color-text);
-  color: var(--color-text);
-  border-radius: 4px;
-  padding: 4px 8px;
-  font-size: 14px;
-  cursor: pointer;
-  margin-left: 16px;
-  transition: all 0.2s ease;
-}
-
-.lang-switch:hover {
-  background: var(--color-text);
-  color: var(--color-background);
-}
-
 .lang-switch-circle:hover {
   background: var(--color-text);
   color: var(--color-background);
@@ -385,16 +308,6 @@ const scrollToSection = (id: string) => {
 .button.text:hover {
   opacity: 1;
   text-decoration: underline;
-}
-
-nav {
-  transform: translate3d(-50%, 0, 0);
-  will-change: transform;
-  contain: layout style;
-}
-
-.nav-hide {
-  transform: translate3d(-50%, 200%, 0);
 }
 
 @media (max-width: 640px) {

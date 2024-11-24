@@ -191,18 +191,23 @@ header {
 }
 
 :root {
-  --nav-transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  --nav-transition: transform 0.4s cubic-bezier(0.3, 0, 0.2, 1),
+    opacity 0.4s cubic-bezier(0.3, 0, 0.2, 1);
   --nav-bg: rgba(255, 255, 255, 0.7);
   --nav-padding: 1rem 2rem;
   --nav-border-radius: 100px;
   --nav-item-padding: 0.5rem 1.25rem;
+  --nav-mobile-scale: 0.9; /* New variable for mobile scaling */
 }
 
 nav {
   position: fixed;
   bottom: 2rem;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate3d(-50%, 0, 0) translateZ(0);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  perspective: 1000;
   background: var(--nav-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -212,27 +217,23 @@ nav {
   justify-content: center;
   z-index: 100;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition:
-    transform var(--nav-transition),
-    opacity var(--nav-transition);
+  transition: var(--nav-transition);
   max-width: 90%;
   width: max-content;
   transform-origin: bottom center;
-  transform: translate3d(-50%, 0, 0);
   opacity: 1;
   will-change: transform;
   -ms-overflow-style: none;
   scrollbar-width: none;
   overflow: visible; /* Ensure shadows aren't clipped */
+  backface-visibility: hidden;
+  perspective: 1000px;
+  contain: layout style paint;
+  -webkit-font-smoothing: antialiased;
 }
 
 nav[style*='position: absolute'] {
-  transform: translateX(-50%) translateY(200%);
-  opacity: 0;
-}
-
-.nav-hide {
-  transform: translateX(-50%) translateY(200%);
+  transform: translate3d(-50%, 200%, 0);
   opacity: 0;
 }
 
@@ -349,8 +350,8 @@ nav::-webkit-scrollbar {
 
 @media (max-width: 768px) {
   :root {
-    --nav-padding: 0.5rem;
-    --nav-item-padding: 0.35rem 0.75rem;
+    --nav-padding: 0.35rem;
+    --nav-item-padding: 0.25rem 0.75rem;
   }
 
   .hero-title {
@@ -390,21 +391,12 @@ nav::-webkit-scrollbar {
 
   nav {
     bottom: 1rem;
-    padding: var(--nav-padding);
+    padding: 0;
     width: 90%;
     max-width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-  }
-
-  nav[style*='position: absolute'] {
-    transform: translateX(-50%) translateY(200%);
-    opacity: 0;
-  }
-
-  .nav-hide {
-    transform: translateX(-50%) translateY(200%);
-    opacity: 0;
+    transform: translate3d(-50%, 0, 0) translateZ(0) scale(var(--nav-mobile-scale));
   }
 
   .nav-content {
@@ -412,19 +404,28 @@ nav::-webkit-scrollbar {
     width: 100%;
     justify-content: space-between;
     padding: 0 0.5rem;
+    transform: none;
+    backface-visibility: hidden;
   }
 
   nav a {
-    padding: 0.35rem 0.75rem;
-    font-size: 0.9rem;
+    padding: var(--nav-item-padding);
+    font-size: 0.85rem;
     white-space: nowrap;
     flex-shrink: 0;
+  }
+
+  .lang-switch-circle {
+    width: 36px;
+    height: 36px;
+    font-size: 13px;
   }
 }
 
 @media (max-width: 380px) {
   :root {
-    --nav-item-padding: 0.25rem 0.5rem;
+    --nav-item-padding: 0.2rem 0.5rem;
+    --nav-mobile-scale: 0.85; /* Even smaller scale for very small screens */
   }
 
   nav a {
@@ -434,6 +435,12 @@ nav::-webkit-scrollbar {
 
   .nav-content {
     gap: 0.25rem;
+  }
+
+  .lang-switch-circle {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
   }
 }
 
@@ -450,6 +457,7 @@ nav::-webkit-scrollbar {
 
   nav {
     transition: none;
+    padding: 0;
   }
 }
 
