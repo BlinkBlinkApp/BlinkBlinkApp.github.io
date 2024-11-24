@@ -118,7 +118,6 @@ const toggleLanguage = () => {
   locale.value = newLocale
   currentLanguage.value = newLocale
   localStorage.setItem('user-locale', newLocale)
-  // Update rotating words after language change
   words.splice(
     0,
     words.length,
@@ -131,8 +130,8 @@ const toggleLanguage = () => {
   currentWord.value = words[currentIndex]
 }
 
-const BASE_DURATION = 600 // 0.6s in ms
-const CHAR_DELAY = 40 // 0.04s in ms
+const BASE_DURATION = 600
+const CHAR_DELAY = 40
 const words = [
   t('hero.words.strain'),
   t('hero.words.dryness'),
@@ -149,16 +148,15 @@ const currentSection = ref('home')
 const heroOpacity = ref(1)
 const shouldHideNav = ref(false)
 const backgroundRef = ref<HTMLElement | null>(null)
-let lastScrollY = 0 // Add this line to declare lastScrollY
+let lastScrollY = 0
 
-// Helper function to format section names
 const formatSectionName = (section: string) => {
   return t(`nav.${section}`)
 }
 
 const scrollActiveNavItemIntoView = () => {
   requestAnimationFrame(() => {
-    const nav = document.querySelector('.nav-content') // Changed to .nav-content
+    const nav = document.querySelector('.nav-content')
     const activeItem = nav?.querySelector('a.active') as HTMLElement
     if (nav && activeItem) {
       const navRect = nav.getBoundingClientRect()
@@ -196,29 +194,25 @@ const handleScroll = () => {
     requestAnimationFrame(() => {
       const { scrollY } = window
 
-      // Calculate nav visibility less frequently
-      if (Math.abs(lastScrollY - scrollY) > 100) {
+      // Reduce nav visibility checks frequency and add hysteresis
+      if (Math.abs(lastScrollY - scrollY) > 150) {
         const aboutSection = document.getElementById('about')
         if (aboutSection) {
-          shouldHideNav.value = aboutSection.getBoundingClientRect().top - window.innerHeight < 0
+          const threshold = window.innerHeight + 100
+          const shouldHide = aboutSection.getBoundingClientRect().top - threshold < 0
+          if (shouldHideNav.value !== shouldHide) {
+            shouldHideNav.value = shouldHide
+          }
         }
         lastScrollY = scrollY
       }
-
-      // Use transforms for better performance
-      heroOpacity.value = Math.max(0, Math.min(1, 1 - scrollY / (window.innerHeight * 0.75)))
-
-      // Use transform3d for GPU acceleration
-      if (backgroundRef.value) {
-        backgroundRef.value.style.transform = `translate3d(-50%, calc(-50% + ${scrollY * 0.4}px), 0) rotate(-45deg)`
-      }
-
+      heroOpacity.value = Math.max(0, Math.min(1, 1 - scrollY / (window.innerHeight * 0.8)))
       ticking = false
     })
   }
 }
 
-// Add ResizeObserver for more efficient resize handling
+const debouncedScroll = debounce(handleScroll, 32) // Increased from 16ms
 const resizeObserver = new ResizeObserver(
   debounce(() => {
     handleScroll()
@@ -237,12 +231,8 @@ onMounted(() => {
     }, totalDuration)
   }, 4000)
 
-  // Remove preloading code that used onImageLoad
-
-  // Throttle scroll handler using requestAnimationFrame
   handleScroll()
 
-  // Use Intersection Observer for section detection
   const sectionObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -261,10 +251,8 @@ onMounted(() => {
     if (element) sectionObserver.observe(element)
   })
 
-  // Initial setup and event listeners
-  window.addEventListener('scroll', handleScroll, { passive: true })
+  window.addEventListener('scroll', debouncedScroll, { passive: true })
 
-  // Use ResizeObserver instead of resize event
   if (backgroundRef.value) {
     resizeObserver.observe(backgroundRef.value)
   }
@@ -274,7 +262,7 @@ onMounted(() => {
   // Cleanup
   onUnmounted(() => {
     sectionObserver.disconnect()
-    window.removeEventListener('scroll', handleScroll)
+    window.removeEventListener('scroll', debouncedScroll)
     window.removeEventListener('resize', handleScroll)
     resizeObserver.disconnect()
   })
@@ -289,27 +277,24 @@ const scrollToSection = (id: string) => {
     return
   }
 
-  // Add a small delay to ensure content is rendered
   setTimeout(() => {
     const element = document.getElementById(id)
 
     if (element) {
-      const navHeight = 80 // Height of fixed header
-      const extraPadding = 16 // Additional padding for visual comfort
+      const navHeight = 80
+      const extraPadding = 16
 
       // Get the actual position after all content is loaded
       const elementPosition = element.getBoundingClientRect().top
-      const offsetPosition = elementPosition + window.pageYOffset - (navHeight + extraPadding)
+      const offsetPosition = elementPosition + window.scrollY - (navHeight + extraPadding)
 
       window.scrollTo({
         top: offsetPosition,
         behavior: 'smooth',
       })
-
-      // Wait for scroll to complete before scrolling nav item into view
       setTimeout(scrollActiveNavItemIntoView, 500)
     }
-  }, 100) // Small delay to ensure content is rendered
+  }, 100)
 }
 </script>
 
@@ -317,28 +302,31 @@ const scrollToSection = (id: string) => {
 .nav-wrapper {
   display: flex;
   align-items: center;
-  gap: 8px; /* Reduced from 16px */
+  gap: 8px;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 12px 0 24px; /* Adjusted padding: left 24px, right 12px */
+  padding: 8px 20px 8px 24px;
   width: 100%;
+  transform: translateZ(0);
+  will-change: transform;
+  contain: layout style paint;
 }
 
 .nav-content {
   flex: 1;
   overflow-x: auto;
-  padding-right: 8px; /* Added padding to separate from language switch */
-  -webkit-overflow-scrolling: touch; /* Add smooth scrolling on iOS */
-  scrollbar-width: none; /* Hide scrollbar on Firefox */
-  -ms-overflow-style: none; /* Hide scrollbar on IE/Edge */
+  padding-right: 8px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .nav-content::-webkit-scrollbar {
-  display: none; /* Hide scrollbar on Chrome/Safari */
+  display: none;
 }
 
 .lang-switch-circle {
-  position: relative; /* Changed from fixed */
+  position: relative;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -352,8 +340,8 @@ const scrollToSection = (id: string) => {
   align-items: center;
   justify-content: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  flex-shrink: 0; /* Prevent shrinking */
-  margin-right: -4px; /* Added negative margin to move slightly closer to edge */
+  flex-shrink: 0;
+  margin-right: 0;
 }
 
 .lang-switch {
@@ -383,6 +371,7 @@ const scrollToSection = (id: string) => {
   display: flex;
   gap: 16px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .button.text {
@@ -390,10 +379,37 @@ const scrollToSection = (id: string) => {
   padding: 8px 16px;
   color: var(--color-text);
   opacity: 0.8;
+  white-space: nowrap;
 }
 
 .button.text:hover {
   opacity: 1;
   text-decoration: underline;
+}
+
+nav {
+  transform: translate3d(-50%, 0, 0);
+  will-change: transform;
+  contain: layout style;
+}
+
+.nav-hide {
+  transform: translate3d(-50%, 200%, 0);
+}
+
+@media (max-width: 640px) {
+  .hero-buttons {
+    gap: 12px;
+    width: 100%;
+  }
+
+  .hero-buttons .button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .button.text {
+    padding: 12px 16px;
+  }
 }
 </style>

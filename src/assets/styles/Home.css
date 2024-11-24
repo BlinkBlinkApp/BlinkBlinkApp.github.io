@@ -206,11 +206,10 @@ nav {
   background: var(--nav-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  padding: var(--nav-padding);
+  padding: 0; /* Removed padding from nav, moved to nav-wrapper */
   border-radius: var(--nav-border-radius);
   display: flex;
   justify-content: center;
-  gap: 2rem;
   z-index: 100;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   transition:
@@ -224,6 +223,7 @@ nav {
   will-change: transform;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  overflow: visible; /* Ensure shadows aren't clipped */
 }
 
 nav[style*='position: absolute'] {
