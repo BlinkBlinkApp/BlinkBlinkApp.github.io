@@ -1,5 +1,5 @@
 .features-section {
-  padding: 12rem 2rem 8rem;
+  padding: 8rem 2rem 8rem;
   position: relative;
   width: 100%;
   max-width: 100vw;
@@ -157,6 +157,8 @@
 .screenshot img {
   width: 100%;
   height: auto;
+  max-width: 1200px;
+  max-height: 800px;
   display: block;
   object-fit: contain;
   transition: transform 0.4s ease;
@@ -349,8 +351,8 @@
 .featured-screenshot img {
   width: auto;
   height: auto;
-  max-width: 60%;
-  max-height: 80vh;
+  max-width: min(1200px, 80%);
+  max-height: min(800px, 80vh);
   object-fit: contain;
   filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.15));
 }
@@ -449,7 +451,8 @@
   }
 
   .featured-screenshot img {
-    max-width: 75%;
+    max-width: min(1200px, 85%);
+    max-height: min(800px, 70vh);
   }
 }
 
@@ -575,7 +578,8 @@
   }
 
   .featured-screenshot img {
-    max-width: 85%;
+    max-width: min(1200px, 90%);
+    max-height: min(800px, 60vh);
   }
 
   .feature-showcase-item.featured .description {
@@ -598,7 +602,8 @@
   }
 
   .featured-screenshot img {
-    max-width: 90%;
+    max-width: min(1200px, 95%);
+    max-height: min(800px, 50vh);
   }
 
   .feature-showcase-item.featured h4 {

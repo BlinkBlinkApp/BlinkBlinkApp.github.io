@@ -44,8 +44,8 @@
                 v-fade-in
                 :fetchpriority="index === 0 ? 'high' : 'low'"
                 :loading="index === 0 ? 'eager' : 'lazy'"
-                width="800"
-                height="600"
+                width="1200"
+                height="800"
               />
             </div>
           </div>
@@ -70,6 +70,8 @@
               alt="Customizable settings"
               v-fade-in
               loading="lazy"
+              width="800"
+              height="600"
             />
           </div>
         </div>
@@ -80,6 +82,8 @@
               alt="Analytics dashboard"
               v-fade-in
               loading="lazy"
+              width="800"
+              height="600"
             />
           </div>
           <div class="description order-odd-2">
@@ -102,6 +106,8 @@
               alt="Analytics dashboard"
               v-fade-in
               loading="lazy"
+              width="800"
+              height="600"
             />
           </div>
         </div>

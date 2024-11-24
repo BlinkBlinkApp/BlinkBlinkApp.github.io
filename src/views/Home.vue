@@ -274,20 +274,27 @@ const scrollToSection = (id: string) => {
     return
   }
 
-  const element = document.getElementById(id)
+  // Add a small delay to ensure content is rendered
+  setTimeout(() => {
+    const element = document.getElementById(id)
 
-  if (element) {
-    const offset = 80 // Offset for fixed header
-    const elementPosition = element.getBoundingClientRect().top
-    const offsetPosition = elementPosition + window.pageYOffset - offset
+    if (element) {
+      const navHeight = 80 // Height of fixed header
+      const extraPadding = 16 // Additional padding for visual comfort
 
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: 'smooth',
-    })
-  }
+      // Get the actual position after all content is loaded
+      const elementPosition = element.getBoundingClientRect().top
+      const offsetPosition = elementPosition + window.pageYOffset - (navHeight + extraPadding)
 
-  scrollActiveNavItemIntoView()
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      })
+
+      // Wait for scroll to complete before scrolling nav item into view
+      setTimeout(scrollActiveNavItemIntoView, 500)
+    }
+  }, 100) // Small delay to ensure content is rendered
 }
 </script>
 

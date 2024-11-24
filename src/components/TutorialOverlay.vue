@@ -59,7 +59,7 @@
               <div class="step-instructions">
                 <p data-step="1.">{{ t('tutorial.mac.step2.instructions.step1') }}</p>
                 <p data-step="2.">{{ t('tutorial.mac.step2.instructions.step2') }}</p>
-                <div class="command-box">
+                <div class="command-box" style="margin-left: 1rem">
                   xattr -c /Applications/BlinkBlink.app
                   <button class="copy-button" @click="copyCommand">
                     {{
@@ -74,7 +74,10 @@
               </div>
             </div>
             <div class="step-image">
-              <img src="@/assets/screenshots/install_guide_mac_step_2.webp" alt="Terminal command" />
+              <img
+                src="@/assets/screenshots/install_guide_mac_step_2.webp"
+                alt="Terminal command"
+              />
             </div>
           </div>
         </div>
@@ -102,7 +105,10 @@
               <br /><br />
               <i18n-t keypath="tutorial.windows.step2.explanation.content" tag="span">
                 <template #smartscreen>
-                  <a :href="t('tutorial.windows.step2.explanation.links.smartscreen')" target="_blank">
+                  <a
+                    :href="t('tutorial.windows.step2.explanation.links.smartscreen')"
+                    target="_blank"
+                  >
                     {{ t('tutorial.windows.step2.explanation.link_texts.smartscreen') }}
                   </a>
                 </template>
