@@ -127,7 +127,7 @@ header {
   margin-right: 0.01em;
 }
 
-.char[data-word-end="true"] {
+.char[data-word-end='true'] {
   margin-right: 0.25em;
 }
 
@@ -404,18 +404,35 @@ nav::-webkit-scrollbar {
     padding: 0;
     width: 90%;
     max-width: 100%;
-    overflow-x: auto;
+    overflow: visible;
     -webkit-overflow-scrolling: touch;
     transform: translate3d(-50%, 0, 0) translateZ(0) scale(var(--nav-mobile-scale));
+    contain: none;
   }
 
   .nav-content {
     gap: 1rem;
-    width: 100%;
-    justify-content: space-between;
-    padding: 0 0.5rem;
-    transform: none;
-    backface-visibility: hidden;
+    width: auto;
+    justify-content: flex-start;
+    padding: 0.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 10px,
+      #000 calc(100% - 10px),
+      transparent
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 10px,
+      #000 calc(100% - 10px),
+      transparent
+    );
   }
 
   nav a {
@@ -423,6 +440,7 @@ nav::-webkit-scrollbar {
     font-size: 0.85rem;
     white-space: nowrap;
     flex-shrink: 0;
+    scroll-snap-align: center;
   }
 
   .lang-switch-circle {
@@ -432,7 +450,7 @@ nav::-webkit-scrollbar {
   }
 
   .rotating-text-wrapper {
-    min-height: 3em; /* Accommodate up to 2 lines */
+    min-height: 3em;
     height: auto;
     text-align: left;
   }
@@ -447,7 +465,7 @@ nav::-webkit-scrollbar {
 @media (max-width: 380px) {
   :root {
     --nav-item-padding: 0.2rem 0.5rem;
-    --nav-mobile-scale: 0.85; /* Even smaller scale for very small screens */
+    --nav-mobile-scale: 0.85;
   }
 
   nav a {

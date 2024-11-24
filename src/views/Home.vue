@@ -197,9 +197,16 @@ onMounted(() => {
   const sectionObserver = new IntersectionObserver(
     (entries) =>
       entries.forEach((entry) => {
-        if (entry.isIntersecting) currentSection.value = entry.target.id
+        if (entry.isIntersecting) {
+          currentSection.value = entry.target.id
+          scrollActiveNavItemIntoView()
+        }
       }),
-    { rootMargin: '-45% 0px -45% 0px' },
+    {
+      // Adjusted margins for better mobile detection
+      rootMargin: '-20% 0px -20% 0px',
+      threshold: 0.2
+    }
   )
 
   sections.forEach((section) => {
@@ -230,11 +237,12 @@ const scrollActiveNavItemIntoView = () => {
       const navRect = nav.getBoundingClientRect()
       const activeRect = activeItem.getBoundingClientRect()
 
-      // Check if active item is not fully visible
+      // Enhanced scroll positioning
       if (activeRect.left < navRect.left || activeRect.right > navRect.right) {
+        const scrollLeft = activeItem.offsetLeft - nav.clientWidth / 2 + activeItem.offsetWidth / 2
         nav.scrollTo({
-          left: activeItem.offsetLeft - (nav.clientWidth - activeItem.clientWidth) / 2,
-          behavior: 'smooth',
+          left: scrollLeft,
+          behavior: 'smooth'
         })
       }
     }
