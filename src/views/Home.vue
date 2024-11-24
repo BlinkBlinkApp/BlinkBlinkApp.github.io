@@ -104,7 +104,7 @@
 
 <script setup lang="ts">
 import '@/assets/styles/Home.css'
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import Features from '@/components/sections/Features.vue'
 import Rule from '@/components/sections/Rule.vue'
 import Download from '@/components/sections/Download.vue'
@@ -158,7 +158,7 @@ const formatSectionName = (section: string) => {
 
 const scrollActiveNavItemIntoView = () => {
   requestAnimationFrame(() => {
-    const nav = document.querySelector('nav')
+    const nav = document.querySelector('.nav-content') // Changed to .nav-content
     const activeItem = nav?.querySelector('a.active') as HTMLElement
     if (nav && activeItem) {
       const navRect = nav.getBoundingClientRect()
@@ -174,6 +174,11 @@ const scrollActiveNavItemIntoView = () => {
     }
   })
 }
+
+// Add watch for currentSection
+watch(currentSection, () => {
+  scrollActiveNavItemIntoView()
+})
 
 // Debounce scroll handler
 const debounce = (fn: Function, ms = 16) => {
@@ -323,6 +328,13 @@ const scrollToSection = (id: string) => {
   flex: 1;
   overflow-x: auto;
   padding-right: 8px; /* Added padding to separate from language switch */
+  -webkit-overflow-scrolling: touch; /* Add smooth scrolling on iOS */
+  scrollbar-width: none; /* Hide scrollbar on Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar on IE/Edge */
+}
+
+.nav-content::-webkit-scrollbar {
+  display: none; /* Hide scrollbar on Chrome/Safari */
 }
 
 .lang-switch-circle {

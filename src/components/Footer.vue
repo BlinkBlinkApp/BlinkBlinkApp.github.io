@@ -13,7 +13,8 @@
         <h4>Links</h4>
         <a href="https://github.com/frozen0601" target="_blank">GitHub</a>
         <a href="https://www.linkedin.com/in/weichengh/" target="_blank">LinkedIn</a>
-        <a href="mailto:theblinkblinkapp@gmail.com">Contact (Feedback Welcome!)</a>
+        <a href="mailto:theblinkblinkapp@gmail.com">Contact</a>
+        <a href="https://forms.gle/2mZisXYEzaCz7Ra5A">Feedback</a>
       </div>
 
       <div class="footer-support">
