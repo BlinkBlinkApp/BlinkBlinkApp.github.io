@@ -50,9 +50,19 @@
               </span>
             </div>
           </h1>
-          <a href="#download" class="button secondary download-button">
-            {{ t('hero.downloadButton') }}
-          </a>
+          <div class="hero-buttons">
+            <a href="#download" class="button secondary download-button">
+              {{ t('hero.downloadButton') }}
+            </a>
+            <a
+              href="https://forms.gle/2mZisXYEzaCz7Ra5A"
+              class="button text feedback-button"
+              target="_blank"
+              rel="noopener"
+            >
+              {{ t('hero.feedbackButton') }}
+            </a>
+          </div>
         </div>
         <div class="hero-right">
           <p class="hero-description">
@@ -355,5 +365,23 @@ const scrollToSection = (id: string) => {
   background: var(--color-text);
   color: var(--color-background);
   transform: scale(1.1);
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.button.text {
+  background: transparent;
+  padding: 8px 16px;
+  color: var(--color-text);
+  opacity: 0.8;
+}
+
+.button.text:hover {
+  opacity: 1;
+  text-decoration: underline;
 }
 </style>
