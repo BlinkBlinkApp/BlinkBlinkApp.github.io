@@ -109,7 +109,6 @@ header {
 .rotating-text {
   display: inline-flex;
   flex-wrap: wrap;
-  gap: 0.1em;
   color: var(--primary-color);
   font-weight: 900;
   position: relative;
@@ -124,6 +123,12 @@ header {
   animation-delay: calc(var(--char-index) * var(--char-delay));
   will-change: transform, opacity;
   backface-visibility: hidden;
+  display: inline-block;
+  margin-right: 0.01em;
+}
+
+.char[data-word-end="true"] {
+  margin-right: 0.25em;
 }
 
 .rotating-text.animate-out .char {

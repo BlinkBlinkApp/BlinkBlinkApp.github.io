@@ -44,6 +44,7 @@
                   :key="`${currentWord}-${index}`"
                   class="char"
                   :style="{ '--char-index': index }"
+                  :data-word-end="char === '\u00A0'"
                   >{{ char }}</span
                 >
               </span>
