@@ -94,9 +94,9 @@
     "downloadButton": {
       "windows": "Download for Windows",
       "macos": "Download for macOS",
+      "linux": "Get it on Snap Store",
       "preparing": "Preparing Download..."
     },
-    "comingSoon": "Linux Coming Soon",
     "versionInfo": {
       "latest": "Latest Version",
       "releaseDate": "Release Date",

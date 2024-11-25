@@ -5,7 +5,11 @@
 
       <div class="features-ticker">
         <div class="ticker-content" style="running">
-          <div class="feature" v-for="(feature, index) in [...computedFeatures, ...computedFeatures]" :key="index">
+          <div
+            class="feature"
+            v-for="(feature, index) in [...computedFeatures, ...computedFeatures]"
+            :key="index"
+          >
             <i :class="feature.icon"></i>
             <h3>{{ feature.title }}</h3>
             <p>{{ feature.description }}</p>
@@ -21,7 +25,11 @@
               :class="['button', 'icon', 'solid', 'fa-download', { loading: isLoading.windows }]"
               :disabled="isLoading.windows"
             >
-              {{ isLoading.windows ? t('download.downloadButton.preparing') : t('download.downloadButton.windows') }}
+              {{
+                isLoading.windows
+                  ? t('download.downloadButton.preparing')
+                  : t('download.downloadButton.windows')
+              }}
             </a>
           </li>
           <li>
@@ -30,19 +38,36 @@
               :class="['button', 'icon', 'solid', 'fa-download', { loading: isLoading.macos }]"
               :disabled="isLoading.macos"
             >
-              {{ isLoading.macos ? t('download.downloadButton.preparing') : t('download.downloadButton.macos') }}
+              {{
+                isLoading.macos
+                  ? t('download.downloadButton.preparing')
+                  : t('download.downloadButton.macos')
+              }}
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://snapcraft.io/blinkblink"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="button icon solid fa-download"
+            >
+              {{ t('download.downloadButton.linux') }}
             </a>
           </li>
         </div>
       </ul>
-
-      <span class="coming-soon-label">{{ t('download.comingSoon') }}</span>
       <div class="version-info" v-if="latestVersion">
-        <span>{{ t('download.versionInfo.latest') }}: <span class="version">{{ latestVersion }}</span></span>
+        <span
+          >{{ t('download.versionInfo.latest') }}:
+          <span class="version">{{ latestVersion }}</span></span
+        >
         <span class="dot-separator">•</span>
         <span class="date">{{ t('download.versionInfo.releaseDate') }}: {{ releaseDate }}</span>
         <span class="dot-separator">•</span>
-        <span class="downloads">{{ totalDownloads.toLocaleString() }} {{ t('download.versionInfo.downloads') }}</span>
+        <span class="downloads"
+          >{{ totalDownloads.toLocaleString() }} {{ t('download.versionInfo.downloads') }}</span
+        >
       </div>
 
       <!-- Add the donation popup -->
@@ -94,16 +119,56 @@ const selectedPlatform = ref<'windows' | 'macos'>('windows')
 
 // Replace the features array with a computed property
 const computedFeatures = computed(() => [
-  { icon: 'fa-solid fa-rocket', title: t('download.features.autoStart.title'), description: t('download.features.autoStart.description') },
-  { icon: 'fa-solid fa-stopwatch', title: t('download.features.smartScheduling.title'), description: t('download.features.smartScheduling.description') },
-  { icon: 'fa-solid fa-chart-line', title: t('download.features.trackProgress.title'), description: t('download.features.trackProgress.description') },
-  { icon: 'fa-solid fa-eye', title: t('download.features.breakReminders.title'), description: t('download.features.breakReminders.description') },
-  { icon: 'fa-solid fa-user-md', title: t('download.features.rule.title'), description: t('download.features.rule.description') },
-  { icon: 'fa-solid fa-arrows-rotate', title: t('download.features.autoUpdates.title'), description: t('download.features.autoUpdates.description') },
-  { icon: 'fa-solid fa-shield', title: t('download.features.privacyFirst.title'), description: t('download.features.privacyFirst.description') },
-  { icon: 'fa-solid fa-desktop', title: t('download.features.multiScreen.title'), description: t('download.features.multiScreen.description') },
-  { icon: 'fa-solid fa-brush', title: t('download.features.cleanInterface.title'), description: t('download.features.cleanInterface.description') },
-  { icon: 'fa-solid fa-moon', title: t('download.features.themeSync.title'), description: t('download.features.themeSync.description') }
+  {
+    icon: 'fa-solid fa-rocket',
+    title: t('download.features.autoStart.title'),
+    description: t('download.features.autoStart.description'),
+  },
+  {
+    icon: 'fa-solid fa-stopwatch',
+    title: t('download.features.smartScheduling.title'),
+    description: t('download.features.smartScheduling.description'),
+  },
+  {
+    icon: 'fa-solid fa-chart-line',
+    title: t('download.features.trackProgress.title'),
+    description: t('download.features.trackProgress.description'),
+  },
+  {
+    icon: 'fa-solid fa-eye',
+    title: t('download.features.breakReminders.title'),
+    description: t('download.features.breakReminders.description'),
+  },
+  {
+    icon: 'fa-solid fa-user-md',
+    title: t('download.features.rule.title'),
+    description: t('download.features.rule.description'),
+  },
+  {
+    icon: 'fa-solid fa-arrows-rotate',
+    title: t('download.features.autoUpdates.title'),
+    description: t('download.features.autoUpdates.description'),
+  },
+  {
+    icon: 'fa-solid fa-shield',
+    title: t('download.features.privacyFirst.title'),
+    description: t('download.features.privacyFirst.description'),
+  },
+  {
+    icon: 'fa-solid fa-desktop',
+    title: t('download.features.multiScreen.title'),
+    description: t('download.features.multiScreen.description'),
+  },
+  {
+    icon: 'fa-solid fa-brush',
+    title: t('download.features.cleanInterface.title'),
+    description: t('download.features.cleanInterface.description'),
+  },
+  {
+    icon: 'fa-solid fa-moon',
+    title: t('download.features.themeSync.title'),
+    description: t('download.features.themeSync.description'),
+  },
 ])
 
 async function getAllReleasesFromGitHub(): Promise<GitHubRelease[]> {

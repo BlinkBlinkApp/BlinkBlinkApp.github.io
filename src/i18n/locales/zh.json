@@ -93,9 +93,9 @@
     "downloadButton": {
       "windows": "下載 Windows 版本",
       "macos": "下載 macOS 版本",
+      "linux": "在 Snap Store 下載",
       "preparing": "準備下載中..."
     },
-    "comingSoon": "Linux 版本即將推出",
     "versionInfo": {
       "latest": "最新版本",
       "releaseDate": "發布日期",
