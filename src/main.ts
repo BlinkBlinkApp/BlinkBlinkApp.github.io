@@ -10,8 +10,6 @@ app.use(i18n)
 
 app.directive('fade-in', {
   mounted(el) {
-    el.classList.add('img-lazy')
-
     const loadImage = () => {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {

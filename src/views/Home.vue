@@ -19,7 +19,6 @@
             src="@/assets/background.webp"
             alt=""
             v-fade-in
-            loading="lazy"
             width="800"
             height="600"
             decoding="async"
@@ -45,13 +44,18 @@
                   :key="`${currentWord}-${index}`"
                   class="char"
                   :style="{ '--char-index': index }"
+                  :data-word-end="char === '\u00A0'"
                   >{{ char }}</span
                 >
               </span>
             </div>
           </h1>
           <div class="hero-buttons">
-            <a href="#download" class="button secondary download-button">
+            <a
+              href="#download"
+              class="button secondary download-button"
+              @click="handleNavClick($event, 'download')"
+            >
               {{ t('hero.downloadButton') }}
             </a>
             <a
@@ -79,8 +83,8 @@
               v-for="section in sections"
               :key="section"
               :href="`#${section}`"
-              :class="{ active: currentSection === section }"
-              @click.prevent="scrollToSection(section)"
+              :class="{ active: activeSection === section }"
+              @click="handleNavClick($event, section)"
             >
               {{ formatSectionName(section) }}
             </a>
@@ -104,12 +108,15 @@
 
 <script setup lang="ts">
 import '@/assets/styles/Home.css'
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import Features from '@/components/sections/Features.vue'
 import Rule from '@/components/sections/Rule.vue'
 import Download from '@/components/sections/Download.vue'
 import Footer from '@/components/Footer.vue'
 import { useI18n } from 'vue-i18n'
+import { useSectionObserver } from '@/composables/useSectionObserver'
+import { useNavScroll } from '@/composables/useNavScroll'
 
 const CONFIG = {
   ANIMATION: {
@@ -127,22 +134,14 @@ const words = ['strain', 'dryness', 'fatigue', 'discomfort', 'burnout'].map((wor
 )
 const currentWord = ref(words[0])
 const animate = ref(true)
-const currentSection = ref('home')
 const heroOpacity = ref(1)
 
-// Utility functions
-const debounce = <T extends (...args: any[]) => any>(fn: T, delay: number = 50) => {
-  let timeoutId: ReturnType<typeof setTimeout>
-  return function (this: any, ...args: Parameters<T>) {
-    clearTimeout(timeoutId)
-    timeoutId = setTimeout(() => fn.apply(this, args), delay)
-  }
-}
-
-const handleScroll = debounce(() => {
-  const { scrollY } = window
-  heroOpacity.value = Math.max(0, 1 - scrollY / (window.innerHeight * 0.8))
-}, CONFIG.ANIMATION.DELAY)
+// Add router instance
+const router = useRouter()
+const route = useRoute()
+const sections = ['home', 'rule', 'features', 'download', 'about']
+const { activeSection } = useSectionObserver(sections)
+const { scrollActiveNavItemIntoView } = useNavScroll(activeSection)
 
 const rotateWords = () => {
   let index = 0
@@ -154,22 +153,6 @@ const rotateWords = () => {
       animate.value = true
     }, CONFIG.ANIMATION.DURATION)
   }, CONFIG.ANIMATION.INTERVAL)
-}
-
-const sections = ['home', 'rule', 'features', 'download', 'about']
-const scrollToSection = (id: string) => {
-  if (id === 'home') {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-    return
-  }
-
-  const element = document.getElementById(id)
-  if (element) {
-    const navHeight = 80 // Inline constant since it's only used here
-    const offset = element.getBoundingClientRect().top + window.scrollY - navHeight
-    window.scrollTo({ top: offset, behavior: 'smooth' })
-    setTimeout(scrollActiveNavItemIntoView, 500)
-  }
 }
 
 // Language handling
@@ -189,56 +172,36 @@ const toggleLanguage = () => {
 // Setup and cleanup
 onMounted(() => {
   const wordRotationInterval = rotateWords()
-  const sectionObserver = new IntersectionObserver(
-    (entries) =>
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) currentSection.value = entry.target.id
-      }),
-    { rootMargin: '-45% 0px -45% 0px' },
-  )
-
-  sections.forEach((section) => {
-    const element = document.getElementById(section)
-    if (element) sectionObserver.observe(element)
-  })
-
-  window.addEventListener('scroll', handleScroll, { passive: true })
-  window.addEventListener('resize', handleScroll)
 
   onUnmounted(() => {
     clearInterval(wordRotationInterval)
-    sectionObserver.disconnect()
-    window.removeEventListener('scroll', handleScroll)
-    window.removeEventListener('resize', handleScroll)
   })
+
+  scrollActiveNavItemIntoView()
 })
 
 const formatSectionName = (section: string) => {
   return t(`nav.${section}`)
 }
 
-const scrollActiveNavItemIntoView = () => {
-  requestAnimationFrame(() => {
-    const nav = document.querySelector('.nav-content')
-    const activeItem = nav?.querySelector('a.active') as HTMLElement
-    if (nav && activeItem) {
-      const navRect = nav.getBoundingClientRect()
-      const activeRect = activeItem.getBoundingClientRect()
+// Simplify handleNavClick to only use hash
+const handleNavClick = (event: Event, section: string) => {
+  event.preventDefault()
 
-      // Check if active item is not fully visible
-      if (activeRect.left < navRect.left || activeRect.right > navRect.right) {
-        nav.scrollTo({
-          left: activeItem.offsetLeft - (nav.clientWidth - activeItem.clientWidth) / 2,
-          behavior: 'smooth',
-        })
-      }
-    }
-  })
-}
+  // Directly scroll to element
+  const element = document.getElementById(section)
+  if (element) {
+    const behavior = window.innerWidth <= 768 ? 'auto' : 'smooth'
+    const offset = 100 // Same as router's scroll behavior
+    const y = element.getBoundingClientRect().top + window.pageYOffset - offset
 
-watch(currentSection, () => {
+    window.scrollTo({ top: y, behavior })
+  }
+
+  // Update URL without triggering router scroll behavior
+  router.replace({ hash: section === 'home' ? '' : `#${section}` })
   scrollActiveNavItemIntoView()
-})
+}
 </script>
 
 <style scoped>

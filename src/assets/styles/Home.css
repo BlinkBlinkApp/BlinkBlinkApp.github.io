@@ -98,7 +98,8 @@ header {
 }
 
 .rotating-text-wrapper {
-  height: 1.5em;
+  min-height: 1.5em;
+  height: auto;
   margin-top: 0.5rem;
   overflow: hidden;
   word-break: break-word;
@@ -111,6 +112,8 @@ header {
   color: var(--primary-color);
   font-weight: 900;
   position: relative;
+  line-height: 1.3;
+  min-height: 1.3em;
 }
 
 .char {
@@ -120,6 +123,12 @@ header {
   animation-delay: calc(var(--char-index) * var(--char-delay));
   will-change: transform, opacity;
   backface-visibility: hidden;
+  display: inline-block;
+  margin-right: 0.01em;
+}
+
+.char[data-word-end='true'] {
+  margin-right: 0.25em;
 }
 
 .rotating-text.animate-out .char {
@@ -197,7 +206,7 @@ header {
   --nav-padding: 1rem 2rem;
   --nav-border-radius: 100px;
   --nav-item-padding: 0.5rem 1.25rem;
-  --nav-mobile-scale: 0.9; /* New variable for mobile scaling */
+  --nav-mobile-scale: 1; /* Changed from 0.9 */
 }
 
 nav {
@@ -252,6 +261,19 @@ nav a {
   padding: var(--nav-item-padding);
   overflow: hidden;
   border-radius: var(--nav-border-radius);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  outline: none;
+  user-select: none;
+}
+
+nav a:focus {
+  outline: none;
+}
+
+nav a:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: -2px;
 }
 
 nav a::before {
@@ -357,6 +379,7 @@ nav::-webkit-scrollbar {
   .hero-title {
     font-size: var(--font-size-5xl);
     word-wrap: break-word;
+    text-align: left;
   }
 
   header {
@@ -394,18 +417,32 @@ nav::-webkit-scrollbar {
     padding: 0;
     width: 90%;
     max-width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    transform: translate3d(-50%, 0, 0) translateZ(0) scale(var(--nav-mobile-scale));
+    overflow: visible;
+    /* Remove scale transform that might cause janky scrolling */
+    transform: translate3d(-50%, 0, 0);
+    /* Remove contain property */
+    contain: none;
+    /* Enable better touch handling */
+    touch-action: pan-x pan-y;
   }
 
   .nav-content {
     gap: 1rem;
-    width: 100%;
-    justify-content: space-between;
-    padding: 0 0.5rem;
-    transform: none;
-    backface-visibility: hidden;
+    width: auto;
+    justify-content: flex-start;
+    padding: 0.5rem;
+    overflow-x: auto;
+    /* Enable momentum scrolling */
+    -webkit-overflow-scrolling: touch;
+    /* Use mandatory snap for better control */
+    scroll-snap-type: x mandatory;
+    /* Remove Firefox scrollbar */
+    scrollbar-width: none;
+    /* Prevent rubber-banding on iOS */
+    overscroll-behavior-x: contain;
+    /* Remove mask for better performance */
+    mask-image: none;
+    -webkit-mask-image: none;
   }
 
   nav a {
@@ -413,6 +450,9 @@ nav::-webkit-scrollbar {
     font-size: 0.85rem;
     white-space: nowrap;
     flex-shrink: 0;
+    scroll-snap-align: start;
+    /* Better touch handling */
+    touch-action: manipulation;
   }
 
   .lang-switch-circle {
@@ -420,12 +460,24 @@ nav::-webkit-scrollbar {
     height: 36px;
     font-size: 13px;
   }
+
+  .rotating-text-wrapper {
+    min-height: 3em;
+    height: auto;
+    text-align: left;
+  }
+
+  .rotating-text {
+    width: 100%;
+    justify-content: flex-start;
+    text-align: left;
+  }
 }
 
 @media (max-width: 380px) {
   :root {
     --nav-item-padding: 0.2rem 0.5rem;
-    --nav-mobile-scale: 0.85; /* Even smaller scale for very small screens */
+    --nav-mobile-scale: 0.85;
   }
 
   nav a {
