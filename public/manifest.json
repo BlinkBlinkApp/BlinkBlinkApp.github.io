@@ -1,0 +1,38 @@
+{
+  "name": "BlinkBlink",
+  "short_name": "BlinkBlink",
+  "description": "Smart break reminders for healthier screen time",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#f8fafc",
+  "icons": [
+    {
+      "src": "https://blinkblinkapp.github.io/assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://blinkblinkapp.github.io/assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://blinkblinkapp.github.io/assets/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["health", "productivity"],
+  "orientation": "any",
+  "screenshots": [
+    {
+      "src": "https://blinkblinkapp.github.io/assets/social-preview-1200x630.png",
+      "sizes": "1200x630",
+      "type": "image/png"
+    }
+  ]
+}
