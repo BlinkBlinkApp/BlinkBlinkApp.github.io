@@ -59,7 +59,7 @@
               {{ t('hero.downloadButton') }}
             </a>
             <a
-              href="https://forms.gle/2mZisXYEzaCz7Ra5A"
+              href="https://blinkblink.canny.io/"
               class="button text feedback-button"
               target="_blank"
               rel="noopener"
