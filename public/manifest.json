@@ -1,7 +1,7 @@
 {
-  "name": "BlinkBlink",
+  "name": "BlinkBlink - 20-20-20 Eye Care Reminder",
   "short_name": "BlinkBlink",
-  "description": "Smart break reminders for healthier screen time",
+  "description": "Prevent digital eye strain and dry eyes with the 20-20-20 rule. Smart break reminders for healthier screen time. Features eye exercises, break notifications, and screen time tracking.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f8fafc",
@@ -26,7 +26,7 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": ["health", "productivity"],
+  "categories": ["health", "productivity", "lifestyle", "eye care", "wellness"],
   "orientation": "any",
   "screenshots": [
     {
