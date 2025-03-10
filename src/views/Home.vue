@@ -320,18 +320,24 @@ const handleNavClick = (event: Event, section: string) => {
   }
 }
 
-/* Add these styles for the character-by-character animation */
+.hero-title {
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+
 .rotating-text-wrapper {
   display: inline-block;
   min-height: 1.5em;
   position: relative;
   overflow-x: hidden;
   min-width: 5ch;
+  margin-top: 0.1em;
 }
 
 .rotating-text {
   display: inline-flex;
   position: relative;
+  line-height: 1.2;
 }
 
 .char {
