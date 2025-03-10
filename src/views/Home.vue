@@ -27,14 +27,16 @@
         <div class="hero-left">
           <h1 class="hero-title">
             {{ t('hero.title') }}
+            <br />
             <div class="rotating-text-wrapper">
               <span
                 class="rotating-text"
                 :class="{ 'animate-out': !animate }"
                 :style="{
                   '--word-length': currentWord.length,
-                  '--base-duration': '0.6s',
-                  '--char-delay': '0.04s',
+                  '--base-duration': baseDuration + 's',
+                  '--char-delay': charDelay + 's',
+                  '--total-duration': calculateTotalDuration(currentWord.length) + 's',
                 }"
               >
                 <span
@@ -44,7 +46,6 @@
                   :key="`${currentWord}-${index}`"
                   class="char"
                   :style="{ '--char-index': index }"
-                  :data-word-end="char === '\u00A0'"
                   >{{ char }}</span
                 >
               </span>
@@ -120,9 +121,10 @@ import { useNavScroll } from '@/composables/useNavScroll'
 
 const CONFIG = {
   ANIMATION: {
-    INTERVAL: 4000,
-    DURATION: 600,
-    DELAY: 50,
+    INTERVAL: 4000, // Total time each word is displayed
+    BASE_DURATION: 0.6, // Base animation duration per character
+    CHAR_DELAY: 0.04, // Delay between each character animation
+    MIN_WORD_TIME: 2000, // Minimum time a word stays visible before animating out
   },
 } as const
 
@@ -135,6 +137,8 @@ const words = ['strain', 'dryness', 'fatigue', 'discomfort', 'burnout'].map((wor
 const currentWord = ref(words[0])
 const animate = ref(true)
 const heroOpacity = ref(1)
+const baseDuration = ref(CONFIG.ANIMATION.BASE_DURATION)
+const charDelay = ref(CONFIG.ANIMATION.CHAR_DELAY)
 
 // Add router instance
 const router = useRouter()
@@ -143,16 +147,45 @@ const sections = ['home', 'rule', 'features', 'download', 'about']
 const { activeSection } = useSectionObserver(sections)
 const { scrollActiveNavItemIntoView } = useNavScroll(activeSection)
 
+// Calculate the total duration needed for a word animation
+const calculateTotalDuration = (wordLength: number) => {
+  return baseDuration.value + (wordLength - 1) * charDelay.value
+}
+
+// Calculate how long to wait before switching to the next word
+const getAnimationTimeout = (wordLength: number) => {
+  // Calculate the total animation time needed
+  const animationTime = calculateTotalDuration(wordLength)
+
+  // Make sure the minimum visible time is respected
+  return Math.max(CONFIG.ANIMATION.INTERVAL - CONFIG.ANIMATION.MIN_WORD_TIME, animationTime * 1000)
+}
+
 const rotateWords = () => {
   let index = 0
-  return setInterval(() => {
-    animate.value = false
+
+  const scheduleNextWord = () => {
+    // Schedule fade out
     setTimeout(() => {
-      index = (index + 1) % words.length
-      currentWord.value = words[index]
-      animate.value = true
-    }, CONFIG.ANIMATION.DURATION)
-  }, CONFIG.ANIMATION.INTERVAL)
+      animate.value = false
+
+      // Schedule the new word after the exit animation completes
+      setTimeout(
+        () => {
+          index = (index + 1) % words.length
+          currentWord.value = words[index]
+          animate.value = true
+
+          // Schedule the next rotation based on current word length
+          scheduleNextWord()
+        },
+        calculateTotalDuration(currentWord.value.length) * 1000,
+      )
+    }, CONFIG.ANIMATION.MIN_WORD_TIME)
+  }
+
+  // Start the first rotation
+  scheduleNextWord()
 }
 
 // Language handling
@@ -167,16 +200,14 @@ const toggleLanguage = () => {
   )
   words.splice(0, words.length, ...newWords)
   currentWord.value = words[0]
+
+  // Adjust animation for the first word after language change
+  animate.value = true
 }
 
 // Setup and cleanup
 onMounted(() => {
-  const wordRotationInterval = rotateWords()
-
-  onUnmounted(() => {
-    clearInterval(wordRotationInterval)
-  })
-
+  rotateWords()
   scrollActiveNavItemIntoView()
 })
 
@@ -286,6 +317,57 @@ const handleNavClick = (event: Event, section: string) => {
 
   .button.text {
     padding: 12px 16px;
+  }
+}
+
+/* Add these styles for the character-by-character animation */
+.rotating-text-wrapper {
+  display: inline-block;
+  min-height: 1.5em;
+  position: relative;
+  overflow-x: hidden;
+  min-width: 5ch;
+}
+
+.rotating-text {
+  display: inline-flex;
+  position: relative;
+}
+
+.char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: char-appear var(--base-duration) forwards;
+  animation-delay: calc(var(--char-index) * var(--char-delay));
+}
+
+.animate-out .char {
+  opacity: 1;
+  transform: translateY(0);
+  animation: char-disappear var(--base-duration) forwards;
+  animation-delay: calc(var(--char-index) * var(--char-delay));
+}
+
+@keyframes char-appear {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes char-disappear {
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+@media (max-width: 640px) {
+  .rotating-text-wrapper {
+    display: block;
+    width: 100%;
+    min-height: 2em;
   }
 }
 </style>
