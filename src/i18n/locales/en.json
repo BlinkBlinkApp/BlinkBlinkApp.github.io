@@ -144,15 +144,25 @@
         "description": "Matches light or dark mode"
       }
     },
-    "linuxFormats": {
-      "label": "Other formats:",
-      "snap": "Snap Store"
-    },
-    "archNote": {
-      "served": "Downloaded the {arch} build.",
+    "options": {
+      "toggle": "Other options",
+      "recommended": "Your Mac",
+      "windowsNote": "64-bit build. Windows on ARM runs it under emulation.",
       "appleSilicon": "Apple Silicon",
-      "intel": "Intel",
-      "other": "Need a different one?"
+      "appleSiliconHint": "M1, M2, M3 and newer",
+      "intel": "Intel chip",
+      "intelHint": "Macs from before 2020",
+      "universal": "Universal build",
+      "universalHint": "One download for Apple Silicon and Intel",
+      "appimage": "AppImage",
+      "appimageHint": "Runs on most distributions",
+      "deb": ".deb package",
+      "debHint": "Debian, Ubuntu, Mint",
+      "rpm": ".rpm package",
+      "rpmHint": "Fedora, RHEL, openSUSE",
+      "snap": "Snap Store",
+      "snapHint": "Ubuntu and derivatives",
+      "unavailable": "That build is not part of the latest release. Please try another option."
     }
   },
   "tutorial": {

@@ -17,67 +17,81 @@
         </div>
       </div>
 
+      <!--
+        One column per platform, each built the same way: a primary button that
+        serves the right build without asking, and an identical disclosure
+        underneath for the cases where the default is wrong. Keeping the three
+        identical matters more than packing every format into view.
+      -->
       <ul class="actions special">
         <div class="primary-downloads">
-          <li>
+          <li v-for="platform in PLATFORMS" :key="platform" class="platform">
             <a
-              @click="handleDownload('windows')"
-              :class="['button', 'icon', 'solid', 'fa-download', { loading: isLoading.windows }]"
-              :disabled="isLoading.windows"
+              @click="requestDownload(primaryTarget(platform))"
+              :class="['button', 'icon', 'solid', 'fa-download', { loading: isLoading[platform] }]"
+              :disabled="isLoading[platform]"
             >
               {{
-                isLoading.windows
+                isLoading[platform]
                   ? t('download.downloadButton.preparing')
-                  : t('download.downloadButton.windows')
+                  : t(`download.downloadButton.${platform}`)
               }}
             </a>
-          </li>
-          <li>
-            <a
-              @click="handleDownload('macos')"
-              :class="['button', 'icon', 'solid', 'fa-download', { loading: isLoading.macos }]"
-              :disabled="isLoading.macos"
+
+            <button
+              class="options-toggle"
+              type="button"
+              :aria-expanded="openPanel === platform"
+              :aria-controls="`options-${platform}`"
+              @click="togglePanel(platform)"
             >
-              {{
-                isLoading.macos
-                  ? t('download.downloadButton.preparing')
-                  : t('download.downloadButton.macos')
-              }}
-            </a>
-          </li>
-          <li>
-            <a
-              @click="handleDownload('linux')"
-              :class="['button', 'icon', 'solid', 'fa-download', { loading: isLoading.linux }]"
-              :disabled="isLoading.linux"
-            >
-              {{
-                isLoading.linux
-                  ? t('download.downloadButton.preparing')
-                  : t('download.downloadButton.linux')
-              }}
-            </a>
+              {{ t('download.options.toggle') }}
+              <span class="chevron" :class="{ open: openPanel === platform }" aria-hidden="true"
+                >&#9662;</span
+              >
+            </button>
+
+            <div class="options-panel" :id="`options-${platform}`" v-show="openPanel === platform">
+              <p class="options-note" v-if="platform === 'windows'">
+                {{ t('download.options.windowsNote') }}
+              </p>
+
+              <button
+                v-for="option in optionsFor(platform)"
+                :key="option.key"
+                class="option"
+                type="button"
+                @click="requestDownload(option.target)"
+              >
+                <span class="option-label">
+                  {{ option.label }}
+                  <span class="option-badge" v-if="option.recommended">{{
+                    t('download.options.recommended')
+                  }}</span>
+                </span>
+                <span class="option-hint">{{ option.hint }}</span>
+              </button>
+
+              <!--
+                An external store rather than a release asset, so it is a plain
+                link and stays available even for releases that carry no Linux
+                builds at all.
+              -->
+              <a
+                v-if="platform === 'linux'"
+                class="option"
+                href="https://snapcraft.io/blinkblink"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span class="option-label">{{ t('download.options.snap') }}</span>
+                <span class="option-hint">{{ t('download.options.snapHint') }}</span>
+              </a>
+            </div>
           </li>
         </div>
       </ul>
 
-      <!--
-        Releases carry deb and rpm alongside the AppImage the button serves.
-        Fedora in particular cannot use a snap without setting one up first.
-      -->
-      <p class="linux-formats">
-        {{ t('download.linuxFormats.label') }}
-        <a
-          v-for="format in LINUX_FORMATS"
-          :key="format.key"
-          @click="downloadLinuxFormat(format.extension)"
-        >
-          {{ format.label }}
-        </a>
-        <a href="https://snapcraft.io/blinkblink" target="_blank" rel="noopener noreferrer">
-          {{ t('download.linuxFormats.snap') }}
-        </a>
-      </p>
       <div class="version-info" v-if="latestVersion">
         <span
           >{{ t('download.versionInfo.latest') }}:
@@ -90,28 +104,6 @@
           >{{ totalDownloads.toLocaleString() }} {{ t('download.versionInfo.downloads') }}</span
         >
       </div>
-
-      <!--
-        Processor detection is a heuristic, so say which build was served and
-        always leave a way to the other one.
-      -->
-      <p class="arch-note" v-if="downloadedArch">
-        {{
-          t('download.archNote.served', {
-            arch:
-              downloadedArch === 'arm64'
-                ? t('download.archNote.appleSilicon')
-                : t('download.archNote.intel'),
-          })
-        }}
-        <a
-          href="https://github.com/frozen0601/BlinkBlink-Releases/releases/latest"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {{ t('download.archNote.other') }}
-        </a>
-      </p>
 
       <!-- Add the donation popup -->
       <DonationPopup
@@ -131,7 +123,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed } from 'vue'
+import { ref, reactive, onMounted, computed, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import '@/assets/styles/Download.css'
 import TutorialOverlay from '@/components/TutorialOverlay.vue'
@@ -156,6 +148,23 @@ interface GitHubRelease {
 type Arch = 'arm64' | 'x64'
 type Platform = 'windows' | 'macos' | 'linux'
 
+/** What a click should fetch, resolved against the release once it loads. */
+interface DownloadTarget {
+  platform: Platform
+  extension: string
+  arch: Arch
+  /** Opened instead when the release carries no such asset. */
+  fallbackHref?: string
+}
+
+interface DownloadOption {
+  key: string
+  label: string
+  hint: string
+  recommended?: boolean
+  target: DownloadTarget
+}
+
 /**
  * The slice of the User-Agent Client Hints API used below. Not in TypeScript's
  * DOM lib, since it is not implemented outside Chromium.
@@ -164,23 +173,30 @@ interface UserAgentData {
   getHighEntropyValues(hints: string[]): Promise<{ architecture?: string }>
 }
 
-/** Linux formats offered alongside the primary AppImage download. */
+const PLATFORMS: Platform[] = ['windows', 'macos', 'linux']
+
+const SNAP_URL = 'https://snapcraft.io/blinkblink'
+
 const LINUX_FORMATS = [
-  { key: 'deb', extension: '.deb', label: '.deb' },
-  { key: 'rpm', extension: '.rpm', label: '.rpm' },
+  { key: 'appimage', extension: '.AppImage' },
+  { key: 'deb', extension: '.deb' },
+  { key: 'rpm', extension: '.rpm' },
 ] as const
 
+const latestRelease = ref<GitHubRelease | null>(null)
 const latestVersion = ref('')
 const releaseDate = ref('')
 const totalDownloads = ref(0)
-const isLoading = reactive({
+const isLoading = reactive<Record<Platform, boolean>>({
   windows: false,
   macos: false,
   linux: false,
 })
 
-/** Which macOS build the last download served, so the other can be offered. */
-const downloadedArch = ref<Arch | null>(null)
+/** Detected once at mount, and only ever used to mark a recommendation. */
+const detectedArch = ref<Arch>('arm64')
+
+const openPanel = ref<Platform | null>(null)
 
 const showTutorial = ref(false)
 const selectedPlatform = ref<'windows' | 'macos'>('windows')
@@ -263,6 +279,10 @@ function isNewerVersion(candidate: string, current: string): boolean {
  * `userAgentData` is Chromium-only, and Safari deliberately does not
  * distinguish Apple Silicon in its User-Agent, so the WebGL renderer string is
  * the practical fallback.
+ *
+ * This only decides which option is labelled as recommended. Nothing is chosen
+ * on the visitor's behalf, so a wrong guess costs them nothing — which matters,
+ * because an arm64 build on an Intel Mac does not launch at all.
  */
 async function detectMacArch(): Promise<Arch> {
   const uaData = (navigator as unknown as { userAgentData?: UserAgentData }).userAgentData
@@ -290,20 +310,103 @@ async function detectMacArch(): Promise<Arch> {
 }
 
 /**
- * Picks the asset matching this machine's architecture.
+ * Picks the asset matching an architecture.
  *
- * Releases carry both an Intel and an Apple Silicon macOS build, and an arm64
- * build will not launch at all on an Intel Mac — so matching matters more than
- * simply finding a file of the right type.
+ * A release may carry one universal macOS build or one per architecture; both
+ * shapes have shipped. The unsuffixed fallback is what makes a universal build,
+ * and every release published before 0.2.0, resolve correctly.
  */
 function pickAsset(assets: GitHubAsset[], extension: string, arch: Arch): GitHubAsset | undefined {
   const candidates = assets.filter((a) => a.name.toLowerCase().endsWith(extension.toLowerCase()))
   return (
     candidates.find((a) => new RegExp(`[-_.]${arch}\\b`, 'i').test(a.name)) ??
-    // A release published before architectures appeared in the filenames.
     candidates.find((a) => !/[-_.](arm64|x64|x86_64|amd64|aarch64)\b/i.test(a.name)) ??
     candidates[0]
   )
+}
+
+/** True when the loaded release carries an asset of this type and architecture. */
+function hasAsset(extension: string, arch?: Arch): boolean {
+  const assets = latestRelease.value?.assets ?? []
+  return assets.some(
+    (a) =>
+      a.name.toLowerCase().endsWith(extension.toLowerCase()) &&
+      (!arch || new RegExp(`[-_.]${arch}\\b`, 'i').test(a.name)),
+  )
+}
+
+/**
+ * The options shown under a platform's button, derived from what the release
+ * actually contains rather than from a fixed list — so the page can never offer
+ * a download that does not exist, and picks up a new build shape on its own.
+ */
+function optionsFor(platform: Platform): DownloadOption[] {
+  if (platform === 'windows') return []
+
+  if (platform === 'macos') {
+    // Per-architecture DMGs: name the chip, never the architecture string.
+    if (hasAsset('.dmg', 'arm64') && hasAsset('.dmg', 'x64')) {
+      return (['arm64', 'x64'] as Arch[]).map((arch) => ({
+        key: arch,
+        label: t(arch === 'arm64' ? 'download.options.appleSilicon' : 'download.options.intel'),
+        hint: t(
+          arch === 'arm64' ? 'download.options.appleSiliconHint' : 'download.options.intelHint',
+        ),
+        recommended: arch === detectedArch.value,
+        target: { platform, extension: '.dmg', arch },
+      }))
+    }
+
+    // One build for both chips, which is worth saying plainly rather than
+    // leaving the visitor to wonder whether it runs on theirs.
+    return hasAsset('.dmg')
+      ? [
+          {
+            key: 'universal',
+            label: t('download.options.universal'),
+            hint: t('download.options.universalHint'),
+            target: { platform, extension: '.dmg', arch: detectedArch.value },
+          },
+        ]
+      : []
+  }
+
+  return LINUX_FORMATS.filter((format) => hasAsset(format.extension)).map((format) => ({
+    key: format.key,
+    label: t(`download.options.${format.key}`),
+    hint: t(`download.options.${format.key}Hint`),
+    target: { platform, extension: format.extension, arch: 'x64' as Arch },
+  }))
+}
+
+/**
+ * What the big button serves.
+ *
+ * Windows ships x64 only, deliberately: electron-updater's latest.yml has no
+ * per-architecture entry, so publishing both would hand ARM64 installers to x64
+ * machines on auto-update. Windows on ARM emulates x64.
+ *
+ * Linux falls back to the Snap Store, which is a real page even for the
+ * releases that carry no Linux assets at all — everything before 0.2.0.
+ */
+function primaryTarget(platform: Platform): DownloadTarget {
+  if (platform === 'windows') return { platform, extension: '.exe', arch: 'x64' }
+  if (platform === 'macos') return { platform, extension: '.dmg', arch: detectedArch.value }
+  return { platform, extension: '.AppImage', arch: 'x64', fallbackHref: SNAP_URL }
+}
+
+async function togglePanel(platform: Platform) {
+  const opening = openPanel.value !== platform
+  openPanel.value = opening ? platform : null
+  if (!opening) return
+
+  // The nav bar is fixed to the bottom of the viewport, so a panel opened near
+  // it lands underneath and looks like nothing happened. `scroll-margin-bottom`
+  // on the panel is what keeps this scroll clear of the bar.
+  await nextTick()
+  document
+    .getElementById(`options-${platform}`)
+    ?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
 }
 
 async function getAllReleasesFromGitHub(): Promise<GitHubRelease[]> {
@@ -323,8 +426,8 @@ async function getAllReleasesFromGitHub(): Promise<GitHubRelease[]> {
  * release cannot advertise it as current, and drafts and prereleases are
  * excluded outright.
  */
-async function getLatestReleaseFromGitHub(): Promise<GitHubRelease> {
-  const usable = (await getAllReleasesFromGitHub())
+function pickLatestRelease(releases: GitHubRelease[]): GitHubRelease {
+  const usable = releases
     .filter((r) => !r.draft && !r.prerelease && parseVersion(r.tag_name) !== null)
     .sort((a, b) => (isNewerVersion(a.tag_name, b.tag_name) ? -1 : 1))
 
@@ -334,14 +437,23 @@ async function getLatestReleaseFromGitHub(): Promise<GitHubRelease> {
   return usable[0]
 }
 
+async function getLatestReleaseFromGitHub(): Promise<GitHubRelease> {
+  return latestRelease.value ?? pickLatestRelease(await getAllReleasesFromGitHub())
+}
+
 onMounted(async () => {
+  detectMacArch().then((arch) => {
+    detectedArch.value = arch
+  })
+
   try {
     const releases = await getAllReleasesFromGitHub()
     // Reuse the filtered, version-sorted path: reading releases[0] straight
     // from the API could advertise a prerelease, or an old release that was
     // re-published, as the current version.
-    const newest = await getLatestReleaseFromGitHub()
+    const newest = pickLatestRelease(releases)
 
+    latestRelease.value = newest
     latestVersion.value = newest.tag_name
     releaseDate.value = new Date(newest.published_at).toLocaleDateString()
 
@@ -357,49 +469,40 @@ onMounted(async () => {
 })
 
 const showDonationPopup = ref(false)
-const pendingDownload = ref<Platform | null>(null)
+const pendingDownload = ref<DownloadTarget | null>(null)
 
-async function handleDownload(platform: Platform) {
-  pendingDownload.value = platform
+/**
+ * Every download goes through here, primary button and option alike, so the
+ * donation prompt and the macOS install guide appear whichever one was clicked.
+ * The install guide matters most to the visitors who went looking for a
+ * specific build, which is exactly who the options are for.
+ */
+function requestDownload(target: DownloadTarget) {
+  pendingDownload.value = target
   showDonationPopup.value = true
 }
 
-/** Opens a specific Linux package format directly, bypassing the popup. */
-async function downloadLinuxFormat(extension: string) {
-  try {
-    const release = await getLatestReleaseFromGitHub()
-    const asset = pickAsset(release.assets, extension, 'x64')
-    if (!asset) throw new Error(`No ${extension} build available`)
-    window.location.href = asset.browser_download_url
-  } catch (error) {
-    console.error('Download error:', error)
-    alert('Failed to get download link. Please try again later.')
-  }
-}
-
 async function proceedWithDownload() {
-  if (!pendingDownload.value) return
+  const target = pendingDownload.value
+  if (!target) return
 
-  const platform = pendingDownload.value
+  const { platform } = target
   showDonationPopup.value = false
   isLoading[platform] = true
 
   try {
     const release = await getLatestReleaseFromGitHub()
-
-    // Windows ships x64 only, deliberately: electron-updater's latest.yml has
-    // no per-architecture entry, so publishing both would hand ARM64
-    // installers to x64 machines on auto-update. Windows on ARM emulates x64.
-    const extension = platform === 'windows' ? '.exe' : platform === 'linux' ? '.AppImage' : '.dmg'
-    const arch: Arch = platform === 'macos' ? await detectMacArch() : 'x64'
-    const asset = pickAsset(release.assets, extension, arch)
+    const asset = pickAsset(release.assets, target.extension, target.arch)
 
     if (!asset) {
-      throw new Error(`No ${platform} version available`)
+      // A release without this build is a normal state, not a failure: the
+      // Linux packages only exist from 0.2.0 onwards.
+      if (target.fallbackHref) {
+        window.open(target.fallbackHref, '_blank', 'noopener')
+        return
+      }
+      throw new Error(`No ${platform} build in ${release.tag_name}`)
     }
-
-    // Detection is a heuristic, so record what was served and offer the other.
-    downloadedArch.value = platform === 'macos' ? arch : null
 
     if (platform !== 'linux') {
       selectedPlatform.value = platform
@@ -409,7 +512,7 @@ async function proceedWithDownload() {
     window.location.href = asset.browser_download_url
   } catch (error) {
     console.error('Download error:', error)
-    alert('Failed to get download link. Please try again later.')
+    alert(t('download.options.unavailable'))
   } finally {
     isLoading[platform] = false
     pendingDownload.value = null

@@ -144,15 +144,25 @@
         "description": "隨系統明暗模式變換"
       }
     },
-    "linuxFormats": {
-      "label": "其他格式：",
-      "snap": "Snap 商店"
-    },
-    "archNote": {
-      "served": "已下載 {arch} 版本。",
+    "options": {
+      "toggle": "其他選項",
+      "recommended": "你的 Mac",
+      "windowsNote": "64 位元版本。ARM 版 Windows 會以模擬方式執行。",
       "appleSilicon": "Apple 晶片",
-      "intel": "Intel",
-      "other": "需要其他版本嗎？"
+      "appleSiliconHint": "M1、M2、M3 及更新機種",
+      "intel": "Intel 處理器",
+      "intelHint": "2020 年以前的 Mac",
+      "universal": "通用版本",
+      "universalHint": "一個檔案同時支援 Apple 晶片與 Intel",
+      "appimage": "AppImage",
+      "appimageHint": "適用於大多數發行版",
+      "deb": ".deb 套件",
+      "debHint": "Debian、Ubuntu、Mint",
+      "rpm": ".rpm 套件",
+      "rpmHint": "Fedora、RHEL、openSUSE",
+      "snap": "Snap 商店",
+      "snapHint": "Ubuntu 及衍生發行版",
+      "unavailable": "最新版本沒有這個檔案，請改選其他選項。"
     }
   },
   "tutorial": {

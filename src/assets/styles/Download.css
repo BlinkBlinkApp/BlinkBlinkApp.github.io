@@ -163,6 +163,9 @@
   gap: 1.5rem;
   justify-content: center;
   flex-wrap: wrap;
+  /* Top-aligned so an opened options panel grows downward instead of
+     stretching its two neighbours to match. */
+  align-items: flex-start;
 }
 
 .coming-soon-label {
@@ -462,32 +465,120 @@
 }
 
 /*
- * Linux package formats beyond the AppImage the main button serves, and the
- * note saying which macOS build was downloaded. Both are secondary to the
- * three primary buttons, so they read as quiet supporting text.
+ * Per-platform download options.
+ *
+ * Every platform gets the same column: primary button, one quiet disclosure,
+ * and a panel that opens in place. The three stay identical even when a
+ * platform has only one option to show, because an affordance that appears
+ * under one button and not the others reads as an afterthought — which is
+ * exactly how the first pass at this looked.
  */
-.linux-formats,
-.arch-note {
-  margin: 0.75rem auto 0;
+.platform {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.6rem;
+}
+
+.options-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  align-self: center;
+  padding: 0.3rem 0.6rem;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.7);
-  text-align: center;
-}
-
-.arch-note {
-  margin-top: 0.75rem;
-}
-
-.linux-formats a,
-.arch-note a {
-  color: rgba(255, 255, 255, 0.95);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  color: rgba(255, 255, 255, 0.75);
   cursor: pointer;
-  margin: 0 0.35rem;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
 }
 
-.linux-formats a:hover,
-.arch-note a:hover {
+.options-toggle:hover {
   color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.options-toggle .chevron {
+  font-size: 0.7em;
+  transition: transform 0.2s ease;
+}
+
+.options-toggle .chevron.open {
+  transform: rotate(180deg);
+}
+
+.options-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.6rem;
+  /* Clears the fixed bottom nav when the panel is scrolled into view. */
+  scroll-margin-bottom: 7rem;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+}
+
+.options-note {
+  margin: 0;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Anchor and button both appear here, so reset what each brings with it. */
+.options-panel .option {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  width: 100%;
+  padding: 0.5rem 0.7rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-family: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.options-panel .option:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.option-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: white;
+}
+
+.option-hint {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.option-badge {
+  padding: 0.1rem 0.4rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 100px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent-color);
 }
