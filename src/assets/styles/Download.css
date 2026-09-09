@@ -326,8 +326,8 @@
   z-index: 100;
   overflow-y: auto;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;  /* Add this line */
-  flex-direction: column;  /* Add this line */
+  display: flex; /* Add this line */
+  flex-direction: column; /* Add this line */
 }
 
 .tutorial-content {
@@ -355,7 +355,9 @@
   border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .tutorial-content .step:hover {
@@ -457,4 +459,35 @@
 .close-button:hover {
   background: rgba(255, 255, 255, 0.2);
   transform: scale(1.1);
+}
+
+/*
+ * Linux package formats beyond the AppImage the main button serves, and the
+ * note saying which macOS build was downloaded. Both are secondary to the
+ * three primary buttons, so they read as quiet supporting text.
+ */
+.linux-formats,
+.arch-note {
+  margin: 0.75rem auto 0;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+}
+
+.arch-note {
+  margin-top: 0.75rem;
+}
+
+.linux-formats a,
+.arch-note a {
+  color: rgba(255, 255, 255, 0.95);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  margin: 0 0.35rem;
+}
+
+.linux-formats a:hover,
+.arch-note a:hover {
+  color: white;
 }

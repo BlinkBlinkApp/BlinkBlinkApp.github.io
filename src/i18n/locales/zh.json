@@ -10,7 +10,8 @@
       "fatigue": "螢幕傷害",
       "discomfort": "長時間注視螢幕",
       "burnout": "視力模糊"
-    }
+    },
+    "feedbackButton": "意見回饋"
   },
   "nav": {
     "home": "首頁",
@@ -93,7 +94,7 @@
     "downloadButton": {
       "windows": "下載 Windows 版本",
       "macos": "下載 macOS 版本",
-      "linux": "在 Snap Store 下載",
+      "linux": "下載 Linux 版本",
       "preparing": "準備下載中..."
     },
     "versionInfo": {
@@ -142,6 +143,16 @@
         "title": "主題同步",
         "description": "隨系統明暗模式變換"
       }
+    },
+    "linuxFormats": {
+      "label": "其他格式：",
+      "snap": "Snap 商店"
+    },
+    "archNote": {
+      "served": "已下載 {arch} 版本。",
+      "appleSilicon": "Apple 晶片",
+      "intel": "Intel",
+      "other": "需要其他版本嗎？"
     }
   },
   "tutorial": {
@@ -189,7 +200,9 @@
           "step1": "開啟終端機（按⌘+空白鍵並輸入「終端機」）",
           "step2": "複製並貼上以下指令到終端機",
           "step3": "按下返回鍵 (⏎) 執行指令",
-          "step4": "開啟BlinkBlink即可使用！🎉"
+          "step4": "開啟BlinkBlink即可使用！🎉",
+          "noTerminal": "最簡單的方式：先開啟 BlinkBlink，讓 macOS 阻擋它，接著打開「系統設定」，前往「隱私權與安全性」，往下捲動並選擇仍要開啟 BlinkBlink。",
+          "orUseTerminal": "偏好使用終端機？以下步驟的效果相同："
         }
       }
     },
