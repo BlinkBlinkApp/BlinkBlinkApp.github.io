@@ -289,6 +289,11 @@ async function detectMacArch(): Promise<Arch> {
   return 'arm64'
 }
 
+/** True when the filename is marked as a build for `arch` specifically. */
+function isBuiltFor(name: string, arch: Arch): boolean {
+  return new RegExp(`[-_.]${arch}\\b`, 'i').test(name)
+}
+
 /**
  * Picks the asset matching this machine's architecture.
  *
@@ -299,7 +304,7 @@ async function detectMacArch(): Promise<Arch> {
 function pickAsset(assets: GitHubAsset[], extension: string, arch: Arch): GitHubAsset | undefined {
   const candidates = assets.filter((a) => a.name.toLowerCase().endsWith(extension.toLowerCase()))
   return (
-    candidates.find((a) => new RegExp(`[-_.]${arch}\\b`, 'i').test(a.name)) ??
+    candidates.find((a) => isBuiltFor(a.name, arch)) ??
     // A release published before architectures appeared in the filenames.
     candidates.find((a) => !/[-_.](arm64|x64|x86_64|amd64|aarch64)\b/i.test(a.name)) ??
     candidates[0]
@@ -399,7 +404,10 @@ async function proceedWithDownload() {
     }
 
     // Detection is a heuristic, so record what was served and offer the other.
-    downloadedArch.value = platform === 'macos' ? arch : null
+    // Only when the file really is one architecture's build: 0.2.0 ships a
+    // single universal DMG, and naming that "the Intel build" would be wrong
+    // for every visitor.
+    downloadedArch.value = platform === 'macos' && isBuiltFor(asset.name, arch) ? arch : null
 
     if (platform !== 'linux') {
       selectedPlatform.value = platform
