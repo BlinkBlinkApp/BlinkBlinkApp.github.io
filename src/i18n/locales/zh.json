@@ -210,9 +210,7 @@
           "step1": "開啟終端機（按⌘+空白鍵並輸入「終端機」）",
           "step2": "複製並貼上以下指令到終端機",
           "step3": "按下返回鍵 (⏎) 執行指令",
-          "step4": "開啟BlinkBlink即可使用！🎉",
-          "noTerminal": "最簡單的方式：先開啟 BlinkBlink，讓 macOS 阻擋它，接著打開「系統設定」，前往「隱私權與安全性」，往下捲動並選擇仍要開啟 BlinkBlink。",
-          "orUseTerminal": "偏好使用終端機？以下步驟的效果相同："
+          "step4": "開啟BlinkBlink即可使用！🎉"
         }
       }
     },

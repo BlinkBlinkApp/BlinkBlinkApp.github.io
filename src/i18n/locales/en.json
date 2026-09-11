@@ -210,9 +210,7 @@
           "step1": "Open Terminal (press ⌘+Space and type \"Terminal\")",
           "step2": "Copy and paste the following command to the Terminal",
           "step3": "hit Return (⏎) to run the command",
-          "step4": "Open BlinkBlink and enjoy! 🎉",
-          "noTerminal": "Easiest route: open BlinkBlink, let macOS refuse it, then open System Settings, go to Privacy & Security, scroll down and choose to open BlinkBlink anyway.",
-          "orUseTerminal": "Prefer the Terminal? These steps do the same thing:"
+          "step4": "Open BlinkBlink and enjoy! 🎉"
         }
       }
     },

@@ -57,17 +57,10 @@
           <div class="step-body">
             <div class="step-content">
               <div class="step-instructions">
-                <p class="no-terminal-route">
-                  <i class="fa-solid fa-circle-info"></i>
-                  {{ t('tutorial.mac.step2.instructions.noTerminal') }}
-                </p>
-                <p class="terminal-route-lead">
-                  {{ t('tutorial.mac.step2.instructions.orUseTerminal') }}
-                </p>
                 <p data-step="1.">{{ t('tutorial.mac.step2.instructions.step1') }}</p>
                 <p data-step="2.">{{ t('tutorial.mac.step2.instructions.step2') }}</p>
                 <div class="command-box" style="margin-left: 1rem">
-                  xattr -d com.apple.quarantine /Applications/BlinkBlink.app
+                  xattr -c /Applications/BlinkBlink.app
                   <button class="copy-button" @click="copyCommand">
                     {{
                       copied
@@ -182,7 +175,7 @@ onUnmounted(() => {
 })
 
 function copyCommand() {
-  navigator.clipboard.writeText('xattr -d com.apple.quarantine /Applications/BlinkBlink.app')
+  navigator.clipboard.writeText('xattr -c /Applications/BlinkBlink.app')
   copied.value = true
   setTimeout(() => {
     copied.value = false
