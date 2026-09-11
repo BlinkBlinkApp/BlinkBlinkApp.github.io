@@ -18,16 +18,17 @@
       </div>
 
       <!--
-        One column per platform, each built the same way: a primary button that
-        serves the right build without asking, and an identical disclosure
-        underneath for the cases where the default is wrong. Keeping the three
-        identical matters more than packing every format into view.
+        One button per platform, and nothing underneath. A button used to start
+        a download on the spot, silently picking a format — an AppImage for
+        someone on Fedora who wanted the rpm — with the alternatives folded away
+        in a disclosure most people never opened. The choice now happens inside
+        the flow, where it is the first thing asked.
       -->
       <ul class="actions special">
         <div class="primary-downloads">
           <li v-for="platform in PLATFORMS" :key="platform" class="platform">
             <a
-              @click="requestDownload(primaryTarget(platform))"
+              @click="openFlow(platform)"
               :class="['button', 'icon', 'solid', 'fa-download', { loading: isLoading[platform] }]"
               :disabled="isLoading[platform]"
             >
@@ -37,57 +38,6 @@
                   : t(`download.downloadButton.${platform}`)
               }}
             </a>
-
-            <button
-              class="options-toggle"
-              type="button"
-              :aria-expanded="openPanel === platform"
-              :aria-controls="`options-${platform}`"
-              @click="togglePanel(platform)"
-            >
-              {{ t('download.options.toggle') }}
-              <span class="chevron" :class="{ open: openPanel === platform }" aria-hidden="true"
-                >&#9662;</span
-              >
-            </button>
-
-            <div class="options-panel" :id="`options-${platform}`" v-show="openPanel === platform">
-              <p class="options-note" v-if="platform === 'windows'">
-                {{ t('download.options.windowsNote') }}
-              </p>
-
-              <button
-                v-for="option in optionsFor(platform)"
-                :key="option.key"
-                class="option"
-                type="button"
-                @click="requestDownload(option.target)"
-              >
-                <span class="option-label">
-                  {{ option.label }}
-                  <span class="option-badge" v-if="option.recommended">{{
-                    t('download.options.recommended')
-                  }}</span>
-                </span>
-                <span class="option-hint">{{ option.hint }}</span>
-              </button>
-
-              <!--
-                An external store rather than a release asset, so it is a plain
-                link and stays available even for releases that carry no Linux
-                builds at all.
-              -->
-              <a
-                v-if="platform === 'linux'"
-                class="option"
-                href="https://snapcraft.io/blinkblink"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span class="option-label">{{ t('download.options.snap') }}</span>
-                <span class="option-hint">{{ t('download.options.snapHint') }}</span>
-              </a>
-            </div>
           </li>
         </div>
       </ul>
@@ -105,10 +55,15 @@
         >
       </div>
 
-      <!-- Add the donation popup -->
-      <DonationPopup
-        v-if="showDonationPopup"
-        @close="showDonationPopup = false"
+      <DownloadFlow
+        v-if="flow.platform"
+        :platform="flow.platform"
+        :step="flow.step"
+        :options="flow.options"
+        :chosen="flow.chosen"
+        :version="latestVersion"
+        @close="closeFlow"
+        @pick="choose"
         @proceed="proceedWithDownload"
       />
 
@@ -123,11 +78,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed, nextTick } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import '@/assets/styles/Download.css'
 import TutorialOverlay from '@/components/TutorialOverlay.vue'
-import DonationPopup from '@/components/DonationPopup.vue'
+import DownloadFlow, { type FlowOption, type FlowStep } from '@/components/DownloadFlow.vue'
 
 const { t } = useI18n()
 
@@ -135,6 +90,8 @@ interface GitHubAsset {
   name: string
   browser_download_url: string
   download_count?: number
+  /** Bytes. Shown in the flow so nobody is surprised by a 100 MB download. */
+  size?: number
 }
 
 interface GitHubRelease {
@@ -157,11 +114,7 @@ interface DownloadTarget {
   fallbackHref?: string
 }
 
-interface DownloadOption {
-  key: string
-  label: string
-  hint: string
-  recommended?: boolean
+interface DownloadOption extends FlowOption {
   target: DownloadTarget
 }
 
@@ -195,8 +148,6 @@ const isLoading = reactive<Record<Platform, boolean>>({
 
 /** Detected once at mount, and only ever used to mark a recommendation. */
 const detectedArch = ref<Arch>('arm64')
-
-const openPanel = ref<Platform | null>(null)
 
 const showTutorial = ref(false)
 const selectedPlatform = ref<'windows' | 'macos'>('windows')
@@ -336,16 +287,32 @@ function hasAsset(extension: string, arch?: Arch): boolean {
 }
 
 /**
- * The options shown under a platform's button, derived from what the release
- * actually contains rather than from a fixed list — so the page can never offer
- * a download that does not exist, and picks up a new build shape on its own.
+ * What a platform offers, derived from the assets the release actually carries
+ * rather than from a fixed list — so the flow can never offer a build that does
+ * not exist, and picks up a new build shape on its own.
+ *
+ * Before the release has loaded the fixed list stands in. Nothing is lost by
+ * it: `pickAsset` falls back to an unsuffixed asset, so a choice of "Apple
+ * Silicon" against a universal release still resolves to the one DMG there is.
  */
 function optionsFor(platform: Platform): DownloadOption[] {
-  if (platform === 'windows') return []
+  const loaded = latestRelease.value !== null
+
+  if (platform === 'windows') {
+    return [
+      {
+        key: 'exe',
+        label: t('download.options.windowsInstaller'),
+        hint: t('download.options.windowsNote'),
+        ...describe('.exe', 'x64'),
+        target: { platform, extension: '.exe', arch: 'x64' },
+      },
+    ]
+  }
 
   if (platform === 'macos') {
     // Per-architecture DMGs: name the chip, never the architecture string.
-    if (hasAsset('.dmg', 'arm64') && hasAsset('.dmg', 'x64')) {
+    if (!loaded || (hasAsset('.dmg', 'arm64') && hasAsset('.dmg', 'x64'))) {
       return (['arm64', 'x64'] as Arch[]).map((arch) => ({
         key: arch,
         label: t(arch === 'arm64' ? 'download.options.appleSilicon' : 'download.options.intel'),
@@ -353,6 +320,7 @@ function optionsFor(platform: Platform): DownloadOption[] {
           arch === 'arm64' ? 'download.options.appleSiliconHint' : 'download.options.intelHint',
         ),
         recommended: arch === detectedArch.value,
+        ...describe('.dmg', arch),
         target: { platform, extension: '.dmg', arch },
       }))
     }
@@ -365,48 +333,87 @@ function optionsFor(platform: Platform): DownloadOption[] {
             key: 'universal',
             label: t('download.options.universal'),
             hint: t('download.options.universalHint'),
+            ...describe('.dmg', detectedArch.value),
             target: { platform, extension: '.dmg', arch: detectedArch.value },
           },
         ]
       : []
   }
 
-  return LINUX_FORMATS.filter((format) => hasAsset(format.extension)).map((format) => ({
+  const packages: DownloadOption[] = LINUX_FORMATS.filter(
+    (format) => !loaded || hasAsset(format.extension),
+  ).map((format) => ({
     key: format.key,
     label: t(`download.options.${format.key}`),
     hint: t(`download.options.${format.key}Hint`),
+    ...describe(format.extension, 'x64'),
     target: { platform, extension: format.extension, arch: 'x64' as Arch },
   }))
+
+  // The Snap Store is a page rather than a release asset, so it is offered even
+  // for the releases that carry no Linux builds at all.
+  return [
+    ...packages,
+    {
+      key: 'snap',
+      label: t('download.options.snap'),
+      hint: t('download.options.snapHint'),
+      external: true,
+      target: { platform, extension: '', arch: 'x64', fallbackHref: SNAP_URL },
+    },
+  ]
 }
+
+/** The filename and size an option resolves to, when the release is known. */
+function describe(extension: string, arch: Arch): { fileName?: string; fileSize?: number } {
+  const assets = latestRelease.value?.assets
+  if (!assets) return {}
+  const asset = pickAsset(assets, extension, arch)
+  return asset ? { fileName: asset.name, fileSize: asset.size } : {}
+}
+
+/* The download flow ---------------------------------------------------- */
+
+const flow = reactive<{
+  platform: Platform | null
+  step: FlowStep
+  options: DownloadOption[]
+  chosen: DownloadOption | null
+}>({ platform: null, step: 'choose', options: [], chosen: null })
 
 /**
- * What the big button serves.
+ * Opens the flow on the step that has something to ask.
  *
- * Windows ships x64 only, deliberately: electron-updater's latest.yml has no
- * per-architecture entry, so publishing both would hand ARM64 installers to x64
- * machines on auto-update. Windows on ARM emulates x64.
- *
- * Linux falls back to the Snap Store, which is a real page even for the
- * releases that carry no Linux assets at all — everything before 0.2.0.
+ * A platform with one build has nothing to choose, and a dialog that asks a
+ * question with a single answer is worse than no dialog at all — Windows starts
+ * on the support step with the file it is about to fetch named in the header.
  */
-function primaryTarget(platform: Platform): DownloadTarget {
-  if (platform === 'windows') return { platform, extension: '.exe', arch: 'x64' }
-  if (platform === 'macos') return { platform, extension: '.dmg', arch: detectedArch.value }
-  return { platform, extension: '.AppImage', arch: 'x64', fallbackHref: SNAP_URL }
+function openFlow(platform: Platform) {
+  const options = optionsFor(platform)
+  flow.platform = platform
+  flow.options = options
+  flow.chosen = options.length === 1 ? options[0] : null
+  flow.step = options.length === 1 ? 'support' : 'choose'
 }
 
-async function togglePanel(platform: Platform) {
-  const opening = openPanel.value !== platform
-  openPanel.value = opening ? platform : null
-  if (!opening) return
+function closeFlow() {
+  flow.platform = null
+  flow.chosen = null
+  flow.options = []
+}
 
-  // The nav bar is fixed to the bottom of the viewport, so a panel opened near
-  // it lands underneath and looks like nothing happened. `scroll-margin-bottom`
-  // on the panel is what keeps this scroll clear of the bar.
-  await nextTick()
-  document
-    .getElementById(`options-${platform}`)
-    ?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+function choose(option: FlowOption) {
+  const picked = flow.options.find((candidate) => candidate.key === option.key)
+  if (!picked) return
+
+  if (picked.external) {
+    window.open(picked.target.fallbackHref ?? SNAP_URL, '_blank', 'noopener')
+    closeFlow()
+    return
+  }
+
+  flow.chosen = picked
+  flow.step = 'support'
 }
 
 async function getAllReleasesFromGitHub(): Promise<GitHubRelease[]> {
@@ -468,26 +475,18 @@ onMounted(async () => {
   }
 })
 
-const showDonationPopup = ref(false)
-const pendingDownload = ref<DownloadTarget | null>(null)
-
 /**
- * Every download goes through here, primary button and option alike, so the
- * donation prompt and the macOS install guide appear whichever one was clicked.
- * The install guide matters most to the visitors who went looking for a
- * specific build, which is exactly who the options are for.
+ * Fetches the chosen build and, for Linux, shows how to install it.
+ *
+ * Windows and macOS hand over to the full install guide, which has screenshots
+ * and a great deal more to say; the Linux packages need two lines and a command,
+ * so they stay in the flow rather than opening a second overlay.
  */
-function requestDownload(target: DownloadTarget) {
-  pendingDownload.value = target
-  showDonationPopup.value = true
-}
-
 async function proceedWithDownload() {
-  const target = pendingDownload.value
-  if (!target) return
+  const target = flow.chosen?.target
+  const platform = flow.platform
+  if (!target || !platform) return
 
-  const { platform } = target
-  showDonationPopup.value = false
   isLoading[platform] = true
 
   try {
@@ -499,23 +498,34 @@ async function proceedWithDownload() {
       // Linux packages only exist from 0.2.0 onwards.
       if (target.fallbackHref) {
         window.open(target.fallbackHref, '_blank', 'noopener')
+        closeFlow()
         return
       }
       throw new Error(`No ${platform} build in ${release.tag_name}`)
     }
 
-    if (platform !== 'linux') {
-      selectedPlatform.value = platform
-      showTutorial.value = true
+    // Name the file that is actually arriving, which for a stale first guess is
+    // not always the one the option advertised.
+    if (flow.chosen) {
+      flow.chosen.fileName = asset.name
+      flow.chosen.fileSize = asset.size
     }
 
     window.location.href = asset.browser_download_url
+
+    if (platform === 'linux') {
+      flow.step = 'guide'
+    } else {
+      selectedPlatform.value = platform
+      showTutorial.value = true
+      closeFlow()
+    }
   } catch (error) {
     console.error('Download error:', error)
     alert(t('download.options.unavailable'))
+    closeFlow()
   } finally {
     isLoading[platform] = false
-    pendingDownload.value = null
   }
 }
 </script>

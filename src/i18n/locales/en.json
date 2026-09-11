@@ -145,7 +145,6 @@
       }
     },
     "options": {
-      "toggle": "Other options",
       "recommended": "Your Mac",
       "windowsNote": "64-bit build. Windows on ARM runs it under emulation.",
       "appleSilicon": "Apple Silicon",
@@ -162,7 +161,33 @@
       "rpmHint": "Fedora, RHEL, openSUSE",
       "snap": "Snap Store",
       "snapHint": "Ubuntu and derivatives",
-      "unavailable": "That build is not part of the latest release. Please try another option."
+      "unavailable": "That build is not part of the latest release. Please try another option.",
+      "windowsInstaller": "Windows installer"
+    },
+    "flow": {
+      "close": "Close",
+      "lead": {
+        "windows": "One build, for 64-bit Windows.",
+        "macos": "Which Mac are you on?",
+        "linux": "Which package suits your system?"
+      },
+      "started": "Your download has started. Here is how to install it.",
+      "done": "Done",
+      "guide": {
+        "common": {
+          "launch": "Open BlinkBlink from your applications menu."
+        },
+        "appimage": {
+          "step1": "Mark the file as executable, then run it. Nothing is installed — the AppImage is the whole app.",
+          "step2": "To keep it, move the file somewhere permanent first; BlinkBlink updates it in place from then on."
+        },
+        "deb": {
+          "step1": "Install it with apt, which pulls in anything it needs."
+        },
+        "rpm": {
+          "step1": "Install it with dnf, which pulls in anything it needs."
+        }
+      }
     }
   },
   "tutorial": {

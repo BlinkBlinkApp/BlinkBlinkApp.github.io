@@ -145,7 +145,6 @@
       }
     },
     "options": {
-      "toggle": "其他選項",
       "recommended": "你的 Mac",
       "windowsNote": "64 位元版本。ARM 版 Windows 會以模擬方式執行。",
       "appleSilicon": "Apple 晶片",
@@ -162,7 +161,33 @@
       "rpmHint": "Fedora、RHEL、openSUSE",
       "snap": "Snap 商店",
       "snapHint": "Ubuntu 及衍生發行版",
-      "unavailable": "最新版本沒有這個檔案，請改選其他選項。"
+      "unavailable": "最新版本沒有這個檔案，請改選其他選項。",
+      "windowsInstaller": "Windows 安裝程式"
+    },
+    "flow": {
+      "close": "關閉",
+      "lead": {
+        "windows": "只有一個版本，適用於 64 位元 Windows。",
+        "macos": "你使用哪一種 Mac？",
+        "linux": "哪一種套件適合你的系統？"
+      },
+      "started": "已開始下載。以下是安裝方式。",
+      "done": "完成",
+      "guide": {
+        "common": {
+          "launch": "從應用程式選單開啟 BlinkBlink。"
+        },
+        "appimage": {
+          "step1": "將檔案設為可執行後直接執行。不需安裝，AppImage 本身就是完整的應用程式。",
+          "step2": "若要長期使用，請先把檔案移到固定位置；之後 BlinkBlink 會就地更新它。"
+        },
+        "deb": {
+          "step1": "使用 apt 安裝，相依套件會一併處理。"
+        },
+        "rpm": {
+          "step1": "使用 dnf 安裝，相依套件會一併處理。"
+        }
+      }
     }
   },
   "tutorial": {
