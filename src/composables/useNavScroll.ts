@@ -1,4 +1,3 @@
-
 import { watch } from 'vue'
 import type { Ref } from 'vue'
 
@@ -12,19 +11,14 @@ export function useNavScroll(activeSection: Ref<string>) {
     const navRect = navContent.getBoundingClientRect()
     const activeRect = activeNavItem.getBoundingClientRect()
 
-    const isFullyVisible =
-      activeRect.left >= navRect.left &&
-      activeRect.right <= navRect.right
+    const isFullyVisible = activeRect.left >= navRect.left && activeRect.right <= navRect.right
 
     if (!isFullyVisible) {
-      const scrollOffset =
-        activeRect.left -
-        navRect.left -
-        (navRect.width - activeRect.width) / 2
+      const scrollOffset = activeRect.left - navRect.left - (navRect.width - activeRect.width) / 2
 
       navContent.scrollTo({
         left: navContent.scrollLeft + scrollOffset,
-        behavior: 'smooth'
+        behavior: 'smooth',
       })
     }
   }

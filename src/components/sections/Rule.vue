@@ -105,10 +105,10 @@ onMounted(() => {
     {
       threshold: [0.1], // Reduced threshold for earlier triggering
       rootMargin: '50px', // Add some margin for smoother transitions
-    }
+    },
   )
 
-  numberSets.forEach(set => observer.observe(set))
+  numberSets.forEach((set) => observer.observe(set))
 
   onBeforeUnmount(() => {
     observer.disconnect()
@@ -147,8 +147,9 @@ onMounted(() => {
   will-change: transform;
 }
 
-.number-container, .bubble-text {
-  transform: translate3d(0,0,0);
+.number-container,
+.bubble-text {
+  transform: translate3d(0, 0, 0);
   will-change: transform, opacity;
 }
 </style>

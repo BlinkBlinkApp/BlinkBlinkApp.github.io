@@ -219,7 +219,6 @@ body {
   will-change: transform;
 }
 
-
 /* Responsive breakpoints */
 @media (max-width: 1024px) {
   :root {
