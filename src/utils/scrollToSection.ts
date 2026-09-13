@@ -73,18 +73,60 @@ function begin(element: HTMLElement): void {
         }
     }
 
-    const settle = () => {
-        if (cancelled) return listen(false)
-        correct()
-        if (Date.now() < deadline) setTimeout(settle, CHECK_MS)
-        else listen(false)
-    }
-    setTimeout(settle, 140)
+    /*
+     * Correct only once the page has stopped moving on its own.
+     *
+     * The smooth scroll takes most of a second, and for all of it the target is
+     * a long way from where it is headed. Checking on a timer without asking
+     * whether the animation is still running meant every check "corrected" it —
+     * a dozen instant jumps fighting the browser's own animation, which is what
+     * made clicking a tab stutter four or five times before arriving.
+     *
+     * So watch the scroll position instead of the clock: two consecutive checks
+     * at the same offset mean the browser has finished, and only then is being
+     * off by more than a few pixels something to fix.
+     */
+    let previousOffset = window.scrollY
+    let stillChecks = 0
+    let running = false
 
-    // A slow image can land after that window closes. `load` is the one moment
-    // the page is known to have stopped moving, so take it as a last aim rather
-    // than polling for longer and holding the page hostage for it.
+    const watch = (until: number) => {
+        if (running) return
+        running = true
+
+        const step = () => {
+            if (cancelled) {
+                running = false
+                return listen(false)
+            }
+
+            const offset = window.scrollY
+            stillChecks = offset === previousOffset ? stillChecks + 1 : 0
+            previousOffset = offset
+
+            if (stillChecks >= 2) {
+                correct()
+                previousOffset = window.scrollY
+                stillChecks = 0
+            }
+
+            if (Date.now() < until) setTimeout(step, CHECK_MS)
+            else {
+                running = false
+                listen(false)
+            }
+        }
+        setTimeout(step, CHECK_MS)
+    }
+
+    watch(deadline)
+
+    // A slow image can land after that window closes, so take one more look
+    // when `load` says the page has finished arriving. Through the same watcher
+    // rather than correcting on the spot: `load` can land while the smooth
+    // scroll is still running, and an instant correction then is precisely the
+    // jump this is here to avoid.
     if (document.readyState !== 'complete') {
-        window.addEventListener('load', () => setTimeout(correct, 60), { once: true })
+        window.addEventListener('load', () => watch(Date.now() + SETTLE_MS), { once: true })
     }
 }
