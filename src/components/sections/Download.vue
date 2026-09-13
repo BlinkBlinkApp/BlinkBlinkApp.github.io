@@ -4,13 +4,12 @@
       <h2>{{ t('download.title') }}</h2>
 
       <div class="features-ticker">
-        <div class="ticker-content" style="running">
+        <div class="ticker-content">
           <div
             class="feature"
             v-for="(feature, index) in [...computedFeatures, ...computedFeatures]"
             :key="index"
           >
-            <i :class="feature.icon"></i>
             <h3>{{ feature.title }}</h3>
             <p>{{ feature.description }}</p>
           </div>
@@ -29,7 +28,7 @@
           <li v-for="platform in PLATFORMS" :key="platform" class="platform">
             <a
               @click="openFlow(platform)"
-              :class="['button', 'icon', 'solid', 'fa-download', { loading: isLoading[platform] }]"
+              :class="['button', 'icon', 'solid', { loading: isLoading[platform] }]"
               :disabled="isLoading[platform]"
             >
               {{
@@ -155,52 +154,42 @@ const selectedPlatform = ref<'windows' | 'macos'>('windows')
 // Replace the features array with a computed property
 const computedFeatures = computed(() => [
   {
-    icon: 'fa-solid fa-rocket',
     title: t('download.features.autoStart.title'),
     description: t('download.features.autoStart.description'),
   },
   {
-    icon: 'fa-solid fa-stopwatch',
     title: t('download.features.smartScheduling.title'),
     description: t('download.features.smartScheduling.description'),
   },
   {
-    icon: 'fa-solid fa-chart-line',
     title: t('download.features.trackProgress.title'),
     description: t('download.features.trackProgress.description'),
   },
   {
-    icon: 'fa-solid fa-eye',
     title: t('download.features.breakReminders.title'),
     description: t('download.features.breakReminders.description'),
   },
   {
-    icon: 'fa-solid fa-user-md',
     title: t('download.features.rule.title'),
     description: t('download.features.rule.description'),
   },
   {
-    icon: 'fa-solid fa-arrows-rotate',
     title: t('download.features.autoUpdates.title'),
     description: t('download.features.autoUpdates.description'),
   },
   {
-    icon: 'fa-solid fa-shield',
     title: t('download.features.privacyFirst.title'),
     description: t('download.features.privacyFirst.description'),
   },
   {
-    icon: 'fa-solid fa-desktop',
     title: t('download.features.multiScreen.title'),
     description: t('download.features.multiScreen.description'),
   },
   {
-    icon: 'fa-solid fa-brush',
     title: t('download.features.cleanInterface.title'),
     description: t('download.features.cleanInterface.description'),
   },
   {
-    icon: 'fa-solid fa-moon',
     title: t('download.features.themeSync.title'),
     description: t('download.features.themeSync.description'),
   },

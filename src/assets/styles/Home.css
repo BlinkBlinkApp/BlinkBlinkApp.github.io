@@ -25,14 +25,16 @@ header {
   margin-top: -2px;
 }
 
+/*
+ * The wordmark sits beside the mascot, which is the colourful half of the
+ * lockup. A gradient on the type as well made two things compete for the same
+ * job; flat ink lets the logo carry the colour.
+ */
 .brand-name {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
   line-height: 44px;
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
 }
