@@ -12,26 +12,30 @@ const router = createRouter({
     },
   ],
   scrollBehavior(to, from, savedPosition) {
+    const isFirstNavigation = from === START_LOCATION
+
+    // The hash wins on the first navigation, before savedPosition is even
+    // considered. Refreshing /#download hands this a savedPosition recorded
+    // against the previous page height — the images above the section have not
+    // loaded yet, so restoring that pixel puts you in #features. Someone who
+    // reloads a URL ending in #download is asking for #download, whatever
+    // number the last visit left behind.
+    if (isFirstNavigation && to.hash) {
+      scrollToSection(to.hash.slice(1))
+      return false
+    }
+
+    // Back and forward within a visit: honour where they were.
     if (savedPosition) {
       return savedPosition
     }
 
-    // A hash change during a visit is the nav being clicked, and `handleNavClick`
-    // has already scrolled. The first navigation of a visit looks identical to
-    // that test — same path, a hash that was not there before — so it used to be
-    // swallowed here, which is why opening or refreshing `/#download` was left
-    // to the browser's own jump to the fragment and landed above the section.
-    const isFirstNavigation = from === START_LOCATION
-    if (!isFirstNavigation && from.path === to.path && to.hash !== from.hash) {
+    // A hash change during a visit is the nav being clicked, and
+    // `handleNavClick` has already scrolled.
+    if (from.path === to.path && to.hash !== from.hash) {
       return false
     }
 
-    // Arriving with a hash — someone opening or refreshing `/#download` — is
-    // the worst case for scrolling to a fixed position: the images above the
-    // section have not loaded, so the section is not yet where the router would
-    // be scrolling to, and the page came to rest above it. `scrollToSection`
-    // re-aims until the page stops moving. Returning false keeps the router
-    // from scrolling as well and fighting it.
     if (to.hash) {
       scrollToSection(to.hash.slice(1))
       return false

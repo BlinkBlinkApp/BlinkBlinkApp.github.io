@@ -358,11 +358,11 @@ const handleNavClick = (event: Event, section: string) => {
    * page, which is a solid surface, a real edge and a shadow.
    */
   background: var(--background-light);
-  border: 1px solid rgba(var(--text-secondary-rgb), 0.22);
+  border: 1px solid rgba(79, 86, 107, 0.22);
   border-radius: 14px;
   box-shadow:
-    0 10px 28px rgba(var(--text-secondary-rgb), 0.22),
-    0 2px 6px rgba(var(--text-secondary-rgb), 0.12);
+    0 10px 28px rgba(79, 86, 107, 0.22),
+    0 2px 6px rgba(79, 86, 107, 0.12);
   display: grid;
   gap: 0.15rem;
 }
@@ -381,12 +381,12 @@ const handleNavClick = (event: Event, section: string) => {
 }
 
 .lang-drawer button:hover {
-  background: rgba(var(--primary-rgb), 0.1);
+  background: rgba(0, 194, 255, 0.1);
 }
 
 /* The language in use is stated, not just highlighted on hover. */
 .lang-drawer button.current {
-  background: rgba(var(--primary-rgb), 0.14);
+  background: rgba(0, 194, 255, 0.14);
   font-weight: var(--font-weight-semibold);
 }
 

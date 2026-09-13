@@ -1,15 +1,19 @@
 :root {
   /* Color system */
   --primary-color: #00c2ff;
+  --primary-color-rgb: 0, 194, 255;
+
   /*
-   * Channel triplets for rgba(). Every rule reaching for these was silently
-   * dropping: only --primary-color-rgb existed, while --primary-rgb was used
-   * seven times and --text-secondary-rgb four, so their shadows and fades
-   * never rendered at all.
+   * --primary-rgb and --text-secondary-rgb are deliberately NOT defined.
+   *
+   * Around eight rules reach for them — a border on the hero buttons, hover
+   * fills on the nav, shadows on the download card, the ticker's edge fades.
+   * None has ever rendered, because neither token has ever existed. Defining
+   * them switches all of it on at once, which is a different-looking site, not
+   * a bug fix: it was tried and the outlines and hover strokes it produced were
+   * not wanted. If any of those effects is ever wanted, give that rule its own
+   * colour rather than reviving the pair.
    */
-  --primary-rgb: 0, 194, 255;
-  --primary-color-rgb: var(--primary-rgb);
-  --text-secondary-rgb: 79, 86, 107;
   --secondary-color: #6d59ff;
   --accent-color: #ff5ca8;
   --background-light: #ffffff;
