@@ -215,19 +215,76 @@ const formatSectionName = (section: string) => {
   return t(`nav.${section}`)
 }
 
-// Simplify handleNavClick to only use hash
+/** How close to the intended position counts as arrived. */
+const SCROLL_TOLERANCE = 4
+/** How long to keep correcting before assuming the page has settled. */
+const SETTLE_MS = 1200
+
+/**
+ * Scrolls to a section and stays on it while the page settles.
+ *
+ * A smooth scroll travels to the pixel the browser computed when it started.
+ * Anything that changes the height of the page in flight — an image finishing,
+ * a section growing as it is passed — leaves that pixel pointing above the
+ * section, which is why clicking Download within a second or two of arriving
+ * landed short of it.
+ *
+ * So the target is re-read from the live element rather than captured up front,
+ * and for a moment afterwards it is checked and corrected. The corrections are
+ * instant rather than smooth: by then they are a few pixels, and a second
+ * animation would read as drift. Any scroll of the user's own cancels the
+ * whole thing — once they have taken over, moving the page under them would be
+ * the worse bug.
+ */
+const scrollToSection = (id: string) => {
+  const element = document.getElementById(id)
+  if (!element) return
+
+  const behavior = window.innerWidth <= 768 ? 'auto' : 'smooth'
+  element.scrollIntoView({ behavior, block: 'start' })
+
+  const deadline = Date.now() + SETTLE_MS
+  let cancelled = false
+  const cancel = () => {
+    cancelled = true
+  }
+
+  // Only a deliberate input counts as taking over; the smooth scroll itself
+  // fires plenty of scroll events.
+  window.addEventListener('wheel', cancel, { passive: true, once: true })
+  window.addEventListener('touchstart', cancel, { passive: true, once: true })
+  window.addEventListener('keydown', cancel, { once: true })
+
+  const correct = () => {
+    if (cancelled) return
+    if (Math.abs(element.getBoundingClientRect().top) > SCROLL_TOLERANCE) {
+      element.scrollIntoView({ behavior: 'auto', block: 'start' })
+    }
+  }
+
+  const settle = () => {
+    if (cancelled) return
+    correct()
+    if (Date.now() < deadline) setTimeout(settle, 120)
+    else {
+      window.removeEventListener('wheel', cancel)
+      window.removeEventListener('touchstart', cancel)
+      window.removeEventListener('keydown', cancel)
+    }
+  }
+  setTimeout(settle, 140)
+
+  // A slow image can land after the window above has closed. `load` is the one
+  // moment the page is known to be done moving, so take it as a last aim
+  // rather than lengthening the polling and holding the page hostage for it.
+  if (document.readyState !== 'complete') {
+    window.addEventListener('load', () => setTimeout(correct, 60), { once: true })
+  }
+}
+
 const handleNavClick = (event: Event, section: string) => {
   event.preventDefault()
-
-  // Directly scroll to element
-  const element = document.getElementById(section)
-  if (element) {
-    const behavior = window.innerWidth <= 768 ? 'auto' : 'smooth'
-    const offset = 100 // Same as router's scroll behavior
-    const y = element.getBoundingClientRect().top + window.pageYOffset - offset
-
-    window.scrollTo({ top: y, behavior })
-  }
+  scrollToSection(section)
 
   // Update URL without triggering router scroll behavior
   router.replace({ hash: section === 'home' ? '' : `#${section}` })

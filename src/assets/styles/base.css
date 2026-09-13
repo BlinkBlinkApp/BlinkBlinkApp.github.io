@@ -253,3 +253,19 @@ nav {
   position: relative;
   z-index: 2;
 }
+
+
+/*
+ * The gap left above a section when it is scrolled to.
+ *
+ * Owned here rather than as a magic number in the scroll handler, so
+ * `scrollIntoView` needs no offset arithmetic and the nav cannot drift out of
+ * step with it.
+ */
+#home,
+#rule,
+#features,
+#download,
+#about {
+  scroll-margin-top: 100px;
+}
