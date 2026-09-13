@@ -2,36 +2,23 @@
 import { createI18n } from 'vue-i18n'
 import en from './locales/en.json'
 import zh from './locales/zh.json'
-
-type RecursivePartial<T> = {
-  [P in keyof T]?: T[P] extends (infer U)[]
-    ? RecursivePartial<U>[]
-    : T[P] extends object
-      ? RecursivePartial<T[P]>
-      : T[P]
-}
+import { DEFAULT_LOCALE, detectLocale } from './locales'
 
 type MessageValue = string | string[] | { [key: string]: MessageValue }
 type MessageSchema = { [key: string]: MessageValue }
 
-export type LocaleFamily = 'en' | 'zh'
+/**
+ * Every language's messages, keyed by the code in `locales.ts`.
+ *
+ * English is the fallback, so a language whose file is missing a key shows the
+ * English string rather than the key itself — which is what makes it safe to
+ * add a translation before it is complete.
+ */
+const messages: Record<string, MessageSchema> = { en, zh }
 
-const getUserLocaleFamily = (): LocaleFamily => {
-  const savedLocale = localStorage.getItem('user-locale')
-  if (savedLocale && (savedLocale === 'en' || savedLocale === 'zh')) {
-    return savedLocale
-  }
-
-  const browserLocale = navigator.language.split('-')[0] as LocaleFamily
-  return browserLocale === 'zh' ? 'zh' : 'en'
-}
-
-export default createI18n<[MessageSchema], LocaleFamily>({
-  legacy: false,
-  locale: getUserLocaleFamily(),
-  fallbackLocale: 'en',
-  messages: {
-    en,
-    zh,
-  },
+export default createI18n<[MessageSchema], string>({
+    legacy: false,
+    locale: detectLocale(),
+    fallbackLocale: DEFAULT_LOCALE,
+    messages,
 })

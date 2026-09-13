@@ -78,12 +78,12 @@
 
 .features-ticker::before {
   left: 0;
-  background: linear-gradient(to right, rgba(var(--primary-color), 0.2), transparent);
+  background: linear-gradient(to right, rgba(var(--primary-rgb), 0.2), transparent);
 }
 
 .features-ticker::after {
   right: 0;
-  background: linear-gradient(to left, rgba(var(--primary-color), 0.2), transparent);
+  background: linear-gradient(to left, rgba(var(--primary-rgb), 0.2), transparent);
 }
 
 .ticker-wrapper {

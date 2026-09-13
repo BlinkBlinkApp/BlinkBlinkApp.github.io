@@ -90,9 +90,53 @@
               {{ formatSectionName(section) }}
             </a>
           </div>
-          <button class="lang-switch-circle" @click="toggleLanguage">
-            {{ currentLanguage === 'en' ? '中' : 'EN' }}
-          </button>
+          <div class="lang-picker" ref="langPicker">
+            <!--
+              The nav is pinned to the bottom of the window, so the list opens
+              upward. Two languages do not need a drawer; the point is that a
+              tenth one costs a JSON file and a line in locales.ts.
+            -->
+            <!--
+              Teleported out of the nav. Inside it the list occupied its box but
+              painted nothing: the nav carries a backdrop-filter, a 3D transform
+              and a fixed position, and a popover that has to escape all three is
+              not worth fighting for. Anchored to the button instead.
+            -->
+            <Teleport to="body">
+              <transition name="lang-drawer">
+                <ul
+                  v-if="langOpen"
+                  ref="langDrawer"
+                  class="lang-drawer"
+                  role="listbox"
+                  :aria-label="t('nav.language')"
+                  :style="langDrawerStyle"
+                >
+                  <li v-for="language in LANGUAGES" :key="language.code">
+                    <button
+                      type="button"
+                      role="option"
+                      :aria-selected="language.code === locale"
+                      :class="{ current: language.code === locale }"
+                      @click="pickLanguage(language.code)"
+                    >
+                      {{ language.name }}
+                    </button>
+                  </li>
+                </ul>
+              </transition>
+            </Teleport>
+            <button
+              class="lang-switch-circle"
+              type="button"
+              :aria-label="t('nav.language')"
+              aria-haspopup="listbox"
+              :aria-expanded="langOpen"
+              @click="langOpen ? (langOpen = false) : openLanguages()"
+            >
+              {{ currentShort }}
+            </button>
+          </div>
         </div>
       </nav>
     </header>
@@ -119,6 +163,7 @@ import { useI18n } from 'vue-i18n'
 import { useSectionObserver } from '@/composables/useSectionObserver'
 import { useNavScroll } from '@/composables/useNavScroll'
 import { scrollToSection } from '@/utils/scrollToSection'
+import { LANGUAGES, rememberLocale } from '@/i18n/locales'
 
 const CONFIG = {
   ANIMATION: {
@@ -190,26 +235,66 @@ const rotateWords = () => {
 }
 
 // Language handling
-const toggleLanguage = () => {
-  const newLocale = locale.value === 'en' ? 'zh' : 'en'
-  locale.value = newLocale
-  currentLanguage.value = newLocale
-  localStorage.setItem('user-locale', newLocale)
+const langOpen = ref(false)
+const langPicker = ref<HTMLElement | null>(null)
+const langDrawer = ref<HTMLElement | null>(null)
+const langDrawerStyle = ref<Record<string, string>>({})
 
-  const newWords = ['strain', 'dryness', 'fatigue', 'discomfort', 'burnout'].map((word) =>
-    t(`hero.words.${word}`),
-  )
+/** Pins the teleported list above the button it belongs to. */
+const openLanguages = () => {
+  const button = langPicker.value?.querySelector('.lang-switch-circle')
+  if (button) {
+    const box = button.getBoundingClientRect()
+    langDrawerStyle.value = {
+      right: `${Math.round(window.innerWidth - box.right)}px`,
+      bottom: `${Math.round(window.innerHeight - box.top + 10)}px`,
+    }
+  }
+  langOpen.value = true
+}
+
+const currentShort = computed(
+  () => LANGUAGES.find((language) => language.code === locale.value)?.short ?? locale.value.toUpperCase()
+)
+
+const pickLanguage = (code: string) => {
+  locale.value = code
+  currentLanguage.value = code
+  rememberLocale(code)
+  langOpen.value = false
+
+  // The rotating headline keeps its own copy of the words, so it has to be
+  // re-read rather than left in the language that was showing.
+  const newWords = ['strain', 'dryness', 'fatigue', 'discomfort', 'burnout'].map((word) => t(`hero.words.${word}`))
   words.splice(0, words.length, ...newWords)
   currentWord.value = words[0]
-
-  // Adjust animation for the first word after language change
   animate.value = true
+}
+
+/** Anywhere outside the picker, or Escape, closes it. */
+const handleLangDismiss = (event: Event) => {
+  if (!langOpen.value) return
+  if (event.type === 'keydown' && (event as KeyboardEvent).key !== 'Escape') return
+  if (event.type === 'pointerdown') {
+    const target = event.target as Node
+    if (langPicker.value?.contains(target) || langDrawer.value?.contains(target)) return
+  }
+  langOpen.value = false
 }
 
 // Setup and cleanup
 onMounted(() => {
   rotateWords()
   scrollActiveNavItemIntoView()
+  // pointerdown rather than click: a press that starts outside should close the
+  // drawer even if the pointer is released somewhere else.
+  document.addEventListener('pointerdown', handleLangDismiss)
+  document.addEventListener('keydown', handleLangDismiss)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('pointerdown', handleLangDismiss)
+  document.removeEventListener('keydown', handleLangDismiss)
 })
 
 const formatSectionName = (section: string) => {
@@ -248,6 +333,93 @@ const handleNavClick = (event: Event, section: string) => {
 
 .nav-content::-webkit-scrollbar {
   display: none;
+}
+
+/*
+ * The picker wraps the button so the drawer can be positioned against it. The
+ * nav sits at the bottom of the window, so it opens upward.
+ */
+.lang-picker {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.lang-drawer {
+  position: fixed;
+  z-index: 1200;
+  margin: 0;
+  padding: 0.3rem;
+  list-style: none;
+  min-width: 8.5rem;
+  /*
+   * Opaque, unlike the nav's frosted pill. The nav always has page content
+   * behind it to frost; this opens over the hero's flat background, where a
+   * 70% white surface is invisible. A popover has to read as lifted off the
+   * page, which is a solid surface, a real edge and a shadow.
+   */
+  background: var(--background-light);
+  border: 1px solid rgba(var(--text-secondary-rgb), 0.22);
+  border-radius: 14px;
+  box-shadow:
+    0 10px 28px rgba(var(--text-secondary-rgb), 0.22),
+    0 2px 6px rgba(var(--text-secondary-rgb), 0.12);
+  display: grid;
+  gap: 0.15rem;
+}
+
+.lang-drawer button {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  border-radius: 10px;
+  background: none;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.lang-drawer button:hover {
+  background: rgba(var(--primary-rgb), 0.1);
+}
+
+/* The language in use is stated, not just highlighted on hover. */
+.lang-drawer button.current {
+  background: rgba(var(--primary-rgb), 0.14);
+  font-weight: var(--font-weight-semibold);
+}
+
+.lang-drawer button:focus-visible,
+.lang-switch-circle:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Opening answers a click, so it moves; closing gets out of the way faster. */
+.lang-drawer-enter-active {
+  transition:
+    opacity 0.16s ease-out,
+    transform 0.16s ease-out;
+}
+
+.lang-drawer-leave-active {
+  transition:
+    opacity 0.1s ease-in,
+    transform 0.1s ease-in;
+}
+
+.lang-drawer-enter-from,
+.lang-drawer-leave-to {
+  opacity: 0;
+  transform: translateY(6px) scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lang-drawer-enter-active,
+  .lang-drawer-leave-active {
+    transition: none;
+  }
 }
 
 .lang-switch-circle {

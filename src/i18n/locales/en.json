@@ -18,7 +18,8 @@
     "rule": "20·20·20",
     "features": "Features",
     "download": "Download",
-    "about": "About"
+    "about": "About",
+    "language": "Language"
   },
   "rule": {
     "pre_heading": "The",
